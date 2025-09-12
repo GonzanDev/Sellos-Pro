@@ -1,45 +1,48 @@
 import React, { useState } from "react";
 
-const questions = [
-  { q: "¿Cuánto tarda el envío?", a: "Generalmente entre 3 y 5 días hábiles." },
+const faqs = [
   {
-    q: "¿Hacen sellos personalizados?",
-    a: "Sí, podés subir tu logo y texto en el personalizador.",
+    question: "¿Cuánto tarda la entrega?",
+    answer: "Entre 3 y 5 días hábiles.",
   },
   {
-    q: "¿Qué métodos de pago aceptan?",
-    a: "Trabajamos con tarjetas y Mercado Pago.",
+    question: "¿Puedo personalizar mi sello?",
+    answer: "Sí, con logo, texto y tipografía.",
+  },
+  {
+    question: "¿Qué métodos de pago aceptan?",
+    answer: "Tarjetas, transferencias y MercadoPago.",
   },
 ];
 
-function FAQ() {
-  const [open, setOpen] = useState(null);
+export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <section className="py-16 bg-white" id="faq">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-black mb-8 text-center">
-          Preguntas Frecuentes
-        </h2>
-        <div className="space-y-4">
-          {questions.map((item, idx) => (
-            <div key={idx} className="border rounded-lg">
-              <button
-                onClick={() => setOpen(open === idx ? null : idx)}
-                className="w-full flex justify-between items-center p-4 font-medium"
-              >
-                {item.q}
-                <span>{open === idx ? "-" : "+"}</span>
-              </button>
-              {open === idx && (
-                <div className="p-4 border-t text-gray-700">{item.a}</div>
-              )}
+    <section id="faq" className="py-16 px-6 bg-gray-100">
+      <h2 className="text-3xl font-bold text-center mb-8 text-red-600">
+        Preguntas Frecuentes
+      </h2>
+      <div className="max-w-2xl mx-auto space-y-4">
+        {faqs.map((faq, index) => (
+          <div key={index} className="bg-white rounded-lg shadow-md">
+            <button
+              className="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800"
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
+            >
+              {faq.question}
+              <span>{openIndex === index ? "−" : "+"}</span>
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                openIndex === index ? "max-h-40 p-4" : "max-h-0"
+              }`}
+            >
+              <p className="text-gray-600">{faq.answer}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
-
-export default FAQ;

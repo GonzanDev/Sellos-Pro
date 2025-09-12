@@ -1,22 +1,18 @@
 import React from "react";
 
-function Hero() {
+export default function Hero() {
   return (
-    <section className="bg-gray-100 text-center py-20" id="hero">
-      <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-        Sellos personalizados de calidad
-      </h1>
-      <p className="text-lg md:text-xl text-gray-700 mb-6">
-        Confiabilidad, diseño y rapidez en cada pedido
+    <section className="bg-gradient-to-r from-black to-[#e30613] text-white py-24 text-center">
+      <h1 className="text-4xl md:text-6xl font-bold">Sellos Profesionales</h1>
+      <p className="mt-4 text-lg md:text-xl">
+        Personalizá tus sellos con la mejor calidad y envío rápido.
       </p>
       <a
         href="#catalog"
-        className="bg-red-600 text-white px-6 py-3 rounded-full font-medium hover:bg-black transition"
+        className="mt-6 inline-block px-6 py-3 bg-white text-black rounded hover:bg-gray-100 transition"
       >
         Ver Catálogo
       </a>
     </section>
   );
 }
-
-export default Hero;

@@ -1,24 +1,24 @@
 import React from "react";
 
-function ProductCard({ product, addToCart }) {
+export default function ProductCard({ product, addToCart }) {
   return (
-    <div className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 flex flex-col">
+    <article className="bg-white rounded-lg shadow p-4 flex flex-col">
       <img
         src={product.image}
         alt={product.name}
-        className="rounded-lg mb-4 h-40 object-cover"
+        className="h-44 w-full object-cover rounded mb-3"
       />
-      <h3 className="font-semibold text-lg text-black">{product.name}</h3>
-      <p className="text-gray-600 flex-1">{product.description}</p>
-      <p className="text-red-600 font-bold mt-2">${product.price}</p>
-      <button
-        onClick={() => addToCart(product)}
-        className="mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-black transition"
-      >
-        Añadir al Carrito
-      </button>
-    </div>
+      <h3 className="font-semibold">{product.name}</h3>
+      <p className="text-sm text-gray-500 flex-1 my-2">{product.description}</p>
+      <div className="flex items-center justify-between">
+        <div className="text-red-600 font-bold">AR$ {product.price}</div>
+        <button
+          onClick={() => addToCart(product)}
+          className="px-3 py-2 bg-[#e30613] text-white rounded hover:bg-black transition"
+        >
+          Añadir
+        </button>
+      </div>
+    </article>
   );
 }
-
-export default ProductCard;
