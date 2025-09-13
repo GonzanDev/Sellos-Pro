@@ -7,19 +7,18 @@ import ContactForm from "./components/ContactForm";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import Cart from "./components/Cart";
+import Toast from "./components/Toast";
 import products from "./data/products";
 
-/**
- * KEY: localStorage key para persistencia del carrito
- */
 const CART_LS_KEY = "sellospro_cart_v1";
 
 export default function App() {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setCartOpen] = useState(false);
+  const [toast, setToast] = useState(null);
   const sectionsRef = useRef({});
 
-  // Inicializar refs para secciones
+  // refs de secciones
   useEffect(() => {
     sectionsRef.current = {
       hero: document.getElementById("hero"),
@@ -30,26 +29,30 @@ export default function App() {
     };
   }, []);
 
-  // Cargar carrito desde localStorage al inicio
-  useEffect(() => {
+  // Estado inicial con función → carga desde localStorage
+  useState(() => {
     try {
       const raw = localStorage.getItem(CART_LS_KEY);
-      if (raw) setCart(JSON.parse(raw));
-    } catch (e) {
-      console.warn("No se pudo cargar carrito desde localStorage", e);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
     }
-  }, []);
+  });
 
   // Guardar carrito en localStorage cuando cambie
   useEffect(() => {
-    try {
-      localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
-    } catch (e) {
-      console.warn("No se pudo guardar carrito en localStorage", e);
-    }
+    localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  // Funciones del carrito
+  // toast ahora dura 3s
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [toast]);
+
+  // funciones carrito
   const addToCart = (product) => {
     setCart((prev) => {
       const ex = prev.find((p) => p.id === product.id);
@@ -60,7 +63,8 @@ export default function App() {
       }
       return [...prev, { ...product, qty: 1 }];
     });
-    setCartOpen(true); // abrir drawer cuando agregan
+    setCartOpen(true);
+    setToast(`${product.name} agregado al carrito ✅`);
   };
 
   const removeFromCart = (id) => {
@@ -75,25 +79,37 @@ export default function App() {
 
   const clearCart = () => setCart([]);
 
-  // Checkout stub (a integrar con backend / MercadoPago luego)
-  const onCheckout = () => {
+  // checkout → MP backend
+  const onCheckout = async () => {
     if (cart.length === 0) {
       alert("Tu carrito está vacío.");
       return;
     }
-    // ejemplo: llamar a backend -> crear preferencia -> redirigir
-    alert("Checkout demo: implementar integración con backend / MercadoPago.");
+    try {
+      const res = await fetch("http://localhost:3001/create_preference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart }),
+      });
+      const data = await res.json();
+      if (data.id) {
+        window.open(
+          `https://www.mercadopago.com/checkout/v1/redirect?pref_id=${data.id}`,
+          "_blank"
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al iniciar el pago");
+    }
   };
 
-  // Scroll suavizado + animación puntual en la sección objetivo
+  // scroll con animación
   const scrollToSection = (id) => {
     const el = sectionsRef.current[id];
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    // Añadir clase temporal para animación, removerla después
     el.classList.remove("section-focus");
-    // forced reflow para reiniciar animación si es necesario
     void el.offsetWidth;
     el.classList.add("section-focus");
     setTimeout(() => el.classList.remove("section-focus"), 900);
@@ -111,19 +127,15 @@ export default function App() {
         <section id="hero">
           <Hero />
         </section>
-
         <section id="catalog" className="pt-6">
           <Catalog products={products} addToCart={addToCart} />
         </section>
-
         <section id="personalizer" className="pt-6">
           <Personalizer />
         </section>
-
         <section id="faq" className="pt-6">
           <FAQ />
         </section>
-
         <section id="contact" className="pt-6">
           <ContactForm />
         </section>
@@ -140,6 +152,7 @@ export default function App() {
       />
 
       <Footer />
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </div>
   );
 }
