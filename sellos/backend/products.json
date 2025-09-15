@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Sello Redondo 40mm",
+    "description": "Sello redondo de 40mm, ideal para firmas y logos empresariales.",
+    "price": 5000,
+    "image": "/images/sello-redondo.png"
+  },
+  {
+    "id": 2,
+    "name": "Sello Rectangular 60x40mm",
+    "description": "Sello rectangular de 60x40mm, resistente y de larga duración.",
+    "price": 6500,
+    "image": "/images/sello-rectangular.png"
+  },
+  {
+    "id": 3,
+    "name": "Sello Profesional Automático",
+    "description": "Sello automático profesional, con tinta recargable y diseño ergonómico.",
+    "price": 12000,
+    "image": "/images/sello-profesional.png"
+  },
+  {
+    "id": 4,
+    "name": "Sello de Bolsillo",
+    "description": "Sello compacto y portátil, ideal para llevar a reuniones y viajes.",
+    "price": 4500,
+    "image": "/images/sello-bolsillo.png"
+  }
+]

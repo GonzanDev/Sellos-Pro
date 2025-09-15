@@ -1,39 +1,34 @@
 import express from "express";
-import mercadopago from "mercadopago";
 import cors from "cors";
-import dotenv from "dotenv";
+import fs from "fs";
 
-dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN,
+// Leer productos desde JSON (simulación DB)
+const products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
+
+// Endpoint para productos
+app.get("/api/products", (req, res) => {
+  res.json(products);
 });
 
-app.post("/create_preference", async (req, res) => {
-  try {
-    const { items } = req.body;
-    const preference = {
-      items: items.map((p) => ({
-        title: p.name,
-        unit_price: p.price,
-        quantity: p.qty,
-      })),
-      back_urls: {
-        success: "http://localhost:5173/success",
-        failure: "http://localhost:5173/failure",
-      },
-      auto_return: "approved",
-    };
-    const response = await mercadopago.preferences.create(preference);
-    res.json({ id: response.body.id });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+// Endpoint "checkout" demo
+app.post("/api/checkout", (req, res) => {
+  const { cart } = req.body;
+  if (!cart || cart.length === 0) {
+    return res.status(400).json({ error: "Carrito vacío" });
   }
+  // Aquí se integraría MercadoPago
+  res.json({
+    success: true,
+    message: "Checkout simulado. Aquí iría la integración con MercadoPago.",
+    cart,
+  });
 });
 
-app.listen(3001, () =>
-  console.log("Backend corriendo en http://localhost:3001")
+const PORT = 4000;
+app.listen(PORT, () =>
+  console.log(`✅ Backend corriendo en http://localhost:${PORT}`)
 );
