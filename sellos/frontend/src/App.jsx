@@ -8,6 +8,7 @@ import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import Toast from "./components/Toast";
+import { Route, Routes} from "react-router-dom";
 
 const CART_LS_KEY = "cart_v1";
 
@@ -22,7 +23,22 @@ export default function App() {
       return [];
     }
   });
+
   const [isCartOpen, setCartOpen] = useState(false);
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   // Cargar productos desde el backend
   useEffect(() => {
@@ -37,6 +53,7 @@ export default function App() {
     localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
   }, [cart]);
 
+  // Funciones carrito
   const addToCart = (product) => {
     setCart((prev) => {
       const ex = prev.find((p) => p.id === product.id);
@@ -73,7 +90,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header openCart={() => setCartOpen(true)} cartCount={cart.length} />
+      <Header openCart={() => setCartOpen(true)} cartCount={cart.length} onNavigate={scrollToSection}/>
       <main>
         <Hero />
         <Catalog products={products} addToCart={addToCart} />

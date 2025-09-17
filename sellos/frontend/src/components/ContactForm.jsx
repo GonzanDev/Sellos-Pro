@@ -28,6 +28,7 @@ export default function ContactForm() {
   };
 
   return (
+    <section id="contact" className="py-16 bg-gray-100">
     <div className="max-w-lg mx-auto bg-white shadow-md rounded-xl p-6">
       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
         Contáctanos
@@ -71,5 +72,6 @@ export default function ContactForm() {
         </button>
       </form>
     </div>
+    </section>
   );
 }

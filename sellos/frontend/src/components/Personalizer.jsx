@@ -33,6 +33,7 @@ export default function Personalizer() {
   };
 
   return (
+    <section id="personalizer" className="py-16 bg-gray-50">
     <div className="bg-white shadow rounded p-6 max-w-lg mx-auto">
       <h2 className="text-xl font-semibold mb-4">Personaliza tu sello</h2>
 
@@ -90,5 +91,7 @@ export default function Personalizer() {
         </div>
       </div>
     </div>
+    </section>
   );
+  
 }
