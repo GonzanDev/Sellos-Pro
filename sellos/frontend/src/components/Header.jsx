@@ -1,107 +1,80 @@
 import React from "react";
-import { ShoppingCart, Menu } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
 
-export default function Header({ openCart, cartCount = 0, onNavigate }) {
-  // mobile menu simple
-  const [open, setOpen] = React.useState(false);
+export default function Header({ openCart, cartCount }) {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const go = (id) => {
-    if (onNavigate) onNavigate(id);
-    setOpen(false);
+  const handleScroll = (id) => {
+    if (location.pathname !== "/") {
+      // Si no estamos en la landing, redirigimos primero
+      navigate("/");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
-    <header className="bg-black text-white sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
-        <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="SellosPro" className="h-10" />
-          <span className="font-bold text-lg">SellosPro</span>
+    <header className="bg-black text-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Logo */}
+        <div
+          className="text-2xl font-bold text-red-600 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          SellosPro
         </div>
 
-        <nav className="hidden md:flex gap-6">
-          <button onClick={() => go("hero")} className="hover:text-[#e30613]">
+        {/* Links */}
+        <nav className="hidden md:flex space-x-6 text-lg">
+          <button
+            onClick={() => handleScroll("hero")}
+            className="hover:text-red-500"
+          >
             Inicio
           </button>
-          <button
-            onClick={() => go("catalog")}
-            className="hover:text-[#e30613]"
-          >
+          <Link to="/catalog" className="hover:text-red-500">
             Catálogo
+          </Link>
+          <button
+            onClick={() => handleScroll("personalizer")}
+            className="hover:text-red-500"
+          >
+            Personalizer
           </button>
           <button
-            onClick={() => go("personalizer")}
-            className="hover:text-[#e30613]"
+            onClick={() => handleScroll("faq")}
+            className="hover:text-red-500"
           >
-            Personalizar
-          </button>
-          <button onClick={() => go("faq")} className="hover:text-[#e30613]">
             FAQ
           </button>
           <button
-            onClick={() => go("contact")}
-            className="hover:text-[#e30613]"
+            onClick={() => handleScroll("contact")}
+            className="hover:text-red-500"
           >
             Contacto
           </button>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={openCart}
-            className="relative px-3 py-2 rounded hover:bg-white/5 transition"
-          >
-            <ShoppingCart />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-xs rounded-full px-1 text-white">
-                {cartCount}
-              </span>
-            )}
-          </button>
-
-          <button
-            className="md:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Abrir menú"
-          >
-            <Menu />
-          </button>
-        </div>
+        {/* Carrito */}
+        <button
+          onClick={openCart}
+          className="relative flex items-center hover:text-red-500"
+        >
+          <ShoppingCart size={28} />
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </button>
       </div>
-
-      {open && (
-        <nav className="md:hidden bg-black px-4 pb-4 space-y-2">
-          <button
-            onClick={() => go("hero")}
-            className="block w-full text-left hover:text-[#e30613] py-2"
-          >
-            Inicio
-          </button>
-          <button
-            onClick={() => go("catalog")}
-            className="block w-full text-left hover:text-[#e30613] py-2"
-          >
-            Catálogo
-          </button>
-          <button
-            onClick={() => go("personalizer")}
-            className="block w-full text-left hover:text-[#e30613] py-2"
-          >
-            Personalizar
-          </button>
-          <button
-            onClick={() => go("faq")}
-            className="block w-full text-left hover:text-[#e30613] py-2"
-          >
-            FAQ
-          </button>
-          <button
-            onClick={() => go("contact")}
-            className="block w-full text-left hover:text-[#e30613] py-2"
-          >
-            Contacto
-          </button>
-        </nav>
-      )}
     </header>
   );
 }
