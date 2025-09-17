@@ -16,6 +16,7 @@ import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import Toast from "./components/Toast";
 import CatalogPage from "./pages/CatalogPage";
+import PersonalizerLogo from "./components/PersonalizerLogo";
 
 const CART_LS_KEY = "cart_v1";
 
@@ -52,6 +53,10 @@ function Home({ products, addToCart }) {
 
       <section id="personalizer" className="pt-6">
         <Personalizer />
+      </section>
+
+      <section id="personalizer-logo" className="pt-6">
+        <PersonalizerLogo />
       </section>
 
       <section id="faq" className="pt-6">
