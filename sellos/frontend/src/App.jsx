@@ -76,6 +76,7 @@ export default function App() {
       return [];
     }
   });
+
   const [isCartOpen, setCartOpen] = useState(false);
 
   // Cargar productos desde backend
@@ -91,6 +92,7 @@ export default function App() {
     localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
   }, [cart]);
 
+  // Funciones carrito
   const addToCart = (product) => {
     setCart((prev) => {
       const ex = prev.find((p) => p.id === product.id);
