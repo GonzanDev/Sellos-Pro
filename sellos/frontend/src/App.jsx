@@ -35,7 +35,7 @@ function Home({ products, addToCart }) {
   const scrollToSection = (id) => {
     const el = sectionsRef.current[id];
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
@@ -76,7 +76,6 @@ export default function App() {
       return [];
     }
   });
-
   const [isCartOpen, setCartOpen] = useState(false);
 
   // Cargar productos desde backend
@@ -92,7 +91,6 @@ export default function App() {
     localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  // Funciones carrito
   const addToCart = (product) => {
     setCart((prev) => {
       const ex = prev.find((p) => p.id === product.id);
@@ -130,7 +128,6 @@ export default function App() {
       alert("Error iniciando pago");
     }
   };
-
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-50">

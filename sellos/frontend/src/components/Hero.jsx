@@ -12,7 +12,7 @@ export default function Hero() {
         Personalizá tus sellos con la mejor calidad y envío rápido.
       </p>
       <Link
-        to="/catalogo"
+        to="/catalog"
         className="mt-6 inline-block px-6 py-3 bg-white text-black rounded hover:bg-gray-100 transition"
       >
         Ver Catálogo
@@ -20,4 +20,3 @@ export default function Hero() {
     </section>
   );
 }
-
