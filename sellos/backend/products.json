@@ -1,30 +1,130 @@
 [
   {
     "id": 1,
-    "name": "Sello Redondo 40mm",
-    "description": "Sello redondo de 40mm, ideal para firmas y logos empresariales.",
-    "price": 5000,
-    "image": "/images/sello-redondo.png"
+    "category": "Automáticos",
+    "name": "Promo Escolar",
+    "description": "Kit de sello automático ideal para uso escolar.",
+    "price": 4000,
+    "image": "/images/automatico-escolar.png"
   },
   {
     "id": 2,
-    "name": "Sello Rectangular 60x40mm",
-    "description": "Sello rectangular de 60x40mm, resistente y de larga duración.",
-    "price": 6500,
-    "image": "/images/sello-rectangular.png"
+    "category": "Automáticos",
+    "name": "Sello Automático Shiny",
+    "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
+    "price": 7500,
+    "image": "/images/automatico-shiny.png"
   },
   {
     "id": 3,
-    "name": "Sello Profesional Automático",
-    "description": "Sello automático profesional, con tinta recargable y diseño ergonómico.",
-    "price": 12000,
-    "image": "/images/sello-profesional.png"
+    "category": "Automáticos",
+    "name": "Mouse Stamp",
+    "description": "Sello con formato de mouse, ergonómico y portátil.",
+    "price": 6000,
+    "image": "/images/mouse-stamp.png"
   },
   {
     "id": 4,
-    "name": "Sello de Bolsillo",
-    "description": "Sello compacto y portátil, ideal para llevar a reuniones y viajes.",
-    "price": 4500,
-    "image": "/images/sello-bolsillo.png"
+    "category": "Automáticos",
+    "name": "Handy Stamp",
+    "description": "Sello automático compacto y fácil de transportar.",
+    "price": 5200,
+    "image": "/images/handy-stamp.png"
+  },
+  {
+    "id": 5,
+    "category": "Automáticos",
+    "name": "Automático N°3",
+    "description": "Sello automático de tamaño estándar N°3.",
+    "price": 5800,
+    "image": "/images/automatico-n3.png"
+  },
+  {
+    "id": 6,
+    "category": "Automáticos",
+    "name": "Automático N°4",
+    "description": "Sello automático más grande, ideal para logos empresariales.",
+    "price": 6500,
+    "image": "/images/automatico-n4.png"
+  },
+  {
+    "id": 7,
+    "category": "Fechadores",
+    "name": "Fechador 3mm",
+    "description": "Fechador manual de 3mm, ideal para oficinas.",
+    "price": 3200,
+    "image": "/images/fechador-3mm.png"
+  },
+  {
+    "id": 8,
+    "category": "Fechadores",
+    "name": "Fechador 5mm",
+    "description": "Fechador manual de 5mm, resistente y duradero.",
+    "price": 3700,
+    "image": "/images/fechador-5mm.png"
+  },
+  {
+    "id": 9,
+    "category": "Fechadores",
+    "name": "Fechador 8mm",
+    "description": "Fechador manual de 8mm, para impresión clara y legible.",
+    "price": 4100,
+    "image": "/images/fechador-8mm.png"
+  },
+  {
+    "id": 10,
+    "category": "Numeradores",
+    "name": "Numerador 4 dígitos",
+    "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
+    "price": 3500,
+    "image": "/images/numerador-4.png"
+  },
+  {
+    "id": 11,
+    "category": "Numeradores",
+    "name": "Numerador 6 dígitos",
+    "description": "Numerador manual de 6 dígitos, ideal para documentos.",
+    "price": 4200,
+    "image": "/images/numerador-6.png"
+  },
+  {
+    "id": 12,
+    "category": "Numeradores",
+    "name": "Numerador 8 dígitos",
+    "description": "Numerador manual de 8 dígitos, resistente y confiable.",
+    "price": 4800,
+    "image": "/images/numerador-8.png"
+  },
+  {
+    "id": 13,
+    "category": "Almohadillas",
+    "name": "Almohadilla Universal",
+    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
+    "price": 1500,
+    "image": "/images/almohadilla.png"
+  },
+  {
+    "id": 14,
+    "category": "Tintas",
+    "name": "Frasco Chiquito",
+    "description": "Tinta en frasco pequeño de 28ml.",
+    "price": 900,
+    "image": "/images/tinta-chica.png"
+  },
+  {
+    "id": 15,
+    "category": "Tintas",
+    "name": "Botella Grande",
+    "description": "Botella grande de tinta de 250ml.",
+    "price": 2500,
+    "image": "/images/tinta-grande.png"
+  },
+  {
+    "id": 16,
+    "category": "Otros",
+    "name": "Sello Abecedario",
+    "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
+    "price": 3000,
+    "image": "/images/sello-abecedario.png"
   }
 ]

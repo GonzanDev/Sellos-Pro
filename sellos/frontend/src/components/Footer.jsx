@@ -1,5 +1,5 @@
 import React from "react";
-import { Facebook, Instagram, Mail, Phone } from "lucide-react";
+import { Phone, Mail, Instagram, Facebook, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -46,16 +46,37 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-white mb-3">Contacto</h3>
           <ul className="space-y-2 text-sm">
             <li className="flex items-center gap-2">
-              <Phone size={16} className="text-red-500" /> +54 9 1234-5678
-            </li>
+  <MessageCircle size={16} className="text-red-500" /> 
+  <a href="https://wa.me/5492235551071" target="_blank" rel="noopener noreferrer" className="hover:underline">
+    +54 9 223 555 1071 (Solo WhatsApp)
+  </a>
+</li>
+
             <li className="flex items-center gap-2">
               <Mail size={16} className="text-red-500" /> contacto@sellospro.com
             </li>
             <li className="flex items-center gap-2">
-              <Instagram size={16} className="text-red-500" /> @sellospro
+              <Instagram size={16} className="text-red-500" />
+              <a
+                href="https://www.instagram.com/sellospro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                @sellospro
+              </a>
             </li>
+
             <li className="flex items-center gap-2">
-              <Facebook size={16} className="text-red-500" /> /sellospro
+              <Facebook size={16} className="text-red-500" /> 
+              <a
+              href="https://www.facebook.com/sellospro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              /sellospro
+            </a>
             </li>
           </ul>
         </div>

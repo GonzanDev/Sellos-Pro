@@ -28,15 +28,20 @@ export default function CatalogPage({ products, addToCart }) {
             className="w-full md:w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e30613]"
           />
 
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full md:w-1/4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e30613]"
-          >
-            <option value="all">Todas las categorías</option>
-            <option value="round">Redondos</option>
-            <option value="rect">Rectangulares</option>
-          </select>
+<select
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+  className="w-full md:w-1/4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e30613]"
+>
+  <option value="all">Todas las categorías</option>
+  <option value="Automáticos">Automáticos</option>
+  <option value="Fechadores">Fechadores</option>
+  <option value="Numeradores">Numeradores</option>
+  <option value="Almohadillas">Almohadillas</option>
+  <option value="Tintas">Tintas</option>
+  <option value="Otros">Otros</option>
+</select>
+
         </div>
 
         {/* Grid de productos */}
