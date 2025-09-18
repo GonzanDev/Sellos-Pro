@@ -126,5 +126,14 @@
     "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
     "price": 3000,
     "image": "/images/sello-abecedario.png"
-  }
+  },
+  {
+  "id": 17,
+  "name": "Kit Sello Logo 1 - Hasta 6x4cm",
+  "description": "Incluye sello automático + almohadilla + tinta.",
+  "price": 35000,
+  "image": "/images/kit-logo.png",
+  "category": "Kit"
+}
+
 ]

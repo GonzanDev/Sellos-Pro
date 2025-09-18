@@ -17,6 +17,7 @@ import Cart from "./components/Cart";
 import Toast from "./components/Toast";
 import CatalogPage from "./pages/CatalogPage";
 import PersonalizerLogo from "./components/PersonalizerLogo";
+import KitLogo from "./pages/KitLogo";
 
 const CART_LS_KEY = "cart_v1";
 
@@ -150,8 +151,13 @@ export default function App() {
             />
             <Route
               path="/catalog"
+                  element={<CatalogPage products={products} addToCart={addToCart} />}
+
+            />
+            <Route
+              path="/KitLogo"
               element={
-                <CatalogPage products={products} addToCart={addToCart} />
+                <KitLogo products={products} addToCart={addToCart} />
               }
             />
           </Routes>

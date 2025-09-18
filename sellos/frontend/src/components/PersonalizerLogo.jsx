@@ -1,22 +1,29 @@
 import React, { useEffect, useState, useRef } from "react";
 
 const LOGO_PERSONALIZER_LS_KEY = "sellospro_logo_personalizer_v1";
-
-// conversión de cm a px (aprox. 37.8 px = 1 cm en pantallas comunes)
 const cmToPx = (cm) => cm * 37.8;
+
+const kits = {
+  "Kit 1": { width: 4, height: 4 },
+  "Kit 2": { width: 5, height: 3 },
+  "Kit 3": { width: 6, height: 4 },
+  "Kit 4": { width: 3, height: 3 },
+  "Kit 5": { width: 7, height: 5 },
+  "Kit 6": { width: 4, height: 6 },
+};
 
 export default function PersonalizerLogo() {
   const [options, setOptions] = useState({
     file: null,
     fileUrl: null,
     fileName: "",
-    width: 3, // ancho en cm
-    height: 3, // alto en cm
+    width: 3,
+    height: 3,
   });
 
+  const [selectedKit, setSelectedKit] = useState(null); // 👈 guarda el kit elegido
   const fileInputRef = useRef(null);
 
-  // cargar opciones guardadas
   useEffect(() => {
     try {
       const raw = localStorage.getItem(LOGO_PERSONALIZER_LS_KEY);
@@ -29,7 +36,6 @@ export default function PersonalizerLogo() {
     }
   }, []);
 
-  // guardar en localStorage
   useEffect(() => {
     try {
       const { fileUrl, fileName, width, height } = options;
@@ -57,21 +63,47 @@ export default function PersonalizerLogo() {
 
   const handleSizeChange = (field, value) => {
     setOptions((prev) => ({ ...prev, [field]: Number(value) }));
+    setSelectedKit(null); // si cambia manualmente, se deselecciona el kit
+  };
+
+  const handleKitClick = (kitName) => {
+    const kit = kits[kitName];
+    if (kit) {
+      setOptions((prev) => ({ ...prev, width: kit.width, height: kit.height }));
+      setSelectedKit(kitName);
+    }
   };
 
   return (
     <section id="personalizer-logo" className="py-16 bg-gray-100">
       <div className="bg-white shadow rounded p-6 max-w-lg mx-auto">
-        <h2 className="text-xl font-semibold mb-4">
-          Personaliza tu sello con logo
-        </h2>
+        <h2 className="text-xl font-semibold mb-4">Previsualiza tu sello logo</h2>
+
+        {/* Botones predefinidos Kits */}
+        <div className="flex flex-wrap gap-2 mb-2">
+          {Object.keys(kits).map((kitName) => (
+            <button
+              key={kitName}
+              onClick={() => handleKitClick(kitName)}
+              className="px-3 py-1 bg-[#e30613] text-white rounded hover:bg-black transition text-sm"
+            >
+              {kitName}
+            </button>
+          ))}
+        </div>
+
+        {/* Subtítulo dinámico del kit */}
+        {selectedKit && (
+          <p className="text-sm text-gray-600 mb-4">
+            {selectedKit} hasta {options.width} cm x {options.height} cm
+          </p>
+        )}
 
         <div className="space-y-4">
           {/* Subir logo */}
           <div>
             <label className="block text-sm font-medium mb-1">Subir Logo</label>
             <div className="flex items-center gap-3">
-              {/* Botón custom que dispara el input */}
               <button
                 type="button"
                 onClick={() => fileInputRef.current.click()}
@@ -80,14 +112,12 @@ export default function PersonalizerLogo() {
                 Elegir archivo
               </button>
 
-              {/* Nombre del archivo cargado */}
               {options.fileName && (
                 <span className="text-sm text-gray-600 truncate max-w-[200px]">
                   {options.fileName}
                 </span>
               )}
 
-              {/* Input oculto */}
               <input
                 type="file"
                 accept="image/*"
@@ -100,9 +130,7 @@ export default function PersonalizerLogo() {
 
           {/* Ancho */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Ancho (cm)
-            </label>
+            <label className="block text-sm font-medium mb-1">Ancho (cm)</label>
             <input
               type="number"
               value={options.width}
@@ -115,9 +143,7 @@ export default function PersonalizerLogo() {
 
           {/* Alto */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Alto (cm)
-            </label>
+            <label className="block text-sm font-medium mb-1">Alto (cm)</label>
             <input
               type="number"
               value={options.height}
