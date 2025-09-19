@@ -18,6 +18,7 @@ import Toast from "./components/Toast";
 import CatalogPage from "./pages/CatalogPage";
 import PersonalizerLogo from "./components/PersonalizerLogo";
 import KitLogo from "./pages/KitLogo";
+import ProductPage from "./pages/ProductPage";
 
 const CART_LS_KEY = "cart_v1";
 
@@ -50,14 +51,6 @@ function Home({ products, addToCart }) {
       <section id="catalog" className="pt-6">
         {/* Vista previa de catálogo */}
         <CatalogPreview products={products.slice(0, 3)} addToCart={addToCart} />
-      </section>
-
-      <section id="personalizer" className="pt-6">
-        <Personalizer />
-      </section>
-
-      <section id="personalizer-logo" className="pt-6">
-        <PersonalizerLogo />
       </section>
 
       <section id="faq" className="pt-6">
@@ -151,14 +144,19 @@ export default function App() {
             />
             <Route
               path="/catalog"
-                  element={<CatalogPage products={products} addToCart={addToCart} />}
-
+              element={
+                <CatalogPage products={products} addToCart={addToCart} />
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={
+                <ProductPage products={products} addToCart={addToCart} />
+              }
             />
             <Route
               path="/KitLogo"
-              element={
-                <KitLogo products={products} addToCart={addToCart} />
-              }
+              element={<KitLogo products={products} addToCart={addToCart} />}
             />
           </Routes>
         </main>

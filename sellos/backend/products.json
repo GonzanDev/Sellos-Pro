@@ -1,7 +1,8 @@
 [
   {
     "id": 1,
-    "category": "Automáticos",
+    "category": "Escolar",
+    "type": "standard",
     "name": "Promo Escolar",
     "description": "Kit de sello automático ideal para uso escolar.",
     "price": 4000,
@@ -10,6 +11,7 @@
   {
     "id": 2,
     "category": "Automáticos",
+    "type": "standard",
     "name": "Sello Automático Shiny",
     "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
     "price": 7500,
@@ -18,6 +20,7 @@
   {
     "id": 3,
     "category": "Automáticos",
+    "type": "standard",
     "name": "Mouse Stamp",
     "description": "Sello con formato de mouse, ergonómico y portátil.",
     "price": 6000,
@@ -26,6 +29,7 @@
   {
     "id": 4,
     "category": "Automáticos",
+    "type": "standard",
     "name": "Handy Stamp",
     "description": "Sello automático compacto y fácil de transportar.",
     "price": 5200,
@@ -34,6 +38,7 @@
   {
     "id": 5,
     "category": "Automáticos",
+    "type": "standard",
     "name": "Automático N°3",
     "description": "Sello automático de tamaño estándar N°3.",
     "price": 5800,
@@ -42,6 +47,7 @@
   {
     "id": 6,
     "category": "Automáticos",
+    "type": "standard",
     "name": "Automático N°4",
     "description": "Sello automático más grande, ideal para logos empresariales.",
     "price": 6500,
@@ -50,6 +56,7 @@
   {
     "id": 7,
     "category": "Fechadores",
+    "type": "standard",
     "name": "Fechador 3mm",
     "description": "Fechador manual de 3mm, ideal para oficinas.",
     "price": 3200,
@@ -58,6 +65,7 @@
   {
     "id": 8,
     "category": "Fechadores",
+    "type": "standard",
     "name": "Fechador 5mm",
     "description": "Fechador manual de 5mm, resistente y duradero.",
     "price": 3700,
@@ -66,6 +74,7 @@
   {
     "id": 9,
     "category": "Fechadores",
+    "type": "standard",
     "name": "Fechador 8mm",
     "description": "Fechador manual de 8mm, para impresión clara y legible.",
     "price": 4100,
@@ -74,6 +83,7 @@
   {
     "id": 10,
     "category": "Numeradores",
+    "type": "standard",
     "name": "Numerador 4 dígitos",
     "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
     "price": 3500,
@@ -82,6 +92,7 @@
   {
     "id": 11,
     "category": "Numeradores",
+    "type": "standard",
     "name": "Numerador 6 dígitos",
     "description": "Numerador manual de 6 dígitos, ideal para documentos.",
     "price": 4200,
@@ -90,6 +101,7 @@
   {
     "id": 12,
     "category": "Numeradores",
+    "type": "standard",
     "name": "Numerador 8 dígitos",
     "description": "Numerador manual de 8 dígitos, resistente y confiable.",
     "price": 4800,
@@ -98,6 +110,7 @@
   {
     "id": 13,
     "category": "Almohadillas",
+    "type": "standard",
     "name": "Almohadilla Universal",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 1500,
@@ -106,6 +119,7 @@
   {
     "id": 14,
     "category": "Tintas",
+    "type": "standard",
     "name": "Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
     "price": 900,
@@ -114,6 +128,7 @@
   {
     "id": 15,
     "category": "Tintas",
+    "type": "standard",
     "name": "Botella Grande",
     "description": "Botella grande de tinta de 250ml.",
     "price": 2500,
@@ -122,18 +137,19 @@
   {
     "id": 16,
     "category": "Otros",
+    "type": "standard",
     "name": "Sello Abecedario",
     "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
     "price": 3000,
     "image": "/images/sello-abecedario.png"
   },
   {
-  "id": 17,
-  "name": "Kit Sello Logo 1 - Hasta 6x4cm",
-  "description": "Incluye sello automático + almohadilla + tinta.",
-  "price": 35000,
-  "image": "/images/kit-logo.png",
-  "category": "Kit"
-}
-
+    "id": 17,
+    "name": "Kit Sello Logo 1 - Hasta 6x4cm",
+    "description": "Incluye sello automático + almohadilla + tinta.",
+    "price": 35000,
+    "image": "/images/kit-logo.png",
+    "category": "Kit",
+    "type": "standard"
+  }
 ]

@@ -42,9 +42,7 @@ export default function Header({ openCart, cartCount }) {
           <Link to="/catalog" className="hover:text-red-500">
             Catálogo
           </Link>
-          <Link to="/KitLogo" className="hover:text-red-500">
-            Kit Logo
-          </Link>
+
           <button
             onClick={() => handleScroll("faq")}
             className="hover:text-red-500"

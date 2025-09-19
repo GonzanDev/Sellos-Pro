@@ -1,9 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product, addToCart }) {
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden border border-gray-100 flex flex-col">
-      <div className="relative w-full h-48 bg-gray-100 flex items-center justify-center">
+      <Link
+        to={`/product/${product.id}`}
+        className="relative w-full h-48 bg-gray-100 flex items-center justify-center"
+      >
         {product.image ? (
           <img
             src={product.image}
@@ -13,12 +17,14 @@ export default function ProductCard({ product, addToCart }) {
         ) : (
           <span className="text-gray-400">Sin imagen</span>
         )}
-      </div>
+      </Link>
 
       <div className="flex-1 flex flex-col p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-          {product.name}
-        </h3>
+        <Link to={`/product/${product.id}`}>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-[#e30613] transition">
+            {product.name}
+          </h3>
+        </Link>
         <p className="text-sm text-gray-500 flex-1">{product.description}</p>
 
         <div className="mt-4 flex items-center justify-between">

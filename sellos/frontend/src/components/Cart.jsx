@@ -82,6 +82,27 @@ export default function Cart({
                     </div>
                   </div>
 
+                  <div className="flex-1">
+                    {/* Si el producto tiene personalización */}
+                    {item.customization && (
+                      <div className="mt-2 text-sm text-gray-500 space-y-1">
+                        {item.customization.text && (
+                          <p>Texto: {item.customization.text}</p>
+                        )}
+                        {item.customization.font && (
+                          <p>Fuente: {item.customization.font}</p>
+                        )}
+                        {item.customization.logo && (
+                          <img
+                            src={item.customization.logoPreview}
+                            alt="Logo personalizado"
+                            className="max-h-16 rounded border"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       onClick={() => updateQty(item.id, (item.qty || 1) - 1)}

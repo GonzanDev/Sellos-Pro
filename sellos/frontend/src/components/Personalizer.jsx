@@ -1,97 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const PERSONALIZER_LS_KEY = "sellospro_personalizer_v1";
-
-export default function Personalizer() {
-  const [options, setOptions] = useState({
-    text: "",
-    color: "#000000",
-    size: "mediano",
-  });
-
-  // cargar opciones guardadas
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(PERSONALIZER_LS_KEY);
-      if (raw) setOptions(JSON.parse(raw));
-    } catch (e) {
-      console.warn("No se pudo cargar personalizador", e);
-    }
-  }, []);
-
-  // guardar cada vez que cambien
-  useEffect(() => {
-    try {
-      localStorage.setItem(PERSONALIZER_LS_KEY, JSON.stringify(options));
-    } catch (e) {
-      console.warn("No se pudo guardar personalizador", e);
-    }
-  }, [options]);
-
+export default function Personalizer({ customization, setCustomization }) {
   const handleChange = (field, value) => {
-    setOptions((prev) => ({ ...prev, [field]: value }));
+    setCustomization((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
-    <section id="personalizer" className="py-16 bg-gray-50">
-    <div className="bg-white shadow rounded p-6 max-w-lg mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Personaliza tu sello</h2>
+    <div className="space-y-6">
+      <>
+        {[1, 2, 3].map((i) => (
+          <div key={i}>
+            <label className="block text-sm font-medium text-gray-700">
+              Línea {i}
+            </label>
+            <input
+              type="text"
+              value={customization[`line${i}`] || ""}
+              onChange={(e) => handleChange(`line${i}`, e.target.value)}
+              className="mt-1 w-full border rounded-lg px-3 py-2"
+            />
+          </div>
+        ))}
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Texto</label>
-          <input
-            type="text"
-            value={options.text}
-            onChange={(e) => handleChange("text", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            placeholder="Ingresa tu texto"
-          />
-        </div>
+        {customization.line1?.length > 15 && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Línea 4
+            </label>
+            <input
+              type="text"
+              value={customization.line4 || ""}
+              onChange={(e) => handleChange("line4", e.target.value)}
+              className="mt-1 w-full border rounded-lg px-3 py-2"
+            />
+          </div>
+        )}
+      </>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">Color</label>
-          <input
-            type="color"
-            value={options.color}
-            onChange={(e) => handleChange("color", e.target.value)}
-            className="w-16 h-10 border rounded cursor-pointer"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Tamaño</label>
-          <select
-            value={options.size}
-            onChange={(e) => handleChange("size", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="chico">Chico</option>
-            <option value="mediano">Mediano</option>
-            <option value="grande">Grande</option>
-          </select>
-        </div>
+      {/* Controles comunes */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Fuente
+        </label>
+        <select
+          value={customization.font || ""}
+          onChange={(e) => handleChange("font", e.target.value)}
+          className="mt-1 w-full border rounded-lg px-3 py-2"
+        >
+          <option value="arial">Arial</option>
+          <option value="times">Times New Roman</option>
+          <option value="comic">Comic Sans</option>
+        </select>
       </div>
 
-      <div className="mt-6 p-4 border rounded bg-gray-50 text-center">
-        <p className="font-medium mb-2">Vista previa:</p>
-        <div
-          className="inline-block px-4 py-2 rounded border"
-          style={{
-            color: options.color,
-            fontSize:
-              options.size === "chico"
-                ? "14px"
-                : options.size === "grande"
-                ? "24px"
-                : "18px",
-          }}
-        >
-          {options.text || "Tu texto aquí"}
-        </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Color</label>
+        <input
+          type="color"
+          value={customization.color || "#000000"}
+          onChange={(e) => handleChange("color", e.target.value)}
+          className="w-12 h-10 p-1 border rounded"
+        />
       </div>
     </div>
-    </section>
   );
-  
 }
