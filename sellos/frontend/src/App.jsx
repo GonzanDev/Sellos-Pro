@@ -9,14 +9,13 @@ import {
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import CatalogPreview from "./components/CatalogPreview";
-import Personalizer from "./components/Personalizer";
 import FAQ from "./components/FAQ";
 import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import Toast from "./components/Toast";
 import CatalogPage from "./pages/CatalogPage";
-import PersonalizerLogo from "./components/PersonalizerLogo";
+
 import KitLogo from "./pages/KitLogo";
 import ProductPage from "./pages/ProductPage";
 

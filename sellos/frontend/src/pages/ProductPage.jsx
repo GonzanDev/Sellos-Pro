@@ -26,33 +26,51 @@ export default function ProductPage({ products, addToCart }) {
     );
   }
 
-  const isCustomizable = ["Automáticos", "Fechadores", "Numeradores"].includes(
-    product.category
+  const category = product.category?.toLowerCase();
+  const isCustomizable = ["automáticos", "fechadores", "numeradores"].includes(
+    category
   );
-  const isKit = ["Kit"].includes(product.category);
-
-  const isSchool = ["Escolar"].includes(product.category);
+  const isKit = category === "kit";
+  const isSchool = category === "escolar";
 
   const handleAddToCart = () => {
     const productWithCustomization =
-      isCustomizable || isKit ? { ...product, customization } : product;
+      isCustomizable || isKit || isSchool
+        ? { ...product, customization }
+        : product;
 
     addToCart(productWithCustomization);
   };
 
+  const handleWhatsApp = () => {
+    const details = `
+🛒 Producto: ${product.name}
+💲 Precio: $${product.price}
+📦 Categoría: ${product.category}
+
+🎨 Personalización:
+${Object.entries(customization)
+  .map(([k, v]) => `- ${k}: ${v}`)
+  .join("\n")}
+    `;
+    const url = `https://wa.me/5492236796060?text=${encodeURIComponent(
+      details
+    )}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="bg-white min-h-[calc(100vh-200px)]">
-      {/* Contenido principal */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row gap-12">
-          {/* Imagen */}
+          {/* Imagen fija */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-lg">
+            <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-lg shadow-sm">
               {product.image ? (
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="max-h-full object-contain"
+                  className="max-h-full object-contain transition-transform duration-300 hover:scale-105"
                 />
               ) : (
                 <span className="text-gray-400">Sin imagen</span>
@@ -60,8 +78,8 @@ export default function ProductPage({ products, addToCart }) {
             </div>
           </div>
 
-          {/* Info */}
-          <div className="flex-1 flex flex-col">
+          {/* Info y tabs */}
+          <div className="flex-1 flex flex-col min-h-[500px]">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               {product.name}
             </h1>
@@ -69,7 +87,7 @@ export default function ProductPage({ products, addToCart }) {
               ${product.price}
             </span>
 
-            <div className="flex gap-4 mb-10">
+            <div className="flex gap-4 mb-10 flex-wrap">
               <button
                 onClick={handleAddToCart}
                 className="px-6 py-3 rounded-lg bg-black text-white font-semibold hover:bg-[#e30613] transition"
@@ -82,97 +100,95 @@ export default function ProductPage({ products, addToCart }) {
               >
                 Volver al catálogo
               </button>
+              <button
+                onClick={handleWhatsApp}
+                className="px-6 py-3 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+              >
+                Enviar por WhatsApp
+              </button>
             </div>
 
             {/* Tabs */}
-            <div>
-              <div className="flex border-b border-gray-200 mb-6">
+            <div className="flex border-b border-gray-200 mb-6">
+              <button
+                className={`px-4 py-2 transition ${
+                  activeTab === "description"
+                    ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
+                    : "text-gray-500 hover:text-gray-800"
+                }`}
+                onClick={() => setActiveTab("description")}
+              >
+                Descripción
+              </button>
+
+              {isCustomizable && (
                 <button
                   className={`px-4 py-2 transition ${
-                    activeTab === "description"
+                    activeTab === "personalizer"
                       ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
                       : "text-gray-500 hover:text-gray-800"
                   }`}
-                  onClick={() => setActiveTab("description")}
+                  onClick={() => setActiveTab("personalizer")}
                 >
-                  Descripción
+                  Personalizador
                 </button>
+              )}
 
-                {isCustomizable && (
-                  <button
-                    className={`px-4 py-2 transition ${
-                      activeTab === "personalizer"
-                        ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                        : "text-gray-500 hover:text-gray-800"
-                    }`}
-                    onClick={() => setActiveTab("personalizer")}
-                  >
-                    Personalizador
-                  </button>
-                )}
+              {isKit && (
+                <button
+                  className={`px-4 py-2 transition ${
+                    activeTab === "logo"
+                      ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
+                      : "text-gray-500 hover:text-gray-800"
+                  }`}
+                  onClick={() => setActiveTab("logo")}
+                >
+                  Logo
+                </button>
+              )}
 
-                {isKit && (
-                  <button
-                    className={`px-4 py-2 transition ${
-                      activeTab === "logo"
-                        ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                        : "text-gray-500 hover:text-gray-800"
-                    }`}
-                    onClick={() => setActiveTab("logo")}
-                  >
-                    Logo
-                  </button>
-                )}
+              {isSchool && (
+                <button
+                  className={`px-4 py-2 transition ${
+                    activeTab === "escolar"
+                      ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
+                      : "text-gray-500 hover:text-gray-800"
+                  }`}
+                  onClick={() => setActiveTab("escolar")}
+                >
+                  Escolar
+                </button>
+              )}
+            </div>
 
-                {isSchool && (
-                  <button
-                    className={`px-4 py-2 transition ${
-                      activeTab === "escolar"
-                        ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                        : "text-gray-500 hover:text-gray-800"
-                    }`}
-                    onClick={() => setActiveTab("escolar")}
-                  >
-                    Logo
-                  </button>
-                )}
-              </div>
+            {/* Contenido tabs */}
+            <div className="flex-1 min-h-[300px]">
+              {activeTab === "description" && (
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {product.description}
+                </p>
+              )}
 
-              {/* Contenido de tabs */}
-              <div className="mt-6">
-                {activeTab === "description" && (
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {product.description}
-                  </p>
-                )}
+              {activeTab === "personalizer" && isCustomizable && (
+                <Personalizer
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
+              )}
 
-                {activeTab === "personalizer" && isCustomizable && (
-                  <div className="mt-4">
-                    <Personalizer
-                      customization={customization}
-                      setCustomization={setCustomization}
-                    />
-                  </div>
-                )}
+              {activeTab === "logo" && isKit && (
+                <PersonalizerLogo
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
+              )}
 
-                {activeTab === "logo" && isKit && (
-                  <div className="mt-4">
-                    <PersonalizerLogo
-                      customization={customization}
-                      setCustomization={setCustomization}
-                    />
-                  </div>
-                )}
-
-                {activeTab === "escolar" && isSchool && (
-                  <div className="mt-4">
-                    <PersonalizerSchool
-                      customization={customization}
-                      setCustomization={setCustomization}
-                    />
-                  </div>
-                )}
-              </div>
+              {activeTab === "escolar" && isSchool && (
+                <PersonalizerSchool
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
+              )}
             </div>
           </div>
         </div>

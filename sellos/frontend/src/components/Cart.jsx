@@ -82,26 +82,57 @@ export default function Cart({
                     </div>
                   </div>
 
-                  <div className="flex-1">
-                    {/* Si el producto tiene personalización */}
-                    {item.customization && (
-                      <div className="mt-2 text-sm text-gray-500 space-y-1">
-                        {item.customization.text && (
-                          <p>Texto: {item.customization.text}</p>
-                        )}
-                        {item.customization.font && (
-                          <p>Fuente: {item.customization.font}</p>
-                        )}
-                        {item.customization.logo && (
-                          <img
-                            src={item.customization.logoPreview}
-                            alt="Logo personalizado"
-                            className="max-h-16 rounded border"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  {/* Personalización */}
+                  {item.customization && (
+                    <div className="mt-2 text-sm text-gray-600 space-y-1">
+                      {Object.entries(item.customization).map(
+                        ([key, value]) => {
+                          if (!value) return null;
+
+                          if (key.toLowerCase() === "color") {
+                            return (
+                              <p key={key} className="flex items-center gap-2">
+                                <span className="font-medium capitalize">
+                                  {key}:
+                                </span>
+                                <span
+                                  className="inline-block w-5 h-5 rounded border border-gray-400"
+                                  style={{ backgroundColor: value }}
+                                />
+                                <span className="text-xs text-gray-500">
+                                  {value}
+                                </span>
+                              </p>
+                            );
+                          }
+
+                          if (key === "logoPreview") {
+                            return (
+                              <img
+                                key={key}
+                                src={value}
+                                alt="Logo personalizado"
+                                className="max-h-16 rounded border"
+                              />
+                            );
+                          }
+
+                          return (
+                            <p key={key}>
+                              <span className="font-medium capitalize">
+                                {key}:
+                              </span>{" "}
+                              {typeof value === "boolean"
+                                ? value
+                                  ? "Sí"
+                                  : "No"
+                                : value}
+                            </p>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
 
                   <div className="mt-3 flex items-center gap-2">
                     <button
@@ -142,7 +173,7 @@ export default function Cart({
           )}
         </div>
 
-        {/* Footer con botones */}
+        {/* Footer */}
         <div className="border-t px-4 py-4">
           <div className="flex justify-between items-center mb-3">
             <div className="text-sm text-gray-600">Total</div>
