@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Cart({
   isOpen,
@@ -10,6 +12,9 @@ export default function Cart({
   clearCart,
 }) {
   const total = cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+
+    const navigate = useNavigate();
+
 
   return (
     <>
@@ -186,12 +191,15 @@ export default function Cart({
             >
               Seguir comprando
             </button>
-            <button
-              onClick={onCheckout}
-              className="flex-1 py-2 bg-[#e30613] text-white rounded hover:bg-black transition"
-            >
-              Pagar
-            </button>
+    <button
+      onClick={() => {
+        onClose(); // cierro el carrito
+        navigate("/checkout"); // redirijo a checkout
+      }}
+      className="flex-1 py-2 bg-[#e30613] text-white rounded hover:bg-black transition"
+    >
+      Pagar
+    </button>
           </div>
         </div>
       </aside>

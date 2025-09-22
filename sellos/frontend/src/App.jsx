@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import CheckoutPage from "./pages/CheckoutPage";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,7 +21,11 @@ import CatalogPage from "./pages/CatalogPage";
 import KitLogo from "./pages/KitLogo";
 import ProductPage from "./pages/ProductPage";
 
+import { getProductsByIds } from "../../backend/utils/utils";
+
 const CART_LS_KEY = "cart_v1";
+
+const selectedIds = [2, 5, 7];
 
 function Home({ products, addToCart }) {
   const sectionsRef = useRef({});
@@ -49,7 +55,10 @@ function Home({ products, addToCart }) {
 
       <section id="catalog" className="pt-6">
         {/* Vista previa de catálogo */}
-        <CatalogPreview products={products.slice(0, 3)} addToCart={addToCart} />
+        <CatalogPreview
+          products={getProductsByIds(products, selectedIds)}
+          addToCart={addToCart}
+        />
       </section>
 
       <section id="faq" className="pt-6">
@@ -156,6 +165,10 @@ export default function App() {
             <Route
               path="/KitLogo"
               element={<KitLogo products={products} addToCart={addToCart} />}
+            />
+            <Route
+              path="/checkout"
+              element={<CheckoutPage cart={cart} onCheckout={checkout} />}
             />
           </Routes>
         </main>
