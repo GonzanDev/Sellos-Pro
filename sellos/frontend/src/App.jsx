@@ -87,7 +87,7 @@ export default function App() {
 
   // Cargar productos desde backend
   useEffect(() => {
-    fetch("http://localhost:4000/api/products")
+    fetch("http://localhost:8080/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Error cargando productos", err));
@@ -168,10 +168,7 @@ export default function App() {
               path="/KitLogo"
               element={<KitLogo products={products} addToCart={addToCart} />}
             />
-            <Route
-              path="/checkout"
-              element={<CheckoutPage cart={cart} />}
-            />
+            <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
           </Routes>
         </main>
 

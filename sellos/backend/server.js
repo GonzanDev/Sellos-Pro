@@ -2,83 +2,94 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import dotenv from "dotenv";
+import { MercadoPagoConfig, Preference } from "mercadopago";
 
 dotenv.config();
 
+// =======================================================
+// ✅ CONFIGURACIÓN EXPLÍCITA DE CORS
+// =======================================================
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions)); // Usa la configuración explícita
 app.use(express.json());
 
-
 // SDK de Mercado Pago
-import { MercadoPagoConfig, Preference } from 'mercadopago';
-// Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN, // tu token privado en .env
+});
 
-// Leer productos desde JSON (simulación DB)
-const products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
+// Manejo robusto de la lectura del archivo (sin cambios)
+let products = [];
+try {
+  products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
+} catch (error) {
+  console.error(
+    "🔴 Error leyendo products.json: Asegúrate de que el archivo exista y sea JSON válido.",
+    error.message
+  );
+}
 
 // Endpoint para productos
 app.get("/api/products", (req, res) => {
   res.json(products);
 });
 
-/*
-// Endpoint "checkout" demo
-app.post("/api/checkout", (req, res) => {
-  const { cart } = req.body;
-  if (!cart || cart.length === 0) {
-    return res.status(400).json({ error: "Carrito vacío" });
-  }
-  // Aquí se integraría MercadoPago
-  res.json({
-    success: true,
-    message: "Checkout simulado. Aquí iría la integración con MercadoPago.",
-    cart,
-  });
+// Endpoint de prueba
+app.get("/ping", (req, res) => {
+  res.send("pong");
 });
 
+// Crear preferencia real
+app.post("/create-preference", async (req, res) => {
+  try {
+    const { items, buyer } = req.body;
+    const preference = new Preference(client);
+    const result = await preference.create({
+      body: {
+        items: items.map((item) => ({
+          title: item.title,
+          quantity: item.quantity, // Aseguramos que sea un número
+          unit_price: Number(item.unit_price),
+          currency_id: "ARS",
+        })),
+        payer: {
+          name: buyer?.name || "Comprador",
+          phone: {
+            area_code: "",
+            number: buyer?.phone || "",
+          },
+          email: "test_user@mercadopago.com",
+        },
 
-const PORT = 4000;
+        back_urls: {
+          success: "http://localhost:5173/success",
+          failure: "http://localhost:5173/failure",
+          pending: "http://localhost:5173/pending",
+        }, // 🛑 auto_return: "approved" fue eliminado para asegurar Status 200
+      },
+    });
+
+    res.status(200).json({
+      preferenceId: result.id,
+    });
+  } catch (error) {
+    console.error("❌ Error al crear preferencia:", error);
+    res.status(500).json({
+      error: "Error al crear la preferencia",
+      details: error.message,
+    });
+  }
+});
+
+// Solo un listen
+const PORT = 8080;
 app.listen(PORT, () =>
   console.log(`✅ Backend corriendo en http://localhost:${PORT}`)
 );
-
-*/
-
-// Ruta de checkout real con Mercado Pago
-app.get("ping", (req, res) => {
-  res.send("pong");
-}); 
-
-app.post("/create-preference", async (req, res) => {
-  const preference = new Preference(client);
-
-  preference.create({
-    body: {
-      items: [
-        {
-          title: "Mi producto",
-          quantity: 1,
-          unit_price: 2000,
-        },
-      ],
-    },
-  })
-  .then((data) => {
-    console.log(data);
-
-    res.status(200).json({
-      preferenceId: data.id,
-      preference_url: data.init_point,
-    });
-  })
-  .catch(() => {
-    res.status(500).json({ error: "Error al crear la preferencia" });
-  });
-});
-
-
-app.listen(8080, () => {
-  console.log("Servidor escuchando en el puerto 8080");
-} );
