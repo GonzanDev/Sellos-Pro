@@ -1,38 +1,45 @@
+/*
 import express from "express";
 import mercadopago from "mercadopago";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
 
-// Configuración MercadoPago
+// Configurar Mercado Pago con el access token desde .env
 mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN, // tu token de MercadoPago
+  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
 });
+console.log("🔑 TOKEN MP:", process.env.MERCADOPAGO_ACCESS_TOKEN);
+  
 
+// Endpoint de checkout
 router.post("/", async (req, res) => {
   try {
-    const { cart } = req.body;
+    const { items } = req.body; // items viene del frontend
 
     const preference = {
-      items: cart.map((item) => ({
-        title: item.name,
-        unit_price: item.price,
-        quantity: item.qty,
-        currency_id: "ARS",
+      items: items.map((item) => ({
+        title: item.title,
+        unit_price: item.unit_price,
+        quantity: item.quantity,
       })),
       back_urls: {
-        success: "http://localhost:5173/success",
+        success: "http://localhost:5173/success", // ajustar según tu frontend
         failure: "http://localhost:5173/failure",
+        pending: "http://localhost:5173/pending",
       },
       auto_return: "approved",
-      notification_url: "http://localhost:4000/api/webhook", // webhook backend
     };
 
     const response = await mercadopago.preferences.create(preference);
-    res.json({ init_point: response.body.init_point });
+    res.json({ id: response.body.id }); // devolver el id de la preferencia
   } catch (error) {
-    console.error("Error en checkout:", error);
-    res.status(500).json({ error: "No se pudo generar la preferencia" });
+    console.error("❌ Error en /checkout:", error);
+    res.status(500).json({ error: "Error al crear la preferencia" });
   }
 });
 
 export default router;
+*/

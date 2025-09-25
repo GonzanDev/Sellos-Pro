@@ -122,6 +122,7 @@ export default function App() {
 
   const clearCart = () => setCart([]);
 
+  /*
   const checkout = async () => {
     const res = await fetch("http://localhost:4000/api/checkout", {
       method: "POST",
@@ -135,6 +136,7 @@ export default function App() {
       alert("Error iniciando pago");
     }
   };
+  */
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-50">
@@ -168,7 +170,7 @@ export default function App() {
             />
             <Route
               path="/checkout"
-              element={<CheckoutPage cart={cart} onCheckout={checkout} />}
+              element={<CheckoutPage cart={cart} />}
             />
           </Routes>
         </main>
@@ -180,7 +182,6 @@ export default function App() {
           removeFromCart={removeFromCart}
           updateQty={updateQty}
           clearCart={clearCart}
-          onCheckout={checkout}
         />
 
         <Footer />
