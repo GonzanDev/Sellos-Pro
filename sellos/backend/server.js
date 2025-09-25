@@ -46,7 +46,6 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
-// Crear preferencia real
 app.post("/create-preference", async (req, res) => {
   try {
     const { items, buyer } = req.body;
@@ -55,7 +54,7 @@ app.post("/create-preference", async (req, res) => {
       body: {
         items: items.map((item) => ({
           title: item.title,
-          quantity: item.quantity, // Aseguramos que sea un número
+          quantity: item.quantity,
           unit_price: Number(item.unit_price),
           currency_id: "ARS",
         })),
@@ -72,12 +71,13 @@ app.post("/create-preference", async (req, res) => {
           success: "http://localhost:5173/success",
           failure: "http://localhost:5173/failure",
           pending: "http://localhost:5173/pending",
-        }, // 🛑 auto_return: "approved" fue eliminado para asegurar Status 200
+        },
       },
-    });
+    }); // CAMBIO IMPORTANTE: Ahora también enviamos el init_point
 
     res.status(200).json({
       preferenceId: result.id,
+      init_point: result.init_point, // <--- ¡Añade esta línea!
     });
   } catch (error) {
     console.error("❌ Error al crear preferencia:", error);
