@@ -1,11 +1,16 @@
 [
   {
     "id": 1,
-    "category": "Automáticos",
+    "category": "Escolar",
     "name": "Promo Escolar",
     "description": "Kit de sello automático ideal para uso escolar.",
     "price": 20000,
-    "image": "/images/automatico-escolar.png"
+    "image": "/images/automatico-escolar.png",
+    "colors": [
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": false },
+      { "name": "Verde", "hex": "#00FF00", "stock": true }
+    ]
   },
   {
     "id": 2,
@@ -13,7 +18,12 @@
     "name": "PROMO Automático 842",
     "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
     "price": 20000,
-    "image": "/images/automatico-shiny.png"
+    "image": "/images/automatico-shiny.png",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Celeste", "hex": "#00CED1", "stock": true },
+      { "name": "Violeta", "hex": "#800080", "stock": false }
+    ]
   },
   {
     "id": 3,
@@ -21,7 +31,11 @@
     "name": "Mouse Stamp",
     "description": "Sello con formato de mouse, ergonómico y portátil.",
     "price": 26000,
-    "image": "/images/mouse-stamp.png"
+    "image": "/images/mouse-stamp.png",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Gris", "hex": "#808080", "stock": true }
+    ]
   },
   {
     "id": 4,
@@ -29,7 +43,12 @@
     "name": "Handy Stamp",
     "description": "Sello automático compacto y fácil de transportar.",
     "price": 26000,
-    "image": "/images/handy-stamp.png"
+    "image": "/images/handy-stamp.png",
+    "colors": [
+      { "name": "Azul Oscuro", "hex": "#001F54", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde Oscuro", "hex": "#006400", "stock": false }
+    ]
   },
   {
     "id": 5,
@@ -37,7 +56,10 @@
     "name": "Automático N°3",
     "description": "Sello automático de un tamaño mayor al estándar N°3.",
     "price": 26000,
-    "image": "/images/automatico-n3.png"
+    "image": "/images/automatico-n3.png",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true }
+    ]
   },
   {
     "id": 6,
@@ -45,7 +67,11 @@
     "name": "Automático N°4",
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
     "price": 29000,
-    "image": "/images/automatico-n4.png"
+    "image": "/images/automatico-n4.png",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": true }
+    ]
   },
   {
     "id": 7,
