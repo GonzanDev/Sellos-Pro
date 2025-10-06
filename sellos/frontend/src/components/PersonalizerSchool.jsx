@@ -1,19 +1,17 @@
 import React from "react";
+import ColorPicker from "./ColorPicker";
 
-export default function PersonalizerSchool({
-  customization,
-  setCustomization,
-}) {
+export default function PersonalizerSchool({ customization, setCustomization, product = {} }) {
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
 
+  const colors = product.colors || [];
+
   return (
     <>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Nombre
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Nombre</label>
         <input
           type="text"
           value={customization.name || ""}
@@ -23,9 +21,7 @@ export default function PersonalizerSchool({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Dibujito
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Dibujito</label>
         <select
           value={customization.icon || ""}
           onChange={(e) => handleChange("icon", e.target.value)}
@@ -56,6 +52,13 @@ export default function PersonalizerSchool({
           Grado
         </label>
       </div>
+
+      {/* 🎨 Selector de colores (reutilizable) */}
+      <ColorPicker
+        colors={colors}
+        value={customization.color}
+        onChange={(hex) => handleChange("color", hex)}
+      />
     </>
   );
 }

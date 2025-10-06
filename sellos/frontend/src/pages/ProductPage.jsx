@@ -170,10 +170,11 @@ ${Object.entries(customization)
               )}
 
               {activeTab === "personalizer" && isCustomizable && (
-                <Personalizer
-                  customization={customization}
-                  setCustomization={setCustomization}
-                />
+<Personalizer
+  product={product}   // 👈 acá le pasás el producto
+  customization={customization}
+  setCustomization={setCustomization}
+/>
               )}
 
               {activeTab === "logo" && isKit && (

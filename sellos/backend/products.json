@@ -20,9 +20,16 @@
     "price": 20000,
     "image": "/images/automatico-shiny.png",
     "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": true },
-      { "name": "Celeste", "hex": "#00CED1", "stock": true },
-      { "name": "Violeta", "hex": "#800080", "stock": false }
+      { "name": "Negro", "hex": "#0D0907", "stock": false },
+      { "name": "Amarillo", "hex": "#ECF40B", "stock": true },
+      { "name": "Verde", "hex": "#57FF00", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Ruby", "hex": "#A30000", "stock": true },
+      { "name": "Azul", "hex": "#0008FF", "stock": true },
+      { "name": "Azul Aqua", "hex": "#000475", "stock": true },
+      { "name": "Violeta", "hex": "#6C369B", "stock": true },
+      { "name": "Fucsia", "hex": "#E40078", "stock": true },
+      { "name": "Amatista", "hex": "#9966CC", "stock": true }
     ]
   },
   {
@@ -135,7 +142,11 @@
     "name": "Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
     "price": 3000,
-    "image": "/images/tinta-chica.png"
+    "image": "/images/tinta-chica.png",
+        "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": true }
+    ]
   },
   {
     "id": 15,
