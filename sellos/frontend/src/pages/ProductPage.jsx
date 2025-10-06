@@ -27,7 +27,7 @@ export default function ProductPage({ products, addToCart }) {
   }
 
   const category = product.category?.toLowerCase();
-  const isCustomizable = ["automáticos", "fechadores", "numeradores"].includes(
+  const isCustomizable = ["automáticos", "fechadores", "numeradores", "tintas"].includes(
     category
   );
   const isKit = category === "kit";
@@ -156,7 +156,7 @@ ${Object.entries(customization)
                   }`}
                   onClick={() => setActiveTab("escolar")}
                 >
-                  Escolar
+                  Personalizar
                 </button>
               )}
             </div>
@@ -186,6 +186,7 @@ ${Object.entries(customization)
 
               {activeTab === "escolar" && isSchool && (
                 <PersonalizerSchool
+                 product={product} 
                   customization={customization}
                   setCustomization={setCustomization}
                 />

@@ -8,8 +8,12 @@
     "image": "/images/automatico-escolar.png",
     "colors": [
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde", "hex": "#57FF00", "stock": true },
+      { "name": "Fucsia", "hex": "#E40078", "stock": true },
+      { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
+      { "name": "Violeta", "hex": "#74217a", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": false },
-      { "name": "Verde", "hex": "#00FF00", "stock": true }
+      { "name": "Negro", "hex": "#000000", "stock": false }
     ]
   },
   {
@@ -40,8 +44,14 @@
     "price": 26000,
     "image": "/images/mouse-stamp.png",
     "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": true },
-      { "name": "Gris", "hex": "#808080", "stock": true }
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Cromado", "hex": "#9C9C9C", "stock": true },
+      { "name": "Ruby", "hex": "#A30000", "stock": true },
+      { "name": "Azul", "hex": "#1368E8", "stock": true },
+      { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
+      { "name": "Rosa", "hex": "#F540A8", "stock": true }
+
+      
     ]
   },
   {
@@ -139,13 +149,21 @@
   {
     "id": 14,
     "category": "Tintas",
-    "name": "Frasco Chiquito",
+    "name": "Tinta AL AGUA - Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
     "price": 3000,
     "image": "/images/tinta-chica.png",
         "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
-      { "name": "Azul", "hex": "#0000FF", "stock": true }
+      { "name": "Azul", "hex": "#0000FF", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde", "hex": "#00FF00", "stock": true },
+      { "name": "Violeta", "hex": "#44035c", "stock": true },
+      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
+      { "name": "Naranja", "hex": "#FFA500", "stock": true },
+      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
+      { "name": "Marrón", "hex": "#4f3c2f", "stock": true },
+      { "name": "Celeste", "hex": "#009ea3", "stock": true }
     ]
   },
   {

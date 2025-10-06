@@ -81,13 +81,30 @@ export default function Checkout({ cart }) {
     setBuyer({ ...buyer, [e.target.name]: e.target.value });
   };
 
+  const handleSendTestEmail = async () => {
+  try {
+    const total = cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+    const response = await fetch("http://localhost:8080/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ buyer, cart, total }),
+    });
+    const data = await response.json();
+    if (data.success) alert("Correo enviado correctamente ✅");
+    else alert("Error al enviar correo ❌");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-                  <h1 className="text-2xl font-bold mb-6">Checkout</h1>         
+            <h1 className="text-2xl font-bold mb-6">Checkout</h1>    
       <div className="flex flex-col lg:flex-row gap-6">
-                                {/* Carrito */}             
+                    {/* Carrito */}      
         <div className="lg:w-7/10 bg-white shadow rounded-lg p-4 flex flex-col max-h-[80vh] overflow-y-auto">
-                    {/* ... (Contenido del Carrito - SIN CAMBIOS) ... */}       
+               {/* ... (Contenido del Carrito - SIN CAMBIOS) ... */}   
           {cart.length === 0 ? (
             <p className="text-gray-500">Tu carrito está vacío</p>
           ) : (
@@ -96,9 +113,9 @@ export default function Checkout({ cart }) {
                 key={item.id}
                 className="flex items-start gap-3 py-3 border-b last:border-0"
               >
-                             
+                      
                 <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
-                                 
+                         
                   {item.image ? (
                     <img
                       src={item.image}
@@ -108,55 +125,55 @@ export default function Checkout({ cart }) {
                   ) : (
                     "Img"
                   )}
-                               
+                        
                 </div>
-                             
+                      
                 <div className="flex-1">
-                                 
+                         
                   <div className="flex justify-between items-start">
-                                     
+                            
                     <div>
-                                         
-                      <div className="font-medium">{item.name}</div>           
-                                         
+                               
+                      <div className="font-medium">{item.name}</div>     
+                               
                       <div className="text-sm text-gray-500">
                         Cantidad: {item.qty || 1}
                       </div>
-                                         
+                               
                       <div className="text-sm text-gray-500">
                         Precio unitario: AR$ {item.price}
                       </div>
-                                       
+                              
                     </div>
-                                     
+                            
                     <div className="text-sm font-semibold text-red-600">
-                                            AR$ {item.price * (item.qty || 1)} 
-                                       
+                                 AR$ {item.price * (item.qty || 1)}
+                              
                     </div>
-                                   
+                           
                   </div>
-                               
+                        
                 </div>
-                           
+                     
               </div>
             ))
           )}
-                 
-          <div className="text-right font-bold mt-4">Total: AR$ {total}</div>   
-               
+             
+          <div className="text-right font-bold mt-4">Total: AR$ {total}</div> 
+            
         </div>
-                                {/* Formulario comprador */}             
+                    {/* Formulario comprador */}      
         <div className="lg:w-3/10 bg-white shadow rounded-lg p-6 flex-shrink-0">
-                                     
-          <h2 className="text-lg font-semibold mb-4">Datos del comprador</h2>   
-                                 
-          {/* ... (Formulario de Datos - SIN CAMBIOS) ... */}       
+                       
+          <h2 className="text-lg font-semibold mb-4">Datos del comprador</h2> 
+                     
+          {/* ... (Formulario de Datos - SIN CAMBIOS) ... */}   
           <form className="space-y-4">
-                     
+                
             <div>
-                         
-              <label className="block font-medium mb-1">Nombre</label>         
-               
+                   
+              <label className="block font-medium mb-1">Nombre</label>    
+              
               <input
                 type="text"
                 name="name"
@@ -164,17 +181,17 @@ export default function Checkout({ cart }) {
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
-                         
+                   
               {errors.name && (
                 <p className="text-red-600 text-sm">{errors.name}</p>
               )}
-                       
+                  
             </div>
-                     
+                
             <div>
-                         
-              <label className="block font-medium mb-1">Celular</label>         
-               
+                   
+              <label className="block font-medium mb-1">Celular</label>    
+              
               <input
                 type="tel"
                 name="phone"
@@ -182,15 +199,15 @@ export default function Checkout({ cart }) {
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
-                         
+                   
               {errors.phone && (
                 <p className="text-red-600 text-sm">{errors.phone}</p>
               )}
-                       
+                  
             </div>
-                     
+                
             <div className="flex items-start gap-2">
-                         
+                   
               <input
                 type="checkbox"
                 id="pickup"
@@ -198,43 +215,43 @@ export default function Checkout({ cart }) {
                 onChange={() => setPickup(!pickup)}
                 className="mt-1"
               />
-                         
+                   
               <label htmlFor="pickup" className="text-sm text-gray-700">
-                                Retiro en el local                          
+                        Retiro en el local             
               </label>
-                       
+                  
             </div>
-                     
+                
             {errors.pickup && (
               <p className="text-red-600 text-sm">{errors.pickup}</p>
             )}
-                     
+                
             <p className="text-xs text-gray-500">
-                              El comprador puede solicitar por su cuenta que una
-                              moto pase a retirar el producto en el local.      
-                           
+                      El comprador puede solicitar por su cuenta que una
+                      moto pase a retirar el producto en el local.   
+                    
             </p>
-                   
+               
           </form>
-                                           
-          {/* Bloque del Botón Personalizado (Minimalista y Centrado) */}       
-                   
+                          
+          {/* Bloque del Botón Personalizado (Minimalista y Centrado) */}   
+              
           <div className="mt-6">
-                                             
+                            
             {loading ? (
               <button
                 disabled
                 className=" flex items-center justify-center w-full py-4 rounded-full bg-gray-300 text-gray-500 cursor-not-allowed font-bold"
               >
-                                Cargando pago...                          
+                        Cargando pago...             
               </button>
             ) : !formValid ? (
               <button
                 disabled
                 className=" flex items-center justify-center w-full py-4 rounded-full bg-gray-300 text-gray-500 cursor-not-allowed font-bold"
               >
-                                Completa tus datos para pagar                  
-                       
+                        Completa tus datos para pagar         
+                   
               </button>
             ) : initPoint ? (
               // CLASES DE TAILWIND PARA EL BOTÓN MINIMALISTA Y CENTRADO
@@ -252,18 +269,25 @@ export default function Checkout({ cart }) {
                     
                     flex items-center justify-center"
               >
-                Pagar            
+                Pagar      
               </a>
+              
             ) : (
               <p className="text-red-600">Error al generar la URL de pago</p>
             )}
-                   
+               <button
+  onClick={handleSendTestEmail}
+  className="w-full mt-3 py-3 bg-blue-600 text-white rounded-lg"
+>
+  Enviar correo de prueba
+</button>
+
           </div>
-               
+            
         </div>
-           
+         
       </div>
-       
+      
     </div>
   );
 }
