@@ -2,42 +2,36 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ product, addToCart }) {
+  const price = typeof product.price === "number" ? product.price : 0;
+
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden border border-gray-100 flex flex-col">
-      <Link
-        to={`/product/${product.id}`}
-        className="relative w-full h-48 bg-gray-100 flex items-center justify-center"
-      >
-        {product.image ? (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group flex flex-col">
+      {/* La imagen ahora es un link a la página del producto */}
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="bg-white h-56 flex items-center justify-center p-4 overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            className="h-full object-contain"
+            className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
           />
-        ) : (
-          <span className="text-gray-400">Sin imagen</span>
-        )}
+        </div>
       </Link>
-
-      <div className="flex-1 flex flex-col p-4">
-        <Link to={`/product/${product.id}`}>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-[#e30613] transition">
+      {/* Contenido de la tarjeta */}
+      <div className="p-4 text-left border-t border-gray-100 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="font-semibold text-base text-gray-800 truncate">
             {product.name}
           </h3>
-        </Link>
-        <p className="text-sm text-gray-500 flex-1">{product.description}</p>
-
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xl font-bold text-[#e30613]">
-            ${product.price}
-          </span>
-          <button
-            onClick={() => addToCart(product)}
-            className="px-3 py-1.5 rounded-lg bg-black text-white hover:bg-[#e30613] transition"
-          >
-            Agregar
-          </button>
+          <p className="mt-1 text-lg font-bold text-gray-900">
+            ${price.toLocaleString("es-AR")}
+          </p>
         </div>
+        <button
+          onClick={() => addToCart(product)}
+          className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   );

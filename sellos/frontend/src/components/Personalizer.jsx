@@ -1,61 +1,51 @@
 import React from "react";
 import ColorPicker from "./ColorPicker";
 
-export default function Personalizer({ customization, setCustomization, product = {} }) {
+export default function Personalizer({
+  customization,
+  setCustomization,
+  product = {},
+}) {
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
 
   const colors = product.colors || [];
+  const maxLines = product.maxLines || 3;
 
   return (
-    <div className="space-y-6">
-      {/* Líneas de texto */}
-      {[1, 2, 3].map((i) => (
+    <div className="space-y-4">
+      <p className="text-sm text-gray-600">
+        Texto del Sello (Máx. {maxLines} líneas)
+      </p>
+      {Array.from({ length: maxLines }).map((_, i) => (
         <div key={i}>
-          <label className="block text-sm font-medium text-gray-700">
-            Línea {i}
-          </label>
           <input
             type="text"
-            value={customization[`line${i}`] || ""}
-            onChange={(e) => handleChange(`line${i}`, e.target.value)}
-            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={customization[`line${i + 1}`] || ""}
+            onChange={(e) => handleChange(`line${i + 1}`, e.target.value)}
+            className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+            placeholder={`Línea ${i + 1}`}
           />
         </div>
       ))}
 
-      {customization.line1?.length > 15 && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Línea 4
-          </label>
-          <input
-            type="text"
-            value={customization.line4 || ""}
-            onChange={(e) => handleChange("line4", e.target.value)}
-            className="mt-1 w-full border rounded-lg px-3 py-2"
-          />
-        </div>
-      )}
-
-      {/* Fuente */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Fuente
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Tamaño
         </label>
         <select
-          value={customization.font || ""}
-          onChange={(e) => handleChange("font", e.target.value)}
-          className="mt-1 w-full border rounded-lg px-3 py-2"
+          value={customization.size || ""}
+          onChange={(e) => handleChange("size", e.target.value)}
+          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
-          <option value="arial">Arial</option>
-          <option value="times">Times New Roman</option>
-          <option value="comic">Comic Sans</option>
+          <option value="">Seleccionar tamaño...</option>
+          <option value="pequeno">Pequeño (38x14mm)</option>
+          <option value="mediano">Mediano (47x18mm)</option>
+          <option value="grande">Grande (58x22mm)</option>
         </select>
       </div>
 
-      {/* 🎨 Selector de colores (reutilizable) */}
       <ColorPicker
         colors={colors}
         value={customization.color}

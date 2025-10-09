@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const WHATSAPP_NUMBER = "5492236796060"; // 👉 Cambiar por tu número real (con código país, sin +)
+const WHATSAPP_NUMBER = "5492235551071";
 
 export default function ContactForm() {
   const [form, setForm] = useState({
@@ -28,50 +28,52 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-16 bg-gray-100">
-    <div className="max-w-lg mx-auto bg-white shadow-md rounded-xl p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-        Contáctanos
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2 mt-1 focus:ring-2 focus:ring-red-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2 mt-1 focus:ring-2 focus:ring-red-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Mensaje</label>
-          <textarea
-            name="mensaje"
-            value={form.mensaje}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border rounded px-3 py-2 mt-1 focus:ring-2 focus:ring-red-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-[#e30613] text-white py-2 rounded-lg hover:bg-black transition"
-        >
-          Enviar por WhatsApp
-        </button>
-      </form>
-    </div>
-    </section>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Nombre
+        </label>
+        <input
+          type="text"
+          name="nombre"
+          value={form.nombre}
+          onChange={handleChange}
+          className="w-full bg-gray-100 border-transparent rounded-md px-4 py-3 focus:ring-2 focus:ring-red-500 focus:bg-white transition"
+          placeholder="Tu nombre completo"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Correo Electrónico
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          className="w-full bg-gray-100 border-transparent rounded-md px-4 py-3 focus:ring-2 focus:ring-red-500 focus:bg-white transition"
+          placeholder="tu@email.com"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Mensaje
+        </label>
+        <textarea
+          name="mensaje"
+          value={form.mensaje}
+          onChange={handleChange}
+          rows="5"
+          className="w-full bg-gray-100 border-transparent rounded-md px-4 py-3 focus:ring-2 focus:ring-red-500 focus:bg-white transition"
+          placeholder="Escribe tu consulta aquí..."
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-[#e30613] text-white py-3 rounded-md hover:bg-red-700 transition font-semibold text-lg"
+      >
+        Enviar Mensaje
+      </button>
+    </form>
   );
 }

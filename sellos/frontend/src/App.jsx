@@ -1,196 +1,70 @@
-import React, { useEffect, useState, useRef } from "react";
-import CheckoutPage from "./pages/CheckoutPage";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+// Contexto y Hooks
+import { CartProvider, useCart } from "./contexts/CartContext";
 
+// Componentes
 import Header from "./components/Header";
-import Hero from "./components/Hero";
-import CatalogPreview from "./components/CatalogPreview";
-import FAQ from "./components/FAQ";
-import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import Toast from "./components/Toast";
+
+// Páginas
+import Home from "./pages/Home";
 import CatalogPage from "./pages/CatalogPage";
-
-import KitLogo from "./pages/KitLogo";
 import ProductPage from "./pages/ProductPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import FAQPage from "./pages/FAQPage";
+import ContactPage from "./pages/ContactPage";
 
-import { getProductsByIds } from "../../backend/utils/utils";
+// Componente interno para tener acceso a los contextos
+function AppContent() {
+  const { cartCount, openCart } = useCart();
+  const [toast, setToast] = useState(null);
 
-const CART_LS_KEY = "cart_v1";
-
-const selectedIds = [2, 5, 7];
-
-function Home({ products, addToCart }) {
-  const sectionsRef = useRef({});
-
-  useEffect(() => {
-    sectionsRef.current = {
-      hero: document.getElementById("hero"),
-      catalog: document.getElementById("catalog"),
-      personalizer: document.getElementById("personalizer"),
-      faq: document.getElementById("faq"),
-      contact: document.getElementById("contact"),
-    };
-  }, []);
-
-  const scrollToSection = (id) => {
-    const el = sectionsRef.current[id];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+  const showToast = (message) => {
+    setToast(message);
   };
 
   return (
-    <main className="flex-1">
-      <section id="hero">
-        <Hero />
-      </section>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Header openCart={openCart} cartCount={cartCount} />
 
-      <section id="catalog" className="pt-6">
-        {/* Vista previa de catálogo */}
-        <CatalogPreview
-          products={getProductsByIds(products, selectedIds)}
-          addToCart={addToCart}
-        />
-      </section>
+      <main className="flex-1">
+        <Routes>
+          {/* Las páginas ahora son más limpias y no necesitan tantas props */}
+          <Route path="/" element={<Home showToast={showToast} />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route
+            path="/product/:id"
+            element={<ProductPage showToast={showToast} />}
+          />
+          <Route path="/checkout" element={<CheckoutPage />} />
 
-      <section id="faq" className="pt-6">
-        <FAQ />
-      </section>
+          {/* --- NUEVAS RUTAS AÑADIDAS --- */}
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
+      </main>
 
-      <section id="contact" className="pt-6">
-        <ContactForm />
-      </section>
-    </main>
+      <Cart />
+      <Footer />
+
+      {toast && (
+        <Toast message={toast} onClose={() => setToast(null)} position="left" />
+      )}
+    </div>
   );
 }
 
+// Envoltura principal con Router y Proveedor de Contexto
 export default function App() {
-  const [products, setProducts] = useState([]);
-  const [toast, setToast] = useState(null);
-  const [cart, setCart] = useState(() => {
-    try {
-      const saved = localStorage.getItem(CART_LS_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [isCartOpen, setCartOpen] = useState(false);
-
-  // Cargar productos desde backend
-  useEffect(() => {
-    fetch("http://localhost:8080/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Error cargando productos", err));
-  }, []);
-
-  // Persistencia carrito
-  useEffect(() => {
-    localStorage.setItem(CART_LS_KEY, JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const ex = prev.find((p) => p.id === product.id);
-      if (ex) {
-        return prev.map((p) =>
-          p.id === product.id ? { ...p, qty: (p.qty || 1) + 1 } : p
-        );
-      }
-      return [...prev, { ...product, qty: 1 }];
-    });
-    setCartOpen(true);
-    setToast(`${product.name} agregado al carrito`);
-  };
-
-  const removeFromCart = (id) =>
-    setCart((prev) => prev.filter((p) => p.id !== id));
-
-  const updateQty = (id, qty) =>
-    setCart((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, qty) } : p))
-    );
-
-  const clearCart = () => setCart([]);
-
-  /*
-  const checkout = async () => {
-    const res = await fetch("http://localhost:4000/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart }),
-    });
-    const data = await res.json();
-    if (data.init_point) {
-      window.location.href = data.init_point; // Redirigir a MercadoPago
-    } else {
-      alert("Error iniciando pago");
-    }
-  };
-  */
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <Header
-          openCart={() => setCartOpen(true)}
-          cartCount={cart.reduce((s, i) => s + (i.qty || 1), 0)}
-        />
-
-        {/* Contenido principal crece */}
-        <main className="flex-1">
-          <Routes>
-            <Route
-              path="/"
-              element={<Home products={products} addToCart={addToCart} />}
-            />
-            <Route
-              path="/catalog"
-              element={
-                <CatalogPage products={products} addToCart={addToCart} />
-              }
-            />
-            <Route
-              path="/product/:id"
-              element={
-                <ProductPage products={products} addToCart={addToCart} />
-              }
-            />
-            <Route
-              path="/KitLogo"
-              element={<KitLogo products={products} addToCart={addToCart} />}
-            />
-            <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
-          </Routes>
-        </main>
-
-        <Cart
-          isOpen={isCartOpen}
-          cart={cart}
-          onClose={() => setCartOpen(false)}
-          removeFromCart={removeFromCart}
-          updateQty={updateQty}
-          clearCart={clearCart}
-        />
-
-        <Footer />
-
-        {toast && (
-          <Toast
-            message={toast}
-            onClose={() => setToast(null)}
-            position="left"
-          />
-        )}
-      </div>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </Router>
   );
 }

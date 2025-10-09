@@ -1,24 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 
 export default function CatalogPreview({ products, addToCart }) {
   return (
-    <section className="py-12 px-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Nuestros sellos más pedidos</h2>
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+    // Añadimos padding horizontal (px) y limitamos el ancho máximo (max-w) con centrado (mx-auto)
+    <div className="max-w-9xl mx-20 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} addToCart={addToCart} />
         ))}
       </div>
-      <div className="text-center mt-8">
-        <Link
-          to="/catalog"
-          className="px-6 py-3 bg-[#e30613] text-white rounded hover:bg-black transition"
-        >
-          Ver todo el catálogo
-        </Link>
-      </div>
-    </section>
+    </div>
   );
 }

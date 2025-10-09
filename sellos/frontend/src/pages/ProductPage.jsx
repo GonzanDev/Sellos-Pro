@@ -3,18 +3,33 @@ import { useParams, useNavigate } from "react-router-dom";
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
+import { useCart } from "../contexts/CartContext.jsx";
+import { useProducts } from "../hooks/useProducts.js";
+import { Heart, ShoppingCart } from "lucide-react";
 
-export default function ProductPage({ products, addToCart }) {
+export default function ProductPage({ showToast }) {
+  const { products, loading, error } = useProducts();
+  const { addToCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("description");
+
   const [customization, setCustomization] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
 
   const product = products.find((p) => String(p.id) === id);
 
+  if (loading)
+    return <div className="text-center py-20">Cargando producto...</div>;
+  if (error)
+    return (
+      <div className="text-center py-20 text-red-600">
+        Error al cargar el producto.
+      </div>
+    );
   if (!product) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-600">
+      <div className="flex flex-col items-center justify-center py-20">
         <p className="text-lg">Producto no encontrado</p>
         <button
           onClick={() => navigate("/catalog")}
@@ -27,170 +42,108 @@ export default function ProductPage({ products, addToCart }) {
   }
 
   const category = product.category?.toLowerCase();
-  const isCustomizable = ["automáticos", "fechadores", "numeradores", "tintas"].includes(
-    category
-  );
+  const isCustomizable = [
+    "automáticos",
+    "fechadores",
+    "numeradores",
+    "tintas",
+  ].includes(category);
   const isKit = category === "kit";
   const isSchool = category === "escolar";
 
   const handleAddToCart = () => {
-    const productWithCustomization =
-      isCustomizable || isKit || isSchool
-        ? { ...product, customization }
-        : product;
-
-    addToCart(productWithCustomization);
+    const productToAdd = {
+      ...product,
+      customization,
+      qty: quantity,
+    };
+    addToCart(productToAdd);
+    showToast(`${product.name} agregado al carrito`);
   };
 
-  const handleWhatsApp = () => {
-    const details = `
-🛒 Producto: ${product.name}
-💲 Precio: $${product.price}
-📦 Categoría: ${product.category}
-
-🎨 Personalización:
-${Object.entries(customization)
-  .map(([k, v]) => `- ${k}: ${v}`)
-  .join("\n")}
-    `;
-    const url = `https://wa.me/5492236796060?text=${encodeURIComponent(
-      details
-    )}`;
-    window.open(url, "_blank");
-  };
+  const images = [product.image, ...(product.thumbnails || [])];
 
   return (
-    <div className="bg-white min-h-[calc(100vh-200px)]">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex flex-col md:flex-row gap-12">
-          {/* Imagen fija */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-lg shadow-sm">
-              {product.image ? (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="max-h-full object-contain transition-transform duration-300 hover:scale-105"
-                />
-              ) : (
-                <span className="text-gray-400">Sin imagen</span>
-              )}
+    <div className="py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+          {/* Columna de Imágenes */}
+          <div>
+            <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border">
+              <img
+                src={images[activeImage]}
+                alt={product.name}
+                className="max-h-full object-contain p-4"
+              />
+            </div>
+            <div className="flex gap-2 sm:gap-4 mt-4">
+              {images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImage(index)}
+                  className={`w-24 h-24 bg-gray-100 rounded-md flex items-center justify-center p-1 border-2 ${
+                    activeImage === index
+                      ? "border-red-600"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="max-h-full object-contain"
+                  />
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Info y tabs */}
-          <div className="flex-1 flex flex-col min-h-[500px]">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          {/* Columna de Información y Personalización */}
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               {product.name}
             </h1>
-            <span className="text-3xl font-semibold text-[#e30613] mb-6">
-              ${product.price}
-            </span>
+            <p className="text-gray-600 mt-4 leading-relaxed">
+              {product.description}
+            </p>
+            <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
+              ${product.price.toFixed(2)}
+            </p>
 
-            <div className="flex gap-4 mb-10 flex-wrap">
-              <button
-                onClick={handleAddToCart}
-                className="px-6 py-3 rounded-lg bg-black text-white font-semibold hover:bg-[#e30613] transition"
-              >
-                Agregar al carrito
-              </button>
-              <button
-                onClick={() => navigate("/catalog")}
-                className="px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-              >
-                Volver al catálogo
-              </button>
-              <button
-                onClick={handleWhatsApp}
-                className="px-6 py-3 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
-              >
-                Enviar por WhatsApp
-              </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex border-b border-gray-200 mb-6">
-              <button
-                className={`px-4 py-2 transition ${
-                  activeTab === "description"
-                    ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                    : "text-gray-500 hover:text-gray-800"
-                }`}
-                onClick={() => setActiveTab("description")}
-              >
-                Descripción
-              </button>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+                Personaliza tu Sello
+              </h2>
 
               {isCustomizable && (
-                <button
-                  className={`px-4 py-2 transition ${
-                    activeTab === "personalizer"
-                      ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                      : "text-gray-500 hover:text-gray-800"
-                  }`}
-                  onClick={() => setActiveTab("personalizer")}
-                >
-                  Personalizador
-                </button>
+                <Personalizer
+                  product={product}
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
               )}
-
               {isKit && (
-                <button
-                  className={`px-4 py-2 transition ${
-                    activeTab === "logo"
-                      ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                      : "text-gray-500 hover:text-gray-800"
-                  }`}
-                  onClick={() => setActiveTab("logo")}
-                >
-                  Logo
-                </button>
-              )}
-
-              {isSchool && (
-                <button
-                  className={`px-4 py-2 transition ${
-                    activeTab === "escolar"
-                      ? "border-b-2 border-[#e30613] text-[#e30613] font-semibold"
-                      : "text-gray-500 hover:text-gray-800"
-                  }`}
-                  onClick={() => setActiveTab("escolar")}
-                >
-                  Personalizar
-                </button>
-              )}
-            </div>
-
-            {/* Contenido tabs */}
-            <div className="flex-1 min-h-[300px]">
-              {activeTab === "description" && (
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {product.description}
-                </p>
-              )}
-
-              {activeTab === "personalizer" && isCustomizable && (
-<Personalizer
-  product={product}   // 👈 acá le pasás el producto
-  customization={customization}
-  setCustomization={setCustomization}
-/>
-              )}
-
-              {activeTab === "logo" && isKit && (
                 <PersonalizerLogo
                   customization={customization}
                   setCustomization={setCustomization}
                 />
               )}
-
-              {activeTab === "escolar" && isSchool && (
+              {isSchool && (
                 <PersonalizerSchool
-                 product={product} 
+                  product={product}
                   customization={customization}
                   setCustomization={setCustomization}
                 />
               )}
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
+                >
+                  <ShoppingCart size={20} />
+                  Añadir al Carrito
+                </button>
+              </div>
             </div>
           </div>
         </div>

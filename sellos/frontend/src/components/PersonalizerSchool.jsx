@@ -1,7 +1,11 @@
 import React from "react";
 import ColorPicker from "./ColorPicker";
 
-export default function PersonalizerSchool({ customization, setCustomization, product = {} }) {
+export default function PersonalizerSchool({
+  customization,
+  setCustomization,
+  product = {},
+}) {
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
@@ -9,23 +13,28 @@ export default function PersonalizerSchool({ customization, setCustomization, pr
   const colors = product.colors || [];
 
   return (
-    <>
+    <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Nombre</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Nombre
+        </label>
         <input
           type="text"
           value={customization.name || ""}
           onChange={(e) => handleChange("name", e.target.value)}
-          className="mt-1 w-full border rounded-lg px-3 py-2"
+          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+          placeholder="Nombre del alumno"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Dibujito</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Dibujito
+        </label>
         <select
           value={customization.icon || ""}
           onChange={(e) => handleChange("icon", e.target.value)}
-          className="mt-1 w-full border rounded-lg px-3 py-2"
+          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
           <option value="">Elegir...</option>
           <option value="estrella">⭐ Estrella</option>
@@ -34,31 +43,11 @@ export default function PersonalizerSchool({ customization, setCustomization, pr
         </select>
       </div>
 
-      <div className="flex gap-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={customization.hoja || false}
-            onChange={(e) => handleChange("hoja", e.target.checked)}
-          />
-          Hoja
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={customization.grado || false}
-            onChange={(e) => handleChange("grado", e.target.checked)}
-          />
-          Grado
-        </label>
-      </div>
-
-      {/* 🎨 Selector de colores (reutilizable) */}
       <ColorPicker
         colors={colors}
         value={customization.color}
         onChange={(hex) => handleChange("color", hex)}
       />
-    </>
+    </div>
   );
 }
