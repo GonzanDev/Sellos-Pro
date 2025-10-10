@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-// Usamos una variable de entorno para la URL de la API
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export function useProducts() {
@@ -9,11 +8,18 @@ export function useProducts() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // --- LÍNEA DE DIAGNÓSTICO ---
+    // Esto nos dirá la URL exacta que se está usando en producción.
+    console.log("Intentando conectar con la API en:", API_URL);
+
     setLoading(true);
     fetch(`${API_URL}/products`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("La respuesta de la red no fue exitosa");
+          // Si la respuesta es 404, el error se lanzará aquí.
+          throw new Error(
+            `La respuesta de la red no fue exitosa (Status: ${res.status})`
+          );
         }
         return res.json();
       })
@@ -28,7 +34,7 @@ export function useProducts() {
       .finally(() => {
         setLoading(false);
       });
-  }, []); // El array vacío asegura que esto se ejecute solo una vez
+  }, []);
 
   return { products, loading, error };
 }
