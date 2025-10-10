@@ -48,6 +48,19 @@ export default function PersonalizerSchool({
         value={customization.color}
         onChange={(hex) => handleChange("color", hex)}
       />
+
+      <div className="pt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Comentarios adicionales
+        </label>
+        <textarea
+          value={customization.comentarios || ""}
+          onChange={(e) => handleChange("comentarios", e.target.value)}
+          rows="3"
+          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 resize-none"
+          placeholder="Aclaraciones, detalles de diseño, etc."
+        />
+      </div>
     </div>
   );
 }

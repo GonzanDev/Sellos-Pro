@@ -43,8 +43,8 @@ function AppContent() {
           <Route path="/checkout" element={<CheckoutPage />} />
 
           {/* --- NUEVAS RUTAS AÑADIDAS --- */}
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/nosotros" element={<FAQPage />} />
+          <Route path="/contacto" element={<ContactPage />} />
         </Routes>
       </main>
 

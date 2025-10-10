@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
-import { ChevronDown } from "lucide-react"; // Importamos el ícono de flecha
+import { ChevronDown } from "lucide-react";
 
 export default function CatalogPage() {
   const { products, loading, error } = useProducts();
@@ -52,16 +52,17 @@ export default function CatalogPage() {
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-gray-900">Catálogo</h1>
-          <div className="flex items-center gap-4">
-            {/* --- ESTILO ACTUALIZADO --- */}
-            <div className="relative">
+          <h1 className="text-3xl font-bold text-gray-900 self-start sm:self-center">
+            Catálogo
+          </h1>
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-none">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
+                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
               >
-                <option value="all">Todas las categorías</option>
+                <option value="all">Categorías</option>
                 <option value="Automáticos">Automáticos</option>
                 <option value="Fechadores">Fechadores</option>
                 <option value="Numeradores">Numeradores</option>
@@ -75,17 +76,16 @@ export default function CatalogPage() {
               />
             </div>
 
-            {/* --- ESTILO ACTUALIZADO --- */}
-            <div className="relative">
+            <div className="relative flex-1 sm:flex-none">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
+                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
               >
                 <option value="default">Ordenar por</option>
-                <option value="price-asc">Precio: Menor a Mayor</option>
-                <option value="price-desc">Precio: Mayor a Menor</option>
-                <option value="name-asc">Nombre: A-Z</option>
+                <option value="price-asc">Menor precio</option>
+                <option value="price-desc">Mayor precio</option>
+                <option value="name-asc">Nombre (A-Z)</option>
               </select>
               <ChevronDown
                 size={20}
@@ -96,7 +96,8 @@ export default function CatalogPage() {
         </div>
 
         {sortedAndFilteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          // --- AJUSTE RESPONSIVE DE LA GRILLA ---
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6 lg:gap-8">
             {sortedAndFilteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

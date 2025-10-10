@@ -8,14 +8,22 @@ const CustomizationDetails = ({ customization }) => {
   if (!customization || Object.keys(customization).length === 0) {
     return null;
   }
-  const details = Object.entries(customization).filter(
+
+  // 1. Extraemos los comentarios para tratarlos por separado
+  const { comentarios, ...otherDetails } = customization;
+
+  // 2. Filtramos el resto de los detalles que queremos mostrar
+  const details = Object.entries(otherDetails).filter(
     ([key, value]) => value && key !== "fileName" && key !== "selectedKit"
   );
-  if (details.length === 0) {
+
+  if (details.length === 0 && !comentarios) {
     return null;
   }
+
   return (
     <div className="mt-2 text-xs text-gray-500 space-y-1 border-t border-gray-200 pt-2">
+      {/* 3. Renderizamos los otros detalles primero */}
       {details.map(([key, value]) => {
         switch (key) {
           case "logoPreview":
@@ -50,6 +58,15 @@ const CustomizationDetails = ({ customization }) => {
             );
         }
       })}
+      {/* 4. Si existen comentarios, los renderizamos al final y con el nuevo estilo */}
+      {comentarios && (
+        <p className="text-gray-600 pt-1">
+          <span className="font-medium capitalize text-gray-600">
+            Comentarios:
+          </span>{" "}
+          {String(comentarios)}
+        </p>
+      )}
     </div>
   );
 };
