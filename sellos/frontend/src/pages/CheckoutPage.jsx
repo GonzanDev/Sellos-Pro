@@ -302,11 +302,17 @@ export default function CheckoutPage() {
                     <div className="mt-1 text-xs text-gray-600 space-y-1">
                       {Object.entries(item.customization).map(
                         ([key, value]) => {
-                          if (!value) return null;
+                          // 🔸 Saltar valores vacíos, pero permitir los true
+                          if (
+                            value === "" ||
+                            value === null ||
+                            value === undefined
+                          )
+                            return null;
 
-                          // Si es color, mostramos cuadrito + nombre del color
+                          // 🎨 Si es color, mostrar nombre + cuadradito
                           if (key === "color") {
-                            let colorName = value; // fallback: mostrar hex
+                            let colorName = value;
                             if (item.colors) {
                               const foundColor = item.colors.find(
                                 (c) =>
@@ -316,7 +322,7 @@ export default function CheckoutPage() {
                             }
                             return (
                               <p key={key}>
-                                <strong>{key}:</strong>{" "}
+                                <strong>Color:</strong>{" "}
                                 <span
                                   className="inline-block w-3 h-3 border rounded-sm align-middle"
                                   style={{ backgroundColor: value }}
@@ -326,7 +332,7 @@ export default function CheckoutPage() {
                             );
                           }
 
-                          // Si es una imagen de logo, la mostramos pequeña
+                          // 🖼️ Si es un logo
                           if (key === "logoPreview") {
                             return (
                               <div key={key}>
@@ -342,7 +348,36 @@ export default function CheckoutPage() {
                             );
                           }
 
-                          // Cualquier otro campo
+                          // 💬 Si son comentarios
+                          if (key === "comentarios") {
+                            return (
+                              <p key={key} className="italic text-gray-500">
+                                <strong>Comentarios:</strong> {value}
+                              </p>
+                            );
+                          }
+
+// 📄 Si es un checkbox (hoja o grado)
+if (key === "hoja" || key === "grado") {
+  // Solo generamos el bloque una vez (cuando pasamos por "hoja")
+  if (key === "hoja") {
+    const detalles = [];
+    if (item.customization.hoja) detalles.push("📄 Hoja");
+    if (item.customization.grado) detalles.push("🎓 Grado");
+
+    if (detalles.length > 0) {
+      return (
+        <p key="detalles">
+          <strong>Detalles:</strong> {detalles.join(", ")}
+        </p>
+      );
+    }
+  }
+  return null; // evita duplicar cuando llega a "grado"
+}
+
+
+                          // 🔤 Otros campos (texto, fuente, etc.)
                           return (
                             <p key={key}>
                               <strong>{key}:</strong> {value}
