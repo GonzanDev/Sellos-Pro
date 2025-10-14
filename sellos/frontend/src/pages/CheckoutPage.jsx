@@ -357,25 +357,27 @@ export default function CheckoutPage() {
                             );
                           }
 
-// 📄 Si es un checkbox (hoja o grado)
-if (key === "hoja" || key === "grado") {
-  // Solo generamos el bloque una vez (cuando pasamos por "hoja")
-  if (key === "hoja") {
-    const detalles = [];
-    if (item.customization.hoja) detalles.push("📄 Hoja");
-    if (item.customization.grado) detalles.push("🎓 Grado");
+                          // 📄 Si es un checkbox (hoja o grado)
+                          if (key === "hoja" || key === "grado") {
+                            // Solo generamos el bloque una vez (cuando pasamos por "hoja")
+                            if (key === "hoja") {
+                              const detalles = [];
+                              if (item.customization.hoja)
+                                detalles.push("📄 Hoja");
+                              if (item.customization.grado)
+                                detalles.push("🎓 Grado");
 
-    if (detalles.length > 0) {
-      return (
-        <p key="detalles">
-          <strong>Detalles:</strong> {detalles.join(", ")}
-        </p>
-      );
-    }
-  }
-  return null; // evita duplicar cuando llega a "grado"
-}
-
+                              if (detalles.length > 0) {
+                                return (
+                                  <p key="detalles">
+                                    <strong>Detalles:</strong>{" "}
+                                    {detalles.join(", ")}
+                                  </p>
+                                );
+                              }
+                            }
+                            return null; // evita duplicar cuando llega a "grado"
+                          }
 
                           // 🔤 Otros campos (texto, fuente, etc.)
                           return (

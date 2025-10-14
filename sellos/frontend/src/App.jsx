@@ -17,6 +17,21 @@ import ProductPage from "./pages/ProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import FAQPage from "./pages/FAQPage";
 import ContactPage from "./pages/ContactPage";
+import SuccessPage from "./pages/SuccesPage";
+import OrderStatusPage from "./pages/OrderStatusPage";
+
+function ProtectedRoute({ children }) {
+  const [searchParams] = useSearchParams();
+  const paymentStatus = searchParams.get("status");
+
+  // Si el parámetro 'status' no es 'approved', redirigimos al inicio.
+  if (paymentStatus !== "approved") {
+    return <Navigate to="/" replace />;
+  }
+
+  // Si el pago fue aprobado, mostramos la página de éxito.
+  return children;
+}
 
 // Componente interno para tener acceso a los contextos
 function AppContent() {
@@ -45,6 +60,16 @@ function AppContent() {
           {/* --- NUEVAS RUTAS AÑADIDAS --- */}
           <Route path="/nosotros" element={<FAQPage />} />
           <Route path="/contacto" element={<ContactPage />} />
+          <Route
+            path="/success"
+            element={
+              <ProtectedRoute>
+                <SuccessPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/order/:orderId" element={<OrderStatusPage />} />
         </Routes>
       </main>
 
