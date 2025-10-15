@@ -19,6 +19,8 @@ import FAQPage from "./pages/FAQPage";
 import ContactPage from "./pages/ContactPage";
 import SuccessPage from "./pages/SuccesPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
+import { useSearchParams } from "react-router-dom";
+
 
 function ProtectedRoute({ children }) {
   const [searchParams] = useSearchParams();

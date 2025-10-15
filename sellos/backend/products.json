@@ -151,7 +151,7 @@
     "category": "Tintas",
     "name": "Tinta AL AGUA - Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
-    "price": 3000,
+    "price": 0.50,
     "image": "/images/tinta-chica.png",
         "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
