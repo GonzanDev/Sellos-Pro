@@ -88,6 +88,9 @@ router.post("/create-preference", async (req, res) => {
       });
     }
 
+    // --- ID DE PEDIDO ÚNICO ---
+    const externalReference = `SP-${Date.now()}`;
+
     const preference = new Preference(client);
     const result = await preference.create({
       body: {
@@ -103,12 +106,14 @@ router.post("/create-preference", async (req, res) => {
             },
           }),
         },
-        // --- URLS DE RETORNO DINÁMICAS ---
         back_urls: {
           success: `${allowedOrigin}/success`,
           failure: `${allowedOrigin}/failure`,
           pending: `${allowedOrigin}/pending`,
         },
+        auto_return: "approved",
+        // --- AÑADIMOS NUESTRO ID DE PEDIDO AQUÍ ---
+        external_reference: externalReference,
       },
     });
 
@@ -149,55 +154,48 @@ router.post("/send-email", async (req, res) => {
       },
     });
 
-const cartHtml = cart
-  .map((item) => {
-const customizationHtml = item.customization
-  ? Object.entries(item.customization)
-      .map(([key, value]) => {
-        if (!value) return "";
+    const cartHtml = cart
+      .map((item) => {
+        const customizationHtml = item.customization
+          ? Object.entries(item.customization)
+              .map(([key, value]) => {
+                if (!value) return "";
 
-        // 🔹 Si es color, mostramos el cuadrito + nombre del color
-        if (key.toLowerCase() === "color") {
-          let colorName = value; // fallback: mostrar el hex si no hay nombre
+                if (key.toLowerCase() === "color") {
+                  let colorName = value;
+                  if (item.colors && Array.isArray(item.colors)) {
+                    const foundColor = item.colors.find(
+                      (c) => c.hex.toLowerCase() === value.toLowerCase()
+                    );
+                    if (foundColor) colorName = foundColor.name;
+                  }
+                  return `<p><strong>Color:</strong> <span style="display:inline-block;width:14px;height:14px;border:1px solid #ccc;background:${value};margin-left:5px;"></span> ${colorName}</p>`;
+                }
 
-          if (item.colors && Array.isArray(item.colors)) {
-            const foundColor = item.colors.find(
-              (c) => c.hex.toLowerCase() === value.toLowerCase()
-            );
-            if (foundColor) colorName = foundColor.name;
-          }
+                if (key === "logoPreview") {
+                  return `<p><strong>Logo:</strong><br><img src="${value}" alt="Logo personalizado" style="max-height:80px;border:1px solid #ddd;border-radius:4px;"></p>`;
+                }
 
-          return `<p><strong>Color:</strong> 
-            <span style="display:inline-block;width:14px;height:14px;border:1px solid #ccc;background:${value};margin-left:5px;"></span> 
-            ${colorName}
-          </p>`;
-        }
+                if (
+                  key.toLowerCase() === "comentarios" ||
+                  key.toLowerCase() === "comentario"
+                ) {
+                  return `<p><strong>🗒️ Comentarios adicionales:</strong> ${value}</p>`;
+                }
 
-        // 🔹 Si es logo
-        if (key === "logoPreview") {
-          return `<p><strong>Logo:</strong><br><img src="${value}" alt="Logo personalizado" style="max-height:80px;border:1px solid #ddd;border-radius:4px;"></p>`;
-        }
+                return `<p><strong>${key}:</strong> ${value}</p>`;
+              })
+              .join("")
+          : "<p><em>Sin personalización</em></p>";
 
-        // 🔹 Si es comentario adicional
-        if (key.toLowerCase() === "comentarios" || key.toLowerCase() === "comentario") {
-          return `<p><strong>🗒️ Comentarios adicionales:</strong> ${value}</p>`;
-        }
-
-        // 🔹 Resto de campos
-        return `<p><strong>${key}:</strong> ${value}</p>`;
-      })
-      .join("")
-  : "<p><em>Sin personalización</em></p>";
-
-    return `
+        return `
       <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
         <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
         <p><strong>Precio unitario:</strong> AR$ ${item.price.toFixed(2)}</p>
         ${customizationHtml}
       </li>`;
-  })
-  .join("");
-
+      })
+      .join("");
 
     const deliveryHtml =
       deliveryMethod === "shipping"

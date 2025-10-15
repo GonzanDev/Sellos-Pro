@@ -7,8 +7,9 @@ export default function SuccessPage() {
   const { clearCart } = useCart();
   const [searchParams] = useSearchParams();
 
-  // Usamos el payment_id de MercadoPago como el ID único y visible para el cliente.
-  const orderId = searchParams.get("payment_id");
+  // --- CAMBIO CLAVE: LEEMOS NUESTRO PROPIO ID ---
+  // En lugar de 'payment_id', leemos 'external_reference' que nos devuelve MercadoPago.
+  const orderId = searchParams.get("external_reference");
   const status = searchParams.get("status");
 
   useEffect(() => {
@@ -31,12 +32,13 @@ export default function SuccessPage() {
 
         <div className="mt-8 bg-gray-100 rounded-lg p-4">
           <p className="text-sm text-gray-600">Número de pedido</p>
+          {/* Mostramos nuestro ID personalizado (ya incluye el prefijo 'SP-') */}
           <p className="text-lg font-mono font-semibold text-gray-800 tracking-wider">
-            {orderId ? `MP-${orderId}` : "N/A"}
+            {orderId || "N/A"}
           </p>
         </div>
 
-        {/* --- ENLACE A LA PÁGINA DE ESTADO --- */}
+        {/* El enlace ahora usa nuestro ID de pedido para ir a la página de estado */}
         {orderId && (
           <div className="mt-6">
             <Link

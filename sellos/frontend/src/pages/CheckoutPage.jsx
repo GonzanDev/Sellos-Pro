@@ -59,27 +59,18 @@ export default function CheckoutPage() {
       const response = await fetch(`${API_URL}/create-preference`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-body: JSON.stringify({
-  items: cart.map((item) => ({
-    title: item.name,
-    unit_price: item.price,
-    quantity: item.qty || 1,
-  })),
-  ...(deliveryMethod === "shipping" && {
-    shipping_cost: SHIPPING_COST,
-  }),
-  buyer,
-  address: deliveryMethod === "shipping" ? address : null,
-
-  // 🧭 URLs de retorno según el resultado del pago
-  back_urls: {
-    success: `${window.location.origin}/success?status=approved`,
-    failure: `${window.location.origin}/checkout?status=failure`,
-    pending: `${window.location.origin}/checkout?status=pending`,
-  },
-  auto_return: "approved", // redirige automáticamente si el pago se aprueba
-}),
-
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            title: item.name,
+            unit_price: item.price,
+            quantity: item.qty || 1,
+          })),
+          ...(deliveryMethod === "shipping" && {
+            shipping_cost: SHIPPING_COST,
+          }),
+          buyer,
+          address: deliveryMethod === "shipping" ? address : null,
+        }),
       });
 
       if (response.ok) {
