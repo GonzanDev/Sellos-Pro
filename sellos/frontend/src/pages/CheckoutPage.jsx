@@ -95,7 +95,6 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
-
   const handleSendTestEmail = async () => {
     try {
       const response = await fetch(`${API_URL}/send-email`, {

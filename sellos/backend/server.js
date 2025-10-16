@@ -2,16 +2,15 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import dotenv from "dotenv";
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import nodemailer from "nodemailer";
 
-// Carga las variables de entorno del archivo .env
 dotenv.config();
 
-// --- SOLUCIÓN AL PROBLEMA DE CORS Y DEPLOY ---
-// Leemos el origen permitido desde una variable de entorno.
-// Si no existe, usamos la de localhost como fallback para desarrollo.
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+const backendUrl =
+  process.env.RENDER_EXTERNAL_URL ||
+  `http://localhost:${process.env.PORT || 8080}`;
 
 const corsOptions = {
   origin: allowedOrigin,
@@ -20,13 +19,10 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-console.log(`✅ Origen de CORS permitido: ${allowedOrigin}`);
-
 const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Verificación de Access Token de MercadoPago
 if (!process.env.MP_ACCESS_TOKEN) {
   console.error(
     "🔴 ¡Error Crítico! No se encontró la variable MP_ACCESS_TOKEN en el archivo .env del backend."
@@ -53,7 +49,7 @@ router.get("/products", (req, res) => {
 
 router.post("/create-preference", async (req, res) => {
   try {
-    const { items, buyer, shipping_cost, address } = req.body;
+    const { items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res
@@ -64,9 +60,16 @@ router.post("/create-preference", async (req, res) => {
     const preferenceItems = items.map((item) => {
       const unit_price = Number(item.unit_price);
       const quantity = Number(item.quantity) || 1;
-      if (isNaN(unit_price) || isNaN(quantity)) {
-        throw new Error("Precio o cantidad inválida en uno de los items.");
+
+      if (isNaN(unit_price) || unit_price <= 0) {
+        throw new Error(
+          `El precio del item "${item.title}" (${unit_price}) es inválido.`
+        );
       }
+      if (isNaN(quantity) || quantity <= 0) {
+        throw new Error(`La cantidad del item "${item.title}" es inválida.`);
+      }
+
       return {
         title: item.title,
         quantity: quantity,
@@ -75,57 +78,33 @@ router.post("/create-preference", async (req, res) => {
       };
     });
 
-    if (shipping_cost && shipping_cost > 0) {
-      const shippingPrice = Number(shipping_cost);
-      if (isNaN(shippingPrice)) {
-        throw new Error("Costo de envío inválido.");
-      }
-      preferenceItems.push({
-        title: "Costo de Envío",
-        quantity: 1,
-        unit_price: shippingPrice,
-        currency_id: "ARS",
-      });
-    }
+    // --- ENFOQUE BÁSICO: SOLO ENVIAMOS LOS ITEMS ---
+    const preferenceBody = {
+      items: preferenceItems,
+      // Añadimos las URLs de retorno
+      back_urls: {
+        success: `${allowedOrigin}/success`,
+        failure: `${allowedOrigin}/checkout`,
+        pending: `${allowedOrigin}/checkout`,
+      },
+      // Añadimos la referencia externa para el ID de pedido
+      external_reference: `SP-${Date.now()}`,
+    };
 
-    // --- ID DE PEDIDO ÚNICO ---
-    const externalReference = `SP-${Date.now()}`;
+    console.log(
+      "🔵 Creando preferencia BÁSICA:",
+      JSON.stringify(preferenceBody, null, 2)
+    );
 
     const preference = new Preference(client);
-    const result = await preference.create({
-      body: {
-        items: preferenceItems,
-        payer: {
-          name: buyer?.name || "Comprador",
-          email: buyer?.email || "test_user@mercadopago.com",
-          phone: { number: buyer?.phone || "" },
-          ...(address && {
-            address: {
-              street_name: address.street,
-              zip_code: address.postalCode,
-            },
-          }),
-        },
-        back_urls: {
-          success: `${allowedOrigin}/success`,
-          failure: `${allowedOrigin}/failure`,
-          pending: `${allowedOrigin}/pending`,
-        },
-        auto_return: "approved",
-        // --- AÑADIMOS NUESTRO ID DE PEDIDO AQUÍ ---
-        external_reference: externalReference,
-      },
-    });
+    const result = await preference.create({ body: preferenceBody });
 
     res.status(200).json({
       preferenceId: result.id,
       init_point: result.init_point,
     });
   } catch (error) {
-    console.error(
-      "❌ Error detallado al crear preferencia:",
-      JSON.stringify(error, null, 2)
-    );
+    console.error("❌ Error detallado al crear preferencia:", error);
     res.status(500).json({
       error: "Error al crear la preferencia de pago.",
       details:
@@ -134,6 +113,11 @@ router.post("/create-preference", async (req, res) => {
         "Error desconocido del servidor.",
     });
   }
+});
+
+router.post("/webhook", async (req, res) => {
+  console.log("🔔 Webhook de MercadoPago recibido:", req.body);
+  res.status(200).send("OK");
 });
 
 router.post("/send-email", async (req, res) => {
