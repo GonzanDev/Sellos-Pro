@@ -37,24 +37,38 @@ async function sendConfirmationEmail({
   total,
   deliveryMethod,
   address,
-  externalReference, // <-- Aceptamos el ID del pedido
+  externalReference,
 }) {
-  // Verificamos que las credenciales para enviar correos existan en el .env
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("Credenciales de email no configuradas en el archivo .env");
+    console.error(
+      "❌ Credenciales de email no configuradas en el archivo .env"
+    );
+    return;
   }
 
-  // Configuramos el servicio de correo (en este caso, Gmail)
+  // --- CORRECCIÓN CLAVE PARA EL DEPLOY ---
+  // En lugar de usar 'service: "gmail"', configuramos el 'transport' de forma explícita.
+  // Esto es más robusto y evita problemas de conexión en plataformas como Render.
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com", // Servidor SMTP de Gmail
+    port: 465, // Puerto para SSL
+    secure: true, // Usamos una conexión segura (SSL)
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      pass: process.env.EMAIL_PASS, // Tu contraseña de aplicación de Gmail
     },
   });
 
-  // Verificamos conexión/credenciales antes de intentar enviar
-  await transporter.verify();
+  // Verificamos que la conexión con el servidor de correos sea exitosa.
+  // Si esto falla, veremos un error claro en los logs de Render.
+  try {
+    await transporter.verify();
+    console.log("📨 Servidor de correo listo para enviar.");
+  } catch (error) {
+    console.error("❌ Error al conectar con el servidor de correo:", error);
+    // Detenemos el envío si no podemos conectar, para no romper el flujo del webhook.
+    return;
+  }
 
   // Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
   const cartHtml = cart
