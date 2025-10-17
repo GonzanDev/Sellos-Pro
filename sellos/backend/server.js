@@ -9,8 +9,7 @@ dotenv.config();
 
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 const backendUrl =
-  process.env.RENDER_EXTERNAL_URL ||
-  `http://localhost:${process.env.PORT || 8080}`;
+  process.env.PUBLIC_BACKEND_URL || process.env.RENDER_EXTERNAL_URL;
 
 const corsOptions = {
   origin: allowedOrigin,
@@ -18,6 +17,8 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
+
+console.log(`✅ URL pública del backend configurada para: ${backendUrl}`);
 
 const app = express();
 app.use(cors(corsOptions));
@@ -83,12 +84,13 @@ router.post("/create-preference", async (req, res) => {
       items: preferenceItems,
       // Añadimos las URLs de retorno
       back_urls: {
-        success: `${allowedOrigin}/success`,
+        success: `${allowedOrigin}/success?t=${Date.now()}`,
         failure: `${allowedOrigin}/checkout`,
         pending: `${allowedOrigin}/checkout`,
       },
       // Añadimos la referencia externa para el ID de pedido
       external_reference: `SP-${Date.now()}`,
+      auto_return: "approved",
     };
 
     console.log(
