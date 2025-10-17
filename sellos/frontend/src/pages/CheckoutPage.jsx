@@ -302,9 +302,56 @@ export default function CheckoutPage() {
                             value === undefined
                           )
                             return null;
+
+                          // 🎨 Si es color, mostrar nombre + cuadradito (no mostrar el hash)
+                          if (key.toLowerCase() === "color") {
+                            let colorName = value;
+                            if (item.colors) {
+                              const foundColor = item.colors.find(
+                                (c) =>
+                                  c.hex.toLowerCase() ===
+                                  String(value).trim().toLowerCase()
+                              );
+                              if (foundColor) colorName = foundColor.name;
+                            }
+
+                            return (
+                              <p key={key}>
+                                <strong>Color:</strong>{" "}
+                                <span
+                                  className="inline-block w-3 h-3 border rounded-sm align-middle mr-2"
+                                  style={{
+                                    backgroundColor: String(value).trim(),
+                                  }}
+                                  aria-hidden="true"
+                                />
+                                {colorName}
+                              </p>
+                            );
+                          }
+
+                          // Si es otro campo que contiene un hex (ej. color_hex), también mostrar solo el swatch
+                          const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(
+                            String(value).trim()
+                          );
+                          if (isHex) {
+                            return (
+                              <p key={key}>
+                                <strong>{key}:</strong>{" "}
+                                <span
+                                  className="inline-block w-3 h-3 border rounded-sm align-middle mr-2"
+                                  style={{
+                                    backgroundColor: String(value).trim(),
+                                  }}
+                                  aria-hidden="true"
+                                />
+                              </p>
+                            );
+                          }
+
                           return (
                             <p key={key}>
-                              <strong>{key}:</strong> {value}
+                              <strong>{key}:</strong> {String(value)}
                             </p>
                           );
                         }

@@ -53,6 +53,9 @@ async function sendConfirmationEmail({
     },
   });
 
+  // Verificamos conexión/credenciales antes de intentar enviar
+  await transporter.verify();
+
   // Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
   const cartHtml = cart
     .map((item) => {
@@ -60,7 +63,6 @@ async function sendConfirmationEmail({
         ? Object.entries(item.customization)
             .map(([key, value]) => {
               if (!value) return "";
-              // ... (aquí va tu lógica para dar formato a cada detalle de personalización)
               return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
             })
             .join("")
@@ -79,25 +81,33 @@ async function sendConfirmationEmail({
       ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
       : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
 
+  // Si no se pasa externalReference (correo de prueba), generamos uno temporal
+  const extRef = externalReference || `TEST-${Date.now()}`;
+
   // Creamos el enlace a la página de estado del pedido.
-  const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
+  const orderStatusLink = `${allowedOrigin}/order/${extRef}`;
+
+  // Enviamos el correo tanto al propietario (EMAIL_USER) como al comprador cuando exista.
+  const recipients = [];
+  if (buyer?.email) recipients.push(buyer.email);
+  if (process.env.EMAIL_USER) recipients.push(process.env.EMAIL_USER);
 
   const mailOptions = {
     from: `"SellosPro" <${process.env.EMAIL_USER}>`,
-    to: process.env.EMAIL_USER, // Notificación para ti
-    subject: `🧾 Nuevo pedido de ${buyer.name} (${externalReference})`,
+    to: recipients.join(","),
+    subject: `🧾 Nuevo pedido de ${buyer?.name || "Cliente"} (${extRef})`,
     html: `
       <h2>Nuevo pedido recibido</h2>
-      <p><strong>ID del Pedido:</strong> ${externalReference}</p>
-      <p><strong>Cliente:</strong> ${buyer.name}</p>
-      <p><strong>Email:</strong> ${buyer.email}</p>
-      <p><strong>Teléfono:</strong> ${buyer.phone}</p>
+      <p><strong>ID del Pedido:</strong> ${extRef}</p>
+      <p><strong>Cliente:</strong> ${buyer?.name || "N/D"}</p>
+      <p><strong>Email:</strong> ${buyer?.email || "N/D"}</p>
+      <p><strong>Teléfono:</strong> ${buyer?.phone || "N/D"}</p>
       <hr>
       ${deliveryHtml}
       <hr>
       <h3>🛒 Detalles del pedido:</h3>
       <ul style="list-style:none;padding:0;margin:0;">${cartHtml}</ul>
-      <h3>Total: AR$ ${total.toFixed(2)}</h3>
+      <h3>Total: AR$ ${Number(total || 0).toFixed(2)}</h3>
       <hr>
       <p style="margin-top: 20px;">
         <a href="${orderStatusLink}" style="background-color: #e30613; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
@@ -108,9 +118,7 @@ async function sendConfirmationEmail({
   };
 
   await transporter.sendMail(mailOptions);
-  console.log(
-    `✅ Correo de confirmación enviado para el pedido ${externalReference}.`
-  );
+  console.log(`✅ Correo de confirmación enviado para el pedido ${extRef}.`);
 }
 
 // ==============================================================================
@@ -138,20 +146,18 @@ router.get("/products", (req, res) => {
   res.json(products);
 });
 
-// ==============================================================================
-// 💳 RUTA PARA CREAR LA PREFERENCIA DE PAGO
-// ==============================================================================
-// Esta ruta recibe los datos del checkout, los guarda en 'metadata' y crea el link de pago.
-router.post("/create-preference", async (req, res) => {
+// =================================================================
+// Ruta para crear una preferencia de pago en MercadoPago
+router.post("/create_preference", async (req, res) => {
   try {
-    // Recibimos todos los datos que nos envía la CheckoutPage
-    const { cart, buyer, deliveryMethod, address, total } = req.body;
+    // Extraemos los datos enviados desde el frontend
+    const { buyer, cart, total, deliveryMethod, address } = req.body || {};
 
     // Generamos un ID único para nuestro pedido.
     const externalReference = `SP-${Date.now()}`;
 
     const preferenceBody = {
-      items: cart.map((item) => ({
+      items: (cart || []).map((item) => ({
         title: item.name,
         quantity: Number(item.qty) || 1,
         unit_price: Number(item.price),
@@ -176,8 +182,8 @@ router.post("/create-preference", async (req, res) => {
       // Le decimos a dónde redirigir al usuario después del pago.
       back_urls: {
         success: `${allowedOrigin}/success`,
-        failure: `${allowedOrigin}/checkout`,
-        pending: `${allowedOrigin}/checkout`,
+        failure: `${allowedOrigin}/failure`,
+        pending: `${allowedOrigin}/pending`,
       },
       auto_return: "approved",
     };
@@ -186,16 +192,16 @@ router.post("/create-preference", async (req, res) => {
     const result = await preference.create({ body: preferenceBody });
 
     res.status(200).json({
-      preferenceId: result.id,
-      init_point: result.init_point,
+      preferenceId: result.id ?? result.body?.id,
+      init_point: result.init_point ?? result.body?.init_point,
     });
   } catch (error) {
     console.error("❌ Error detallado al crear preferencia:", error);
     res.status(500).json({
       error: "Error al crear la preferencia de pago.",
       details:
-        error.cause?.message ||
-        error.message ||
+        error?.cause?.message ||
+        error?.message ||
         "Error desconocido del servidor.",
     });
   }
@@ -242,11 +248,18 @@ router.post("/webhook", async (req, res) => {
 // La ruta de prueba se mantiene por si quieres usarla manualmente.
 router.post("/send-email", async (req, res) => {
   try {
-    await sendConfirmationEmail(req.body);
+    // Si no viene externalReference (botón de prueba), generamos uno para que el correo muestre el link correcto
+    const payload = { ...req.body };
+    if (!payload.externalReference) {
+      payload.externalReference = `TEST-${Date.now()}`;
+    }
+
+    await sendConfirmationEmail(payload);
     res
       .status(200)
       .json({ success: true, message: "Correo de prueba enviado." });
   } catch (error) {
+    console.error("Error enviando correo de prueba:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

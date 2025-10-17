@@ -9,42 +9,42 @@ export default function OrderStatusPage() {
   // const { order, loading, error } = useOrderStatus(orderId);
 
   return (
-    <div className="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
-      <div className="max-w-xl w-full bg-white p-8 sm:p-12 rounded-xl shadow-lg text-center">
-        <Package className="mx-auto h-12 w-12 text-gray-400" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">
+    <div className="bg-gray-50 min-h-[60vh] flex items-center justify-center py-6 px-4 sm:px-6">
+      <div className="max-w-sm w-full bg-white p-6 rounded-lg shadow text-center">
+        <Package className="mx-auto h-10 w-10 text-gray-400" />
+        <h1 className="mt-3 text-xl font-bold text-gray-900">
           Estado del Pedido
         </h1>
-        <p className="mt-2 text-md text-gray-600">
+        <p className="mt-2 text-sm text-gray-600">
           Siguiendo el pedido con ID:
         </p>
-        <p className="mt-4 text-lg font-mono font-semibold text-red-600 bg-gray-100 rounded-md p-3">
+        <p className="mt-3 text-base font-mono font-semibold text-red-600 bg-gray-100 rounded-md p-2">
           MP-{orderId}
         </p>
 
         {/* Placeholder para el estado del pedido */}
-        <div className="mt-8 text-left border-t pt-6">
-          <h2 className="font-semibold text-lg">Historial de estados</h2>
-          <div className="mt-4 space-y-4">
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+        <div className="mt-6 text-left border-t pt-4">
+          <h2 className="font-semibold text-md">Historial de estados</h2>
+          <div className="mt-3 space-y-3">
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm">
                 ✓
               </div>
               <div>
                 <p className="font-semibold">Pedido confirmado</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs text-gray-500">
                   14 de Octubre, 2025 - 12:35 PM
                 </p>
               </div>
             </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-full bg-gray-300" />
               <div>
                 <p className="font-semibold text-gray-500">En preparación</p>
               </div>
             </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-full bg-gray-300" />
               <div>
                 <p className="font-semibold text-gray-500">
                   Listo para retirar
@@ -54,7 +54,7 @@ export default function OrderStatusPage() {
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-6">
           <Link
             to="/"
             className="text-sm font-medium text-red-600 hover:text-red-800"
