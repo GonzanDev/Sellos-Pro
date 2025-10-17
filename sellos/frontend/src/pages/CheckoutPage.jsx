@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 const SHIPPING_COST = 500; // Costo de envío fijo para Mar del Plata
 
 export default function CheckoutPage() {
@@ -59,17 +59,16 @@ export default function CheckoutPage() {
       const response = await fetch(`${API_URL}/create-preference`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // --- CAMBIO APLICADO ---
+        // Ahora enviamos el 'cart' completo (con todos sus detalles de personalización)
+        // y el 'total' para que el backend pueda guardarlos en 'metadata'.
+        // El webhook usará esta información para construir el correo de confirmación.
         body: JSON.stringify({
-          items: cart.map((item) => ({
-            title: item.name,
-            unit_price: item.price,
-            quantity: item.qty || 1,
-          })),
-          ...(deliveryMethod === "shipping" && {
-            shipping_cost: SHIPPING_COST,
-          }),
+          cart: cart, // Enviamos el carrito completo
           buyer,
+          deliveryMethod,
           address: deliveryMethod === "shipping" ? address : null,
+          total: finalTotal,
         }),
       });
 
@@ -132,8 +131,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      {/* --- CAMBIO CLAVE AQUÍ --- */}
-      {/* Añadimos 'md:items-start' para alinear las columnas arriba en pantallas medianas y grandes */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:items-start">
         {/* Columna de Información */}
         <div className="bg-white p-8 rounded-lg shadow-md">
@@ -295,90 +292,16 @@ export default function CheckoutPage() {
                 <div className="flex-1">
                   <p className="font-medium">{item.name}</p>
 
-                  {/* 🔹 Datos de personalización */}
-                  {/* 🔹 Datos de personalización */}
                   {item.customization ? (
                     <div className="mt-1 text-xs text-gray-600 space-y-1">
                       {Object.entries(item.customization).map(
                         ([key, value]) => {
-                          // 🔸 Saltar valores vacíos, pero permitir los true
                           if (
                             value === "" ||
                             value === null ||
                             value === undefined
                           )
                             return null;
-
-                          // 🎨 Si es color, mostrar nombre + cuadradito
-                          if (key === "color") {
-                            let colorName = value;
-                            if (item.colors) {
-                              const foundColor = item.colors.find(
-                                (c) =>
-                                  c.hex.toLowerCase() === value.toLowerCase()
-                              );
-                              if (foundColor) colorName = foundColor.name;
-                            }
-                            return (
-                              <p key={key}>
-                                <strong>Color:</strong>{" "}
-                                <span
-                                  className="inline-block w-3 h-3 border rounded-sm align-middle"
-                                  style={{ backgroundColor: value }}
-                                ></span>{" "}
-                                {colorName}
-                              </p>
-                            );
-                          }
-
-                          // 🖼️ Si es un logo
-                          if (key === "logoPreview") {
-                            return (
-                              <div key={key}>
-                                <strong>Logo:</strong>
-                                <div className="mt-1">
-                                  <img
-                                    src={value}
-                                    alt="Logo"
-                                    className="h-10 border rounded"
-                                  />
-                                </div>
-                              </div>
-                            );
-                          }
-
-                          // 💬 Si son comentarios
-                          if (key === "comentarios") {
-                            return (
-                              <p key={key} className="italic text-gray-500">
-                                <strong>Comentarios:</strong> {value}
-                              </p>
-                            );
-                          }
-
-                          // 📄 Si es un checkbox (hoja o grado)
-                          if (key === "hoja" || key === "grado") {
-                            // Solo generamos el bloque una vez (cuando pasamos por "hoja")
-                            if (key === "hoja") {
-                              const detalles = [];
-                              if (item.customization.hoja)
-                                detalles.push("📄 Hoja");
-                              if (item.customization.grado)
-                                detalles.push("🎓 Grado");
-
-                              if (detalles.length > 0) {
-                                return (
-                                  <p key="detalles">
-                                    <strong>Detalles:</strong>{" "}
-                                    {detalles.join(", ")}
-                                  </p>
-                                );
-                              }
-                            }
-                            return null; // evita duplicar cuando llega a "grado"
-                          }
-
-                          // 🔤 Otros campos (texto, fuente, etc.)
                           return (
                             <p key={key}>
                               <strong>{key}:</strong> {value}

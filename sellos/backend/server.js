@@ -5,9 +5,15 @@ import dotenv from "dotenv";
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import nodemailer from "nodemailer";
 
+// Carga las variables de entorno (tus claves secretas) desde el archivo .env
 dotenv.config();
 
+// Define qué sitios web pueden hacerle peticiones a tu backend.
+// En producción, será tu URL de Vercel. En local, será localhost.
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+
+// La URL pública de tu backend. Es crucial para que MercadoPago sepa a dónde enviar las notificaciones (webhooks).
+// En local, usaremos la URL que nos da ngrok. En producción, Render la provee automáticamente.
 const backendUrl =
   process.env.PUBLIC_BACKEND_URL ||
   process.env.RENDER_EXTERNAL_URL ||
@@ -20,21 +26,25 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// --- FUNCIÓN REUTILIZABLE PARA ENVIAR CORREO ---
-// La hemos mejorado para que acepte el 'externalReference' (nuestro ID de pedido)
-// y lo incluya en el correo de confirmación.
+// ==============================================================================
+// 📧 FUNCIÓN PARA ENVIAR EL CORREO DE CONFIRMACIÓN
+// ==============================================================================
+// Esta función es ahora más completa. Recibe el ID del pedido ('externalReference')
+// para incluirlo en el correo y en el enlace para ver el estado.
 async function sendConfirmationEmail({
   buyer,
   cart,
   total,
   deliveryMethod,
   address,
-  externalReference, // <-- Nuevo parámetro para el ID del pedido
+  externalReference, // <-- Aceptamos el ID del pedido
 }) {
+  // Verificamos que las credenciales para enviar correos existan en el .env
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error("Credenciales de email no configuradas en el archivo .env");
   }
 
+  // Configuramos el servicio de correo (en este caso, Gmail)
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -43,27 +53,23 @@ async function sendConfirmationEmail({
     },
   });
 
+  // Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
   const cartHtml = cart
     .map((item) => {
       const customizationHtml = item.customization
         ? Object.entries(item.customization)
             .map(([key, value]) => {
               if (!value) return "";
-              // ... (resto de tu lógica para mostrar la personalización)
-              return `<p><strong>${key}:</strong> ${value}</p>`;
+              // ... (aquí va tu lógica para dar formato a cada detalle de personalización)
+              return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
             })
             .join("")
-        : "<p><em>Sin personalización</em></p>";
+        : "";
 
       return `
     <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
-      <p><strong>Producto:</strong> ${item.name || item.title} (x${
-        item.qty || item.quantity
-      })</p>
-      <p><strong>Precio unitario:</strong> AR$ ${(
-        item.price || item.unit_price
-      ).toFixed(2)}</p>
-      ${customizationHtml}
+      <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
+      <div style="padding-left: 15px;">${customizationHtml}</div>
     </li>`;
     })
     .join("");
@@ -73,13 +79,12 @@ async function sendConfirmationEmail({
       ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
       : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
 
-  // --- ¡NUEVO! ---
-  // Construimos el enlace a la página de estado del pedido usando el ID único.
+  // Creamos el enlace a la página de estado del pedido.
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
   const mailOptions = {
     from: `"SellosPro" <${process.env.EMAIL_USER}>`,
-    to: process.env.EMAIL_USER, // Se envía a tu propio correo para notificación
+    to: process.env.EMAIL_USER, // Notificación para ti
     subject: `🧾 Nuevo pedido de ${buyer.name} (${externalReference})`,
     html: `
       <h2>Nuevo pedido recibido</h2>
@@ -108,16 +113,12 @@ async function sendConfirmationEmail({
   );
 }
 
+// ==============================================================================
+// 🚀 CONFIGURACIÓN DEL SERVIDOR EXPRESS
+// ==============================================================================
 const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
-
-if (!process.env.MP_ACCESS_TOKEN) {
-  console.error(
-    "🔴 ¡Error Crítico! No se encontró la variable MP_ACCESS_TOKEN en el archivo .env del backend."
-  );
-  process.exit(1);
-}
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
@@ -132,46 +133,53 @@ try {
 
 const router = express.Router();
 
+// Ruta para obtener los productos
 router.get("/products", (req, res) => {
   res.json(products);
 });
 
+// ==============================================================================
+// 💳 RUTA PARA CREAR LA PREFERENCIA DE PAGO
+// ==============================================================================
+// Esta ruta recibe los datos del checkout, los guarda en 'metadata' y crea el link de pago.
 router.post("/create-preference", async (req, res) => {
   try {
-    const { items, buyer, deliveryMethod, address, total } = req.body;
+    // Recibimos todos los datos que nos envía la CheckoutPage
+    const { cart, buyer, deliveryMethod, address, total } = req.body;
 
-    const preferenceItems = items.map((item) => ({
-      title: item.title,
-      quantity: Number(item.quantity) || 1,
-      unit_price: Number(item.unit_price),
-      currency_id: "ARS",
-    }));
-
+    // Generamos un ID único para nuestro pedido.
     const externalReference = `SP-${Date.now()}`;
 
     const preferenceBody = {
-      items: preferenceItems,
+      items: cart.map((item) => ({
+        title: item.name,
+        quantity: Number(item.qty) || 1,
+        unit_price: Number(item.price),
+        currency_id: "ARS",
+      })),
       payer: {
         email: buyer?.email,
         name: buyer?.name,
       },
+      // 'metadata' es como una mochila donde guardamos toda la información del pedido.
+      // MercadoPago nos la devolverá intacta en el webhook.
       metadata: {
         buyer,
-        // Almacenamos los items del carrito con todos sus detalles (incluida la personalización)
-        // para poder usarlos en el correo.
-        cart: items,
+        cart, // Guardamos el carrito completo, con personalización.
         total,
         deliveryMethod,
         address,
       },
+      // Le decimos a MercadoPago que nos avise a esta URL cuando el pago se complete.
       notification_url: `${backendUrl}/api/webhook`,
       external_reference: externalReference,
-      auto_return: "approved",
+      // Le decimos a dónde redirigir al usuario después del pago.
       back_urls: {
         success: `${allowedOrigin}/success`,
         failure: `${allowedOrigin}/checkout`,
         pending: `${allowedOrigin}/checkout`,
       },
+      auto_return: "approved",
     };
 
     const preference = new Preference(client);
@@ -193,6 +201,10 @@ router.post("/create-preference", async (req, res) => {
   }
 });
 
+// ==============================================================================
+// 🔔 RUTA WEBHOOK PARA RECIBIR NOTIFICACIONES DE MP
+// ==============================================================================
+// Esta es la ruta clave. MercadoPago le avisa aquí cuando un pago se completa.
 router.post("/webhook", async (req, res) => {
   console.log("🔔 Webhook de MercadoPago recibido:", req.body);
   const { type, data } = req.body;
@@ -200,20 +212,17 @@ router.post("/webhook", async (req, res) => {
   if (type === "payment") {
     try {
       const payment = await new Payment(client).get({ id: data.id });
-      console.log("✅ Información del pago:", JSON.stringify(payment, null, 2));
 
       if (payment.status === "approved" && payment.metadata) {
         console.log(
           `🎉 Pago APROBADO para el pedido ${payment.external_reference}.`
         );
 
-        // --- ¡NUEVO! ---
-        // Obtenemos los datos del metadata y el ID del pedido (external_reference)
+        // Abrimos la 'mochila' (metadata) para recuperar los datos del pedido.
         const { buyer, cart, total, deliveryMethod, address } =
           payment.metadata;
 
-        // Llamamos a la función de email, pasándole todos los datos necesarios,
-        // incluyendo el ID para construir el enlace.
+        // Llamamos a nuestra función para enviar el correo, pasándole todos los datos.
         await sendConfirmationEmail({
           buyer,
           cart,
@@ -230,7 +239,7 @@ router.post("/webhook", async (req, res) => {
   res.status(200).send("OK");
 });
 
-// Ruta de prueba (opcional)
+// La ruta de prueba se mantiene por si quieres usarla manualmente.
 router.post("/send-email", async (req, res) => {
   try {
     await sendConfirmationEmail(req.body);
