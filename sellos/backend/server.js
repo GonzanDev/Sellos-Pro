@@ -148,12 +148,9 @@ router.get("/products", (req, res) => {
 
 // =================================================================
 // Ruta para crear una preferencia de pago en MercadoPago
-router.post("/create_preference", async (req, res) => {
+router.post("/create-preference", async (req, res) => {
   try {
-    // Extraemos los datos enviados desde el frontend
-    const { buyer, cart, total, deliveryMethod, address } = req.body || {};
-
-    // Generamos un ID único para nuestro pedido.
+    const { cart, buyer, deliveryMethod, address, total } = req.body || {};
     const externalReference = `SP-${Date.now()}`;
 
     const preferenceBody = {
@@ -167,19 +164,9 @@ router.post("/create_preference", async (req, res) => {
         email: buyer?.email,
         name: buyer?.name,
       },
-      // 'metadata' es como una mochila donde guardamos toda la información del pedido.
-      // MercadoPago nos la devolverá intacta en el webhook.
-      metadata: {
-        buyer,
-        cart, // Guardamos el carrito completo, con personalización.
-        total,
-        deliveryMethod,
-        address,
-      },
-      // Le decimos a MercadoPago que nos avise a esta URL cuando el pago se complete.
+      metadata: { buyer, cart, total, deliveryMethod, address },
       notification_url: `${backendUrl}/api/webhook`,
       external_reference: externalReference,
-      // Le decimos a dónde redirigir al usuario después del pago.
       back_urls: {
         success: `${allowedOrigin}/success`,
         failure: `${allowedOrigin}/failure`,
@@ -210,7 +197,6 @@ router.post("/create_preference", async (req, res) => {
 // ==============================================================================
 // 🔔 RUTA WEBHOOK PARA RECIBIR NOTIFICACIONES DE MP
 // ==============================================================================
-// Esta es la ruta clave. MercadoPago le avisa aquí cuando un pago se completa.
 router.post("/webhook", async (req, res) => {
   console.log("🔔 Webhook de MercadoPago recibido:", req.body);
   const { type, data } = req.body;
@@ -223,12 +209,8 @@ router.post("/webhook", async (req, res) => {
         console.log(
           `🎉 Pago APROBADO para el pedido ${payment.external_reference}.`
         );
-
-        // Abrimos la 'mochila' (metadata) para recuperar los datos del pedido.
         const { buyer, cart, total, deliveryMethod, address } =
           payment.metadata;
-
-        // Llamamos a nuestra función para enviar el correo, pasándole todos los datos.
         await sendConfirmationEmail({
           buyer,
           cart,
@@ -245,15 +227,13 @@ router.post("/webhook", async (req, res) => {
   res.status(200).send("OK");
 });
 
-// La ruta de prueba se mantiene por si quieres usarla manualmente.
+// Ruta de prueba
 router.post("/send-email", async (req, res) => {
   try {
-    // Si no viene externalReference (botón de prueba), generamos uno para que el correo muestre el link correcto
     const payload = { ...req.body };
     if (!payload.externalReference) {
       payload.externalReference = `TEST-${Date.now()}`;
     }
-
     await sendConfirmationEmail(payload);
     res
       .status(200)
