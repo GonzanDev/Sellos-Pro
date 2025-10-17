@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
@@ -6,21 +6,22 @@ import { useCart } from "../contexts/CartContext";
 export default function SuccessPage() {
   const { clearCart } = useCart();
   const [searchParams] = useSearchParams();
+  const effectRan = useRef(false);
 
-  // --- CAMBIO CLAVE: LEEMOS NUESTRO PROPIO ID ---
-  // En lugar de 'payment_id', leemos 'external_reference' que nos devuelve MercadoPago.
   const orderId = searchParams.get("external_reference");
   const status = searchParams.get("status");
 
   useEffect(() => {
-    if (status === "approved") {
+    if (status === "approved" && !effectRan.current) {
       clearCart();
+      effectRan.current = true;
     }
   }, [status, clearCart]);
 
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full bg-white p-8 sm:p-12 rounded-xl shadow-lg text-center">
+      {/* --- CAMBIO CLAVE: Contenedor más compacto --- */}
+      <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-xl shadow-lg text-center">
         <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
         <h1 className="mt-4 text-3xl font-bold text-gray-900">
           ¡Gracias por tu pedido!
@@ -32,13 +33,11 @@ export default function SuccessPage() {
 
         <div className="mt-8 bg-gray-100 rounded-lg p-4">
           <p className="text-sm text-gray-600">Número de pedido</p>
-          {/* Mostramos nuestro ID personalizado (ya incluye el prefijo 'SP-') */}
           <p className="text-lg font-mono font-semibold text-gray-800 tracking-wider">
             {orderId || "N/A"}
           </p>
         </div>
 
-        {/* El enlace ahora usa nuestro ID de pedido para ir a la página de estado */}
         {orderId && (
           <div className="mt-6">
             <Link

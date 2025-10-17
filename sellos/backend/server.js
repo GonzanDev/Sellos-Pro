@@ -9,7 +9,9 @@ dotenv.config();
 
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 const backendUrl =
-  process.env.PUBLIC_BACKEND_URL || process.env.RENDER_EXTERNAL_URL;
+  process.env.PUBLIC_BACKEND_URL ||
+  process.env.RENDER_EXTERNAL_URL ||
+  `http://localhost:${process.env.PORT || 8080}`;
 
 const corsOptions = {
   origin: allowedOrigin,
@@ -18,7 +20,93 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-console.log(`✅ URL pública del backend configurada para: ${backendUrl}`);
+// --- FUNCIÓN REUTILIZABLE PARA ENVIAR CORREO ---
+// La hemos mejorado para que acepte el 'externalReference' (nuestro ID de pedido)
+// y lo incluya en el correo de confirmación.
+async function sendConfirmationEmail({
+  buyer,
+  cart,
+  total,
+  deliveryMethod,
+  address,
+  externalReference, // <-- Nuevo parámetro para el ID del pedido
+}) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error("Credenciales de email no configuradas en el archivo .env");
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const cartHtml = cart
+    .map((item) => {
+      const customizationHtml = item.customization
+        ? Object.entries(item.customization)
+            .map(([key, value]) => {
+              if (!value) return "";
+              // ... (resto de tu lógica para mostrar la personalización)
+              return `<p><strong>${key}:</strong> ${value}</p>`;
+            })
+            .join("")
+        : "<p><em>Sin personalización</em></p>";
+
+      return `
+    <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
+      <p><strong>Producto:</strong> ${item.name || item.title} (x${
+        item.qty || item.quantity
+      })</p>
+      <p><strong>Precio unitario:</strong> AR$ ${(
+        item.price || item.unit_price
+      ).toFixed(2)}</p>
+      ${customizationHtml}
+    </li>`;
+    })
+    .join("");
+
+  const deliveryHtml =
+    deliveryMethod === "shipping"
+      ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
+      : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
+
+  // --- ¡NUEVO! ---
+  // Construimos el enlace a la página de estado del pedido usando el ID único.
+  const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
+
+  const mailOptions = {
+    from: `"SellosPro" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER, // Se envía a tu propio correo para notificación
+    subject: `🧾 Nuevo pedido de ${buyer.name} (${externalReference})`,
+    html: `
+      <h2>Nuevo pedido recibido</h2>
+      <p><strong>ID del Pedido:</strong> ${externalReference}</p>
+      <p><strong>Cliente:</strong> ${buyer.name}</p>
+      <p><strong>Email:</strong> ${buyer.email}</p>
+      <p><strong>Teléfono:</strong> ${buyer.phone}</p>
+      <hr>
+      ${deliveryHtml}
+      <hr>
+      <h3>🛒 Detalles del pedido:</h3>
+      <ul style="list-style:none;padding:0;margin:0;">${cartHtml}</ul>
+      <h3>Total: AR$ ${total.toFixed(2)}</h3>
+      <hr>
+      <p style="margin-top: 20px;">
+        <a href="${orderStatusLink}" style="background-color: #e30613; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+          Ver Estado del Pedido
+        </a>
+      </p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+  console.log(
+    `✅ Correo de confirmación enviado para el pedido ${externalReference}.`
+  );
+}
 
 const app = express();
 app.use(cors(corsOptions));
@@ -50,53 +138,41 @@ router.get("/products", (req, res) => {
 
 router.post("/create-preference", async (req, res) => {
   try {
-    const { items } = req.body;
+    const { items, buyer, deliveryMethod, address, total } = req.body;
 
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "El campo 'items' es inválido o está vacío." });
-    }
+    const preferenceItems = items.map((item) => ({
+      title: item.title,
+      quantity: Number(item.quantity) || 1,
+      unit_price: Number(item.unit_price),
+      currency_id: "ARS",
+    }));
 
-    const preferenceItems = items.map((item) => {
-      const unit_price = Number(item.unit_price);
-      const quantity = Number(item.quantity) || 1;
+    const externalReference = `SP-${Date.now()}`;
 
-      if (isNaN(unit_price) || unit_price <= 0) {
-        throw new Error(
-          `El precio del item "${item.title}" (${unit_price}) es inválido.`
-        );
-      }
-      if (isNaN(quantity) || quantity <= 0) {
-        throw new Error(`La cantidad del item "${item.title}" es inválida.`);
-      }
-
-      return {
-        title: item.title,
-        quantity: quantity,
-        unit_price: unit_price,
-        currency_id: "ARS",
-      };
-    });
-
-    // --- ENFOQUE BÁSICO: SOLO ENVIAMOS LOS ITEMS ---
     const preferenceBody = {
       items: preferenceItems,
-      // Añadimos las URLs de retorno
+      payer: {
+        email: buyer?.email,
+        name: buyer?.name,
+      },
+      metadata: {
+        buyer,
+        // Almacenamos los items del carrito con todos sus detalles (incluida la personalización)
+        // para poder usarlos en el correo.
+        cart: items,
+        total,
+        deliveryMethod,
+        address,
+      },
+      notification_url: `${backendUrl}/api/webhook`,
+      external_reference: externalReference,
+      auto_return: "approved",
       back_urls: {
-        success: `${allowedOrigin}/success?t=${Date.now()}`,
+        success: `${allowedOrigin}/success`,
         failure: `${allowedOrigin}/checkout`,
         pending: `${allowedOrigin}/checkout`,
       },
-      // Añadimos la referencia externa para el ID de pedido
-      external_reference: `SP-${Date.now()}`,
-      auto_return: "approved",
     };
-
-    console.log(
-      "🔵 Creando preferencia BÁSICA:",
-      JSON.stringify(preferenceBody, null, 2)
-    );
 
     const preference = new Preference(client);
     const result = await preference.create({ body: preferenceBody });
@@ -119,97 +195,49 @@ router.post("/create-preference", async (req, res) => {
 
 router.post("/webhook", async (req, res) => {
   console.log("🔔 Webhook de MercadoPago recibido:", req.body);
+  const { type, data } = req.body;
+
+  if (type === "payment") {
+    try {
+      const payment = await new Payment(client).get({ id: data.id });
+      console.log("✅ Información del pago:", JSON.stringify(payment, null, 2));
+
+      if (payment.status === "approved" && payment.metadata) {
+        console.log(
+          `🎉 Pago APROBADO para el pedido ${payment.external_reference}.`
+        );
+
+        // --- ¡NUEVO! ---
+        // Obtenemos los datos del metadata y el ID del pedido (external_reference)
+        const { buyer, cart, total, deliveryMethod, address } =
+          payment.metadata;
+
+        // Llamamos a la función de email, pasándole todos los datos necesarios,
+        // incluyendo el ID para construir el enlace.
+        await sendConfirmationEmail({
+          buyer,
+          cart,
+          total,
+          deliveryMethod,
+          address,
+          externalReference: payment.external_reference,
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error al procesar el webhook:", error);
+    }
+  }
   res.status(200).send("OK");
 });
 
+// Ruta de prueba (opcional)
 router.post("/send-email", async (req, res) => {
   try {
-    const { buyer, cart, total, deliveryMethod, address } = req.body;
-
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error(
-        "Credenciales de email no configuradas en el archivo .env"
-      );
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const cartHtml = cart
-      .map((item) => {
-        const customizationHtml = item.customization
-          ? Object.entries(item.customization)
-              .map(([key, value]) => {
-                if (!value) return "";
-
-                if (key.toLowerCase() === "color") {
-                  let colorName = value;
-                  if (item.colors && Array.isArray(item.colors)) {
-                    const foundColor = item.colors.find(
-                      (c) => c.hex.toLowerCase() === value.toLowerCase()
-                    );
-                    if (foundColor) colorName = foundColor.name;
-                  }
-                  return `<p><strong>Color:</strong> <span style="display:inline-block;width:14px;height:14px;border:1px solid #ccc;background:${value};margin-left:5px;"></span> ${colorName}</p>`;
-                }
-
-                if (key === "logoPreview") {
-                  return `<p><strong>Logo:</strong><br><img src="${value}" alt="Logo personalizado" style="max-height:80px;border:1px solid #ddd;border-radius:4px;"></p>`;
-                }
-
-                if (
-                  key.toLowerCase() === "comentarios" ||
-                  key.toLowerCase() === "comentario"
-                ) {
-                  return `<p><strong>🗒️ Comentarios adicionales:</strong> ${value}</p>`;
-                }
-
-                return `<p><strong>${key}:</strong> ${value}</p>`;
-              })
-              .join("")
-          : "<p><em>Sin personalización</em></p>";
-
-        return `
-      <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
-        <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
-        <p><strong>Precio unitario:</strong> AR$ ${item.price.toFixed(2)}</p>
-        ${customizationHtml}
-      </li>`;
-      })
-      .join("");
-
-    const deliveryHtml =
-      deliveryMethod === "shipping"
-        ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-        : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
-
-    const mailOptions = {
-      from: `"SellosPro" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: `🧾 Nuevo pedido de ${buyer.name}`,
-      html: `
-        <h2>Nuevo pedido recibido</h2>
-        <p><strong>Cliente:</strong> ${buyer.name}</p>
-        <p><strong>Email:</strong> ${buyer.email}</p>
-        <p><strong>Teléfono:</strong> ${buyer.phone}</p>
-        <hr>
-        ${deliveryHtml}
-        <hr>
-        <h3>🛒 Detalles del pedido:</h3>
-        <ul style="list-style:none;padding:0;margin:0;">${cartHtml}</ul>
-        <h3>Total: AR$ ${total.toFixed(2)}</h3>
-      `,
-    };
-
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ success: true, message: "Correo enviado" });
+    await sendConfirmationEmail(req.body);
+    res
+      .status(200)
+      .json({ success: true, message: "Correo de prueba enviado." });
   } catch (error) {
-    console.error("❌ Error al enviar correo:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
