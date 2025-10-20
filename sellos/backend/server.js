@@ -9,11 +9,9 @@ import sgMail from "@sendgrid/mail";
 dotenv.config();
 
 // Define qué sitios web pueden hacerle peticiones a tu backend.
-// En producción, será tu URL de Vercel. En local, será localhost.
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
-// La URL pública de tu backend. Es crucial para que MercadoPago sepa a dónde enviar las notificaciones (webhooks).
-// En local, usaremos la URL que nos da ngrok. En producción, Render la provee automáticamente.
+// La URL pública de tu backend para las notificaciones (webhooks).
 const backendUrl =
   process.env.PUBLIC_BACKEND_URL ||
   process.env.RENDER_EXTERNAL_URL ||
@@ -29,8 +27,6 @@ const corsOptions = {
 // ==============================================================================
 // 📧 FUNCIÓN PARA ENVIAR EL CORREO DE CONFIRMACIÓN
 // ==============================================================================
-// Esta función es ahora más completa. Recibe el ID del pedido ('externalReference')
-// para incluirlo en el correo y en el enlace para ver el estado.
 async function sendConfirmationEmail({
   buyer,
   cart,
@@ -39,59 +35,54 @@ async function sendConfirmationEmail({
   address,
   externalReference,
 }) {
-  // Verificamos que la API Key de SendGrid exista en el .env
-  if (!process.env.SENDGRID_API_KEY) {
-    console.error("❌ SENDGRID_API_KEY no configurada en el archivo .env");
+  // Verificamos que las credenciales de SendGrid existan
+  if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
+    console.error(
+      "❌ Credenciales de SendGrid (SENDGRID_API_KEY o EMAIL_FROM) no configuradas en el archivo .env"
+    );
     return;
   }
+
   // Configuramos SendGrid con tu API Key
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // Verificamos que el email del remitente (verificado en SendGrid) exista
-  if (!process.env.EMAIL_FROM) {
-    console.error("❌ EMAIL_FROM no configurado en el archivo .env");
-    return;
-  }
-}
+  // Construimos la lista de productos para el cuerpo del correo.
+  const cartHtml = cart
+    .map((item) => {
+      const customizationHtml = item.customization
+        ? Object.entries(item.customization)
 
-// Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
-const cartHtml = cart
-  .map((item) => {
-    const customizationHtml = item.customization
-      ? Object.entries(item.customization)
-          .map(([key, value]) => {
-            if (!value) return "";
-            return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
-          })
-          .join("")
-      : "";
+            .map(([key, value]) => {
+              if (!value) return "";
 
-    return `
+              return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
+            })
+
+            .join("")
+        : "";
+
+      return `
     <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
       <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
       <div style="padding-left: 15px;">${customizationHtml}</div>
     </li>`;
-  })
-  .join("");
+    })
+    .join("");
 
-const deliveryHtml =
-  deliveryMethod === "shipping"
-    ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-    : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
+  const deliveryHtml =
+    deliveryMethod === "shipping"
+      ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
+      : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
 
-// Si no se pasa externalReference (correo de prueba), generamos uno temporal
-const extRef = externalReference || `TEST-${Date.now()}`;
+  const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
-// Creamos el enlace a la página de estado del pedido.
-const orderStatusLink = `${allowedOrigin}/order/${extRef}`;
-
-const msg = {
-  to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean), // Envía al cliente y a ti
-  from: process.env.EMAIL_FROM, // Debe ser un email verificado en SendGrid
-  subject: `🧾 Confirmación de tu pedido en SellosPro (${externalReference})`,
-  html: `
+  // Creamos el objeto del mensaje para SendGrid
+  const msg = {
+    to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
+    from: process.env.EMAIL_FROM,
+    subject: `🧾 Confirmación de tu pedido en SellosPro (${externalReference})`,
+    html: `
       <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
-      <p>Hemos recibido tu pedido y lo estamos procesando.</p>
       <p><strong>ID del Pedido:</strong> ${externalReference}</p>
       <hr>
       ${deliveryHtml}
@@ -101,24 +92,26 @@ const msg = {
       <h3>Total: AR$ ${Number(total || 0).toFixed(2)}</h3>
       <hr>
       <p style="margin-top: 20px;">
-        <a href="${orderStatusLink}" style="background-color: #e30613; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        <a href="${orderStatusLink}" style="background-color: #e30613; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px;">
           Ver Estado del Pedido
         </a>
       </p>
     `,
-};
+  };
 
-try {
-  await sgMail.send(msg);
-  console.log(
-    `✅ Correo de confirmación enviado via SendGrid para el pedido ${externalReference}.`
-  );
-} catch (error) {
-  console.error("❌ Error al enviar correo con SendGrid:", error);
-  if (error.response) {
-    console.error(error.response.body);
+  try {
+    await sgMail.send(msg);
+    console.log(
+      `✅ Correo de confirmación enviado via SendGrid para el pedido ${externalReference}.`
+    );
+  } catch (error) {
+    console.error("❌ Error al enviar correo con SendGrid:", error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
   }
 }
+
 // ==============================================================================
 // 🚀 CONFIGURACIÓN DEL SERVIDOR EXPRESS
 // ==============================================================================
@@ -139,13 +132,10 @@ try {
 
 const router = express.Router();
 
-// Ruta para obtener los productos
 router.get("/products", (req, res) => {
   res.json(products);
 });
 
-// =================================================================
-// Ruta para crear una preferencia de pago en MercadoPago
 router.post("/create-preference", async (req, res) => {
   try {
     const { cart, buyer, deliveryMethod, address, total } = req.body || {};
@@ -192,9 +182,6 @@ router.post("/create-preference", async (req, res) => {
   }
 });
 
-// ==============================================================================
-// 🔔 RUTA WEBHOOK PARA RECIBIR NOTIFICACIONES DE MP
-// ==============================================================================
 router.post("/webhook", async (req, res) => {
   console.log("🔔 Webhook de MercadoPago recibido:", req.body);
   const { type, data } = req.body;
@@ -209,6 +196,8 @@ router.post("/webhook", async (req, res) => {
         );
         const { buyer, cart, total, deliveryMethod, address } =
           payment.metadata;
+
+        // Al recibir un pago aprobado, solo llamamos a la función de envío de correo.
         await sendConfirmationEmail({
           buyer,
           cart,
