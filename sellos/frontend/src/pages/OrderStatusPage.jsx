@@ -19,7 +19,7 @@ export default function OrderStatusPage() {
           Siguiendo el pedido con ID:
         </p>
         <p className="mt-3 text-base font-mono font-semibold text-red-600 bg-gray-100 rounded-md p-2">
-          MP-{orderId}
+          {orderId}
         </p>
 
         {/* Placeholder para el estado del pedido */}

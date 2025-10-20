@@ -3,7 +3,7 @@ import cors from "cors";
 import fs from "fs";
 import dotenv from "dotenv";
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 // Carga las variables de entorno (tus claves secretas) desde el archivo .env
 dotenv.config();
@@ -39,87 +39,64 @@ async function sendConfirmationEmail({
   address,
   externalReference,
 }) {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error(
-      "❌ Credenciales de email no configuradas en el archivo .env"
-    );
+  // Verificamos que la API Key de SendGrid exista en el .env
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error("❌ SENDGRID_API_KEY no configurada en el archivo .env");
     return;
   }
+  // Configuramos SendGrid con tu API Key
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // --- CORRECCIÓN CLAVE PARA EL DEPLOY ---
-  // En lugar de usar 'service: "gmail"', configuramos el 'transport' de forma explícita.
-  // Esto es más robusto y evita problemas de conexión en plataformas como Render.
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Servidor SMTP de Gmail
-    port: 465, // Puerto para SSL
-    secure: true, // Usamos una conexión segura (SSL)
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, // Tu contraseña de aplicación de Gmail
-    },
-  });
-
-  // Verificamos que la conexión con el servidor de correos sea exitosa.
-  // Si esto falla, veremos un error claro en los logs de Render.
-  try {
-    await transporter.verify();
-    console.log("📨 Servidor de correo listo para enviar.");
-  } catch (error) {
-    console.error("❌ Error al conectar con el servidor de correo:", error);
-    // Detenemos el envío si no podemos conectar, para no romper el flujo del webhook.
+  // Verificamos que el email del remitente (verificado en SendGrid) exista
+  if (!process.env.EMAIL_FROM) {
+    console.error("❌ EMAIL_FROM no configurado en el archivo .env");
     return;
   }
+}
 
-  // Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
-  const cartHtml = cart
-    .map((item) => {
-      const customizationHtml = item.customization
-        ? Object.entries(item.customization)
-            .map(([key, value]) => {
-              if (!value) return "";
-              return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
-            })
-            .join("")
-        : "";
+// Construimos la lista de productos para el cuerpo del correo, incluyendo la personalización.
+const cartHtml = cart
+  .map((item) => {
+    const customizationHtml = item.customization
+      ? Object.entries(item.customization)
+          .map(([key, value]) => {
+            if (!value) return "";
+            return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
+          })
+          .join("")
+      : "";
 
-      return `
+    return `
     <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
       <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
       <div style="padding-left: 15px;">${customizationHtml}</div>
     </li>`;
-    })
-    .join("");
+  })
+  .join("");
 
-  const deliveryHtml =
-    deliveryMethod === "shipping"
-      ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-      : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
+const deliveryHtml =
+  deliveryMethod === "shipping"
+    ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
+    : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
 
-  // Si no se pasa externalReference (correo de prueba), generamos uno temporal
-  const extRef = externalReference || `TEST-${Date.now()}`;
+// Si no se pasa externalReference (correo de prueba), generamos uno temporal
+const extRef = externalReference || `TEST-${Date.now()}`;
 
-  // Creamos el enlace a la página de estado del pedido.
-  const orderStatusLink = `${allowedOrigin}/order/${extRef}`;
+// Creamos el enlace a la página de estado del pedido.
+const orderStatusLink = `${allowedOrigin}/order/${extRef}`;
 
-  // Enviamos el correo tanto al propietario (EMAIL_USER) como al comprador cuando exista.
-  const recipients = [];
-  if (buyer?.email) recipients.push(buyer.email);
-  if (process.env.EMAIL_USER) recipients.push(process.env.EMAIL_USER);
-
-  const mailOptions = {
-    from: `"SellosPro" <${process.env.EMAIL_USER}>`,
-    to: recipients.join(","),
-    subject: `🧾 Nuevo pedido de ${buyer?.name || "Cliente"} (${extRef})`,
-    html: `
-      <h2>Nuevo pedido recibido</h2>
-      <p><strong>ID del Pedido:</strong> ${extRef}</p>
-      <p><strong>Cliente:</strong> ${buyer?.name || "N/D"}</p>
-      <p><strong>Email:</strong> ${buyer?.email || "N/D"}</p>
-      <p><strong>Teléfono:</strong> ${buyer?.phone || "N/D"}</p>
+const msg = {
+  to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean), // Envía al cliente y a ti
+  from: process.env.EMAIL_FROM, // Debe ser un email verificado en SendGrid
+  subject: `🧾 Confirmación de tu pedido en SellosPro (${externalReference})`,
+  html: `
+      <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
+      <p>Hemos recibido tu pedido y lo estamos procesando.</p>
+      <p><strong>ID del Pedido:</strong> ${externalReference}</p>
       <hr>
       ${deliveryHtml}
       <hr>
-      <h3>🛒 Detalles del pedido:</h3>
+      <h3>🛒 Resumen de tu pedido:</h3>
       <ul style="list-style:none;padding:0;margin:0;">${cartHtml}</ul>
       <h3>Total: AR$ ${Number(total || 0).toFixed(2)}</h3>
       <hr>
@@ -129,12 +106,19 @@ async function sendConfirmationEmail({
         </a>
       </p>
     `,
-  };
+};
 
-  await transporter.sendMail(mailOptions);
-  console.log(`✅ Correo de confirmación enviado para el pedido ${extRef}.`);
+try {
+  await sgMail.send(msg);
+  console.log(
+    `✅ Correo de confirmación enviado via SendGrid para el pedido ${externalReference}.`
+  );
+} catch (error) {
+  console.error("❌ Error al enviar correo con SendGrid:", error);
+  if (error.response) {
+    console.error(error.response.body);
+  }
 }
-
 // ==============================================================================
 // 🚀 CONFIGURACIÓN DEL SERVIDOR EXPRESS
 // ==============================================================================
