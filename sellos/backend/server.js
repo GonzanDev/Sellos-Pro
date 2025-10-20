@@ -43,6 +43,36 @@ async function sendConfirmationEmail({
     return;
   }
 
+  // --- ¡NUEVO! FUNCIÓN PARA ENVIAR ACTUALIZACIONES DE ESTADO ---
+  async function sendStatusUpdateEmail({ order }) {
+    if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
+      console.error("❌ Credenciales de SendGrid no configuradas.");
+      return;
+    }
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    const msg = {
+      to: order.buyer.email,
+      from: process.env.EMAIL_FROM,
+      subject: `Tu pedido ${order.externalReference} ha sido actualizado`,
+      html: `
+            <h2>Hola, ${order.buyer.name},</h2>
+            <p>El estado de tu pedido ha cambiado a: <strong>${order.status}</strong>.</p>
+            <p>Puedes ver los detalles de tu pedido en cualquier momento a través del siguiente enlace:</p>
+            <a href="${allowedOrigin}/order/${order.externalReference}">Ver mi pedido</a>
+        `,
+    };
+
+    try {
+      await sgMail.send(msg);
+      console.log(
+        `✅ Correo de actualización de estado enviado para el pedido ${order.externalReference}.`
+      );
+    } catch (error) {
+      console.error("❌ Error al enviar correo de actualización:", error);
+    }
+  }
+
   // Configuramos SendGrid con tu API Key
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -123,6 +153,12 @@ const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
 });
 
+// Al iniciar, nos aseguramos de que la carpeta 'orders' exista.
+if (!fs.existsSync("./orders")) {
+  fs.mkdirSync("./orders");
+  console.log("📁 Directorio 'orders' creado.");
+}
+
 let products = [];
 try {
   products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
@@ -191,27 +227,44 @@ router.post("/webhook", async (req, res) => {
       const payment = await new Payment(client).get({ id: data.id });
 
       if (payment.status === "approved" && payment.metadata) {
-        console.log(
-          `🎉 Pago APROBADO para el pedido ${payment.external_reference}.`
-        );
-        const { buyer, cart, total, deliveryMethod, address } =
-          payment.metadata;
+        const externalReference = payment.external_reference;
+        console.log(`🎉 Pago APROBADO para el pedido ${externalReference}.`);
 
-        // Al recibir un pago aprobado, solo llamamos a la función de envío de correo.
-        await sendConfirmationEmail({
-          buyer,
-          cart,
-          total,
-          deliveryMethod,
-          address,
-          externalReference: payment.external_reference,
-        });
+        const orderData = {
+          ...payment.metadata,
+          externalReference,
+          status: "Confirmado", // Estado inicial del pedido
+          createdAt: new Date().toISOString(),
+        };
+
+        // Guardamos el pedido como un archivo JSON.
+        fs.writeFileSync(
+          `./orders/${externalReference}.json`,
+          JSON.stringify(orderData, null, 2)
+        );
+        console.log(`📄 Pedido ${externalReference} guardado en archivo.`);
+
+        // Enviamos el correo de confirmación.
+        await sendConfirmationEmail(orderData);
       }
     } catch (error) {
       console.error("❌ Error al procesar el webhook:", error);
     }
   }
   res.status(200).send("OK");
+});
+
+// --- ¡NUEVA RUTA! PARA OBTENER EL ESTADO DE UN PEDIDO ---
+router.get("/order/:orderId", (req, res) => {
+  const { orderId } = req.params;
+  const filePath = `./orders/${orderId}.json`;
+
+  if (fs.existsSync(filePath)) {
+    const orderData = fs.readFileSync(filePath, "utf-8");
+    res.status(200).json(JSON.parse(orderData));
+  } else {
+    res.status(404).json({ error: "Pedido no encontrado." });
+  }
 });
 
 // Ruta de prueba
