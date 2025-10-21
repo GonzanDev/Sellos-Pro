@@ -5,7 +5,7 @@ import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
-import { Heart, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 
 export default function ProductPage({ showToast }) {
   const { products, loading, error } = useProducts();
@@ -42,12 +42,7 @@ export default function ProductPage({ showToast }) {
   }
 
   const category = product.category?.toLowerCase();
-  const isCustomizable = [
-    "automáticos",
-    "fechadores",
-    "numeradores",
-    "tintas",
-  ].includes(category);
+  const isCustomizable = ["automáticos", "tintas"].includes(category);
   const isKit = category === "kit";
   const isSchool = category === "escolar";
 
@@ -134,6 +129,52 @@ export default function ProductPage({ showToast }) {
                   setCustomization={setCustomization}
                 />
               )}
+
+              {/* 🔸 Sección adicional para Almohadilla + Tinta */}
+              {product.requiresPad && (() => {
+                const padProduct = products.find((p) => p.id === 19);
+                if (!padProduct) return null;
+
+                const handleAddPad = () => {
+                  addToCart({
+                    ...padProduct,
+                    qty: 1,
+                  });
+                  showToast(`${padProduct.name} agregado al carrito`);
+                };
+
+                return (
+                  <div className="mt-6 border-t border-gray-300 pt-4">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      Este producto necesita:
+                    </h3>
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={padProduct.image}
+                        alt={padProduct.name}
+                        className="w-20 h-20 object-contain rounded-md border"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-800">
+                          {padProduct.name}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          {padProduct.description}
+                        </p>
+                        <p className="text-red-600 font-bold mt-1">
+                          ${padProduct.price}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleAddPad}
+                        className="px-4 py-2 bg-black text-white rounded-md hover:bg-[#e30613] transition"
+                      >
+                        Agregar
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
                 <button
