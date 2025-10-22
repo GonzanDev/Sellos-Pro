@@ -21,7 +21,6 @@ import SuccessPage from "./pages/SuccesPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import { useSearchParams } from "react-router-dom";
 
-
 function ProtectedRoute({ children }) {
   const [searchParams] = useSearchParams();
   const paymentStatus = searchParams.get("status");
@@ -70,7 +69,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
-
+          <Route path="/failure" element={<FailurePage />} />
           <Route path="/order/:orderId" element={<OrderStatusPage />} />
         </Routes>
       </main>

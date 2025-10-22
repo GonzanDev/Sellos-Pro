@@ -12,6 +12,7 @@ export default function SuccessPage() {
   const status = searchParams.get("status");
 
   useEffect(() => {
+    // Limpiamos el carrito solo una vez cuando el pago es aprobado.
     if (status === "approved" && !effectRan.current) {
       clearCart();
       effectRan.current = true;
@@ -19,39 +20,41 @@ export default function SuccessPage() {
   }, [status, clearCart]);
 
   return (
-    <div className="bg-gray-50 min-h-[60vh] flex items-center justify-center py-4 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow text-center">
-        <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
-        <h1 className="mt-3 text-2xl font-bold text-gray-900">
+    <div className="bg-gray-50 min-h-[60vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-xl shadow-lg text-center">
+        <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
+        <h1 className="mt-4 text-3xl font-bold text-gray-900">
           ¡Gracias por tu pedido!
         </h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-md text-gray-600">
           Hemos recibido tu pedido y lo estamos procesando. Recibirás una
           notificación por correo electrónico con los detalles.
         </p>
 
-        <div className="mt-6 bg-gray-100 rounded-md p-3">
-          <p className="text-xs text-gray-600">Número de pedido</p>
-          <p className="text-sm font-mono font-semibold text-gray-800 tracking-wide">
+        <div className="mt-8 bg-gray-100 rounded-lg p-4">
+          <p className="text-sm text-gray-600">Número de pedido</p>
+          <p className="text-lg font-mono font-semibold text-gray-800 tracking-wider">
             {orderId || "N/A"}
           </p>
         </div>
 
-        {orderId && (
-          <div className="mt-4">
-            <Link
-              to={`/order/${orderId}`}
-              className="text-sm font-medium text-red-600 hover:text-red-800"
-            >
-              Ver estado de tu pedido →
-            </Link>
-          </div>
-        )}
+        {/* --- ENLACE AL ESTADO DEL PEDIDO ELIMINADO --- */}
+        {/* Ya no mostramos este enlace, ya que el estado se notificará por correo. */}
+        {/* {orderId && (
+            <div className="mt-6">
+                <Link
+                    to={`/order/${orderId}`}
+                    className="text-sm font-medium text-red-600 hover:text-red-800"
+                >
+                    Ver estado de tu pedido →
+                </Link>
+            </div>
+        )} */}
 
-        <div className="mt-6">
+        <div className="mt-10">
           <Link
             to="/catalog"
-            className="px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-md hover:bg-red-700 transition"
+            className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
           >
             Seguir Comprando
           </Link>
