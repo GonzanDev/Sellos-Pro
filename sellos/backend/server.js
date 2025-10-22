@@ -189,7 +189,7 @@ router.post("/create-preference", async (req, res) => {
         name: buyer?.name,
       },
       metadata: { buyer, cart, total, deliveryMethod, address },
-      notification_url: `${backendUrl}/api/webhook`,
+      notification_url: `https://sellos-pro.onrender.com/api/webhook`,
       external_reference: externalReference,
       back_urls: {
         success: `${allowedOrigin}/success`,
