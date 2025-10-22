@@ -220,6 +220,11 @@ router.post("/create-preference", async (req, res) => {
 
 router.post("/webhook", async (req, res) => {
   console.log(
+    `‼️ Webhook recibido en ${req.originalUrl} con método: ${req.method}`
+  );
+  console.log("   Cabeceras:", JSON.stringify(req.headers, null, 2));
+  console.log("   Cuerpo:", JSON.stringify(req.body, null, 2));
+  console.log(
     "🔔 Webhook de MercadoPago recibido:",
     JSON.stringify(req.body, null, 2)
   ); // Logueamos todo el body
