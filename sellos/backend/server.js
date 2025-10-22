@@ -13,10 +13,10 @@ const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 // La URL pública de tu backend para las notificaciones (webhooks).
 const backendUrl =
-  process.env.PUBLIC_BACKEND_URL ||
   process.env.RENDER_EXTERNAL_URL ||
   `http://localhost:${process.env.PORT || 8080}`;
 
+console.log("Backend URL:", backendUrl);
 const corsOptions = {
   origin: allowedOrigin,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
