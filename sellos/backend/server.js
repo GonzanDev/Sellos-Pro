@@ -306,6 +306,19 @@ router.get("/order/:orderId", (req, res) => {
   }
 });
 
+// ==============================================================================
+// 🧪 RUTA DE PRUEBA SIMPLE PARA WEBHOOKS
+// ==============================================================================
+// Esta ruta solo recibe CUALQUIER método y loguea un mensaje.
+// Úsala temporalmente en el panel de MP para ver si llega algo.
+router.all("/test-webhook", (req, res) => {
+  console.log(
+    `✅ ¡Petición recibida en /api/test-webhook! Método: ${req.method}`
+  );
+  console.log("   Cuerpo:", JSON.stringify(req.body, null, 2));
+  res.status(200).send("OK - Test Received");
+});
+
 // Ruta de prueba
 router.post("/send-email", async (req, res) => {
   try {
