@@ -18,6 +18,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import FAQPage from "./pages/FAQPage";
 import ContactPage from "./pages/ContactPage";
 import SuccessPage from "./pages/SuccesPage";
+import FailurePage from "./pages/FailurePage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import { useSearchParams } from "react-router-dom";
 

@@ -94,26 +94,6 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
-  const handleSendTestEmail = async () => {
-    try {
-      const response = await fetch(`${API_URL}/send-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          buyer,
-          cart,
-          total: finalTotal,
-          deliveryMethod,
-          address,
-        }),
-      });
-      const data = await response.json();
-      if (data.success) alert("Correo de prueba enviado correctamente");
-      else alert("Error al enviar el correo de prueba");
-    } catch (error) {
-      console.error("Error al enviar correo de prueba:", error);
-    }
-  };
 
   if (cart.length === 0) {
     return (
@@ -391,13 +371,6 @@ export default function CheckoutPage() {
             className="mt-6 w-full bg-[#e30613] text-white py-3 rounded-md font-semibold hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? "Procesando..." : "Confirmar Pedido"}
-          </button>
-
-          <button
-            onClick={handleSendTestEmail}
-            className="mt-3 w-full text-xs text-gray-500 hover:text-black"
-          >
-            Enviar correo de prueba
           </button>
         </div>
       </div>
