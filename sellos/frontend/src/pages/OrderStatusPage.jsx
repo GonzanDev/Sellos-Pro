@@ -113,8 +113,7 @@ export default function OrderStatusPage() {
                   {new Date(order.createdAt).toLocaleString("es-AR", {
                     dateStyle: "long",
                     timeStyle: "short",
-                  })}{" "}
-                  hs.
+                  })}
                 </p>
               )}
               <p className="text-sm text-gray-600 mt-2">

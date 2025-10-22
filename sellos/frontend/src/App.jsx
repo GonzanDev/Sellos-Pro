@@ -22,6 +22,18 @@ import FailurePage from "./pages/FailurePage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import { useSearchParams } from "react-router-dom";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Cuando 'pathname' cambia (es decir, navegamos a otra página),
+    // hacemos scroll suavemente hasta arriba.
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]); // El efecto se ejecuta cada vez que cambia la ruta
+
+  return null; // Este componente no renderiza nada visible
+}
+
 function ProtectedRoute({ children }) {
   const [searchParams] = useSearchParams();
   const paymentStatus = searchParams.get("status");
@@ -47,6 +59,8 @@ function AppContent() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header openCart={openCart} cartCount={cartCount} />
+
+      <ScrollToTop />
 
       <main className="flex-1">
         <Routes>
