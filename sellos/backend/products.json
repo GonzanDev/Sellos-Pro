@@ -96,7 +96,9 @@
     "name": "Fechador 3mm",
     "description": "Fechador manual de 3mm, ideal para oficinas.",
     "price": 8000,
-    "image": "/images/fechador-3mm.png"
+    "image": "/images/fechador-3mm.png",
+    "requiresPad": true
+
   },
   {
     "id": 8,
@@ -104,7 +106,9 @@
     "name": "Fechador 5mm",
     "description": "Fechador manual de 5mm, resistente y duradero.",
     "price": 10000,
-    "image": "/images/fechador-5mm.png"
+    "image": "/images/fechador-5mm.png",
+    "requiresPad": true
+
   },
   {
     "id": 9,
@@ -112,7 +116,9 @@
     "name": "Fechador 8mm",
     "description": "Fechador manual de 8mm, para impresión clara y legible.",
     "price": 12000,
-    "image": "/images/fechador-8mm.png"
+    "image": "/images/fechador-8mm.png",
+    "requiresPad": true
+
   },
   {
     "id": 10,
@@ -120,7 +126,8 @@
     "name": "Numerador 4 dígitos",
     "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
     "price": 8000,
-    "image": "/images/numerador-4.png"
+    "image": "/images/numerador-4.png",
+    "requiresPad": true
   },
   {
     "id": 11,
@@ -128,7 +135,8 @@
     "name": "Numerador 6 dígitos",
     "description": "Numerador manual de 6 dígitos, ideal para documentos.",
     "price": 10000,
-    "image": "/images/numerador-6.png"
+    "image": "/images/numerador-6.png",
+    "requiresPad": true
   },
   {
     "id": 12,
@@ -136,7 +144,8 @@
     "name": "Numerador 8 dígitos",
     "description": "Numerador manual de 8 dígitos, resistente y confiable.",
     "price": 12000,
-    "image": "/images/numerador-8.png"
+    "image": "/images/numerador-8.png",
+    "requiresPad": true
   },
   {
     "id": 13,
@@ -196,6 +205,14 @@
   "description": "Incluye sello automático + almohadilla + tinta textil.",
   "price": 45000,
   "image": "/images/kit-logo.png",
+  "category": "Kit"
+},
+{
+  "id": 19,
+  "name": "Almohadilla + Tinta",
+  "description": "Agrega almohadilla + tinta para los sellos que lo requieran.",
+  "price": 10000,
+  "image": "/images/kit-escolar.png",
   "category": "Kit"
 }
 

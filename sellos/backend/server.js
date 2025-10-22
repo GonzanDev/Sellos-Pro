@@ -219,38 +219,72 @@ router.post("/create-preference", async (req, res) => {
 });
 
 router.post("/webhook", async (req, res) => {
-  console.log("🔔 Webhook de MercadoPago recibido:", req.body);
+  console.log(
+    "🔔 Webhook de MercadoPago recibido:",
+    JSON.stringify(req.body, null, 2)
+  ); // Logueamos todo el body
   const { type, data } = req.body;
 
+  // Solo procesamos notificaciones de tipo 'payment'
   if (type === "payment") {
     try {
-      const payment = await new Payment(client).get({ id: data.id });
+      console.log(`⏳ Obteniendo detalles del pago con ID: ${data?.id}`);
+      const payment = await new Payment(client).get({ id: data?.id });
 
-      if (payment.status === "approved" && payment.metadata) {
+      // --- LOG DE DIAGNÓSTICO IMPORTANTE ---
+      // Logueamos el estado del pago y si existe metadata ANTES de la condición.
+      console.log(
+        `ℹ️ Estado del pago: ${payment?.status}, Metadata: ${
+          payment?.metadata ? "Presente" : "Ausente"
+        }`
+      );
+
+      // Verificamos si el pago está aprobado Y si tenemos los datos necesarios en metadata.
+      if (payment?.status === "approved" && payment?.metadata) {
         const externalReference = payment.external_reference;
         console.log(`🎉 Pago APROBADO para el pedido ${externalReference}.`);
 
+        // Extraemos los datos del pedido desde metadata.
         const orderData = {
           ...payment.metadata,
           externalReference,
-          status: "Confirmado", // Estado inicial del pedido
+          status: "Confirmado", // Estado inicial
           createdAt: new Date().toISOString(),
         };
 
-        // Guardamos el pedido como un archivo JSON.
-        fs.writeFileSync(
-          `./orders/${externalReference}.json`,
-          JSON.stringify(orderData, null, 2)
-        );
-        console.log(`📄 Pedido ${externalReference} guardado en archivo.`);
+        // --- MANEJO DE ERRORES AL GUARDAR ARCHIVO ---
+        try {
+          const filePath = `./orders/${externalReference}.json`;
+          fs.writeFileSync(filePath, JSON.stringify(orderData, null, 2));
+          console.log(
+            `📄 Pedido ${externalReference} guardado correctamente en ${filePath}.`
+          );
 
-        // Enviamos el correo de confirmación.
-        await sendConfirmationEmail(orderData);
+          // Solo intentamos enviar el correo si el archivo se guardó bien.
+          await sendConfirmationEmail(orderData);
+        } catch (fileError) {
+          console.error(
+            `❌ Error al guardar el archivo del pedido ${externalReference}:`,
+            fileError
+          );
+          // Considera notificar este error de alguna manera (ej. a ti mismo por correo)
+        }
+      } else {
+        console.log(
+          `⚠️ El pago ${data?.id} no está aprobado o no tiene metadata. Estado: ${payment?.status}. No se procesará.`
+        );
       }
     } catch (error) {
-      console.error("❌ Error al procesar el webhook:", error);
+      console.error(
+        `❌ Error al procesar el webhook para el pago ${data?.id}:`,
+        error
+      );
     }
+  } else {
+    console.log(`ℹ️ Notificación de tipo '${type}' recibida, ignorando.`);
   }
+
+  // Siempre respondemos 200 OK a MercadoPago para que no siga reintentando.
   res.status(200).send("OK");
 });
 
