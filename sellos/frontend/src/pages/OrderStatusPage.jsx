@@ -100,41 +100,27 @@ export default function OrderStatusPage() {
         </p>
 
         <div className="mt-8 text-left border-t pt-6">
-          <h2 className="font-semibold text-lg mb-4">Historial de estados</h2>
-          <div className="space-y-6">
-            {statusTimeline.map((status, index) => {
-              const isCompleted = index <= currentStatusIndex;
-              return (
-                <div key={status} className="flex gap-4">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition-colors ${
-                      isCompleted ? "bg-green-500" : "bg-gray-300"
-                    }`}
-                  >
-                    {isCompleted ? "✓" : ""}
-                  </div>
-                  <div>
-                    <p
-                      className={`font-semibold transition-colors ${
-                        isCompleted ? "text-gray-800" : "text-gray-400"
-                      }`}
-                    >
-                      {status}
-                    </p>
-                    {isCompleted && status === "Confirmado" && (
-                      <p className="text-xs text-gray-500">
-                        {/* Formateamos la fecha para que sea más legible */}
-                        {new Date(order.createdAt).toLocaleString("es-AR", {
-                          dateStyle: "long",
-                          timeStyle: "short",
-                        })}{" "}
-                        hs.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <h2 className="font-semibold text-lg mb-4">Estado Actual</h2>
+          <div className="flex gap-4 items-center">
+            {/* Usamos CheckCircle para indicar que está confirmado */}
+            <CheckCircle className="w-8 h-8 text-green-500 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-gray-800">Pedido Confirmado</p>
+              {/* Mostramos la fecha de creación */}
+              {order.createdAt && (
+                <p className="text-xs text-gray-500">
+                  {new Date(order.createdAt).toLocaleString("es-AR", {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}{" "}
+                  hs.
+                </p>
+              )}
+              <p className="text-sm text-gray-600 mt-2">
+                Recibirás un correo electrónico cuando tu pedido esté listo para
+                retirar.
+              </p>
+            </div>
           </div>
         </div>
 
