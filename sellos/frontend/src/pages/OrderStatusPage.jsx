@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Package, Loader, AlertTriangle } from "lucide-react";
+
+import { CheckCircle, Package, AlertTriangle, Loader } from "lucide-react";
 
 // Creamos un "hook" personalizado para mantener la lógica de fetching ordenada y fuera del componente principal.
 // Esto hace que el código sea más limpio y reutilizable.
