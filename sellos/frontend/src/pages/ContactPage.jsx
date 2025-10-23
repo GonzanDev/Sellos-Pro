@@ -29,7 +29,7 @@ export default function ContactPage() {
                 <MapPin size={24} className="text-red-600 mt-1" />
                 <div>
                   <h3 className="font-semibold text-gray-800">Dirección</h3>
-                  <p>Avenida Luro 3247, Mar del Plata</p>
+                  <p>Bermejo 477, Mar del Plata</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -45,15 +45,14 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-gray-800">
                     Correo Electrónico
                   </h3>
-                  <p>contacto@sellospro.com</p>
+                  <p>sellospro@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Clock size={24} className="text-red-600 mt-1" />
                 <div>
                   <h3 className="font-semibold text-gray-800">Horario</h3>
-                  <p>Lunes a Viernes: 9:00 - 18:00 hrs.</p>
-                  <p>Sábado: 10:00 - 14:00 hrs.</p>
+                  <p>Lunes a Viernes: 10:00 - 15:00 hs.</p>
                 </div>
               </div>
             </div>

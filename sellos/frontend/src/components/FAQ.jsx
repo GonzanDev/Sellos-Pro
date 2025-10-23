@@ -5,22 +5,22 @@ const faqData = [
   {
     question: "¿Cuáles son los plazos de entrega?",
     answer:
-      "Los pedidos suelen tardar entre 3 y 5 días hábiles en ser despachados. El tiempo de envío final dependerá de tu ubicación.",
+      "La demora depende del tipo de sello que elijas. Generalmente, los sellos estándar estan listos para retirar en 2 días hábiles, mientras que los sellos KIT LOGO personalizados tardan 10 días hábiles desde el momento de la compra. De cualquier modo, el cliente sera avisado por WhatsApp al momento que su pedido este listo para ser retirado.",
   },
   {
     question: "¿Puedo personalizar mi sello?",
     answer:
-      "¡Claro que sí! Ofrecemos un personalizador en la página de cada producto donde puedes añadir texto, logos y elegir colores para crear tu sello a medida.",
+      "¡Claro que sí! Ofrecemos un personalizador en la página de cada producto donde puedes añadir texto, logos y elegir colores para crear tu sello a medida. Si necesitas darnos instrucciones específicas también tienes un cuadro para detallar lo que necesites",
   },
   {
-    question: "¿Qué materiales utilizan?",
+    question: "¿Hacen envios?",
     answer:
-      "Utilizamos polímeros de alta durabilidad y carcasas de las mejores marcas para garantizar que tu sello tenga una larga vida útil y una impresión nítida.",
+      "De momento no realizamos envíos, pero el cliente si desea puede contratar un servicio externo para que pase a retirar el pedido en nuestra tienda.",
   },
   {
-    question: "¿Tienen tienda física?",
+    question: "¿Donde retiro mi pedido?",
     answer:
-      "Sí, puedes encontrar nuestra tienda en [Tu Dirección Aquí]. También puedes realizar tu pedido online y retirarlo en el local.",
+      "Podes encontrarnos en nuestra nuestra tienda para retirar tu pedido en Bermejo 477 de Lunes a Viernes de 10 a 15hs.",
   },
 ];
 

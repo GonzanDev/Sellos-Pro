@@ -23,10 +23,10 @@ export default function FaqPage() {
             </h2>
             <p className="text-gray-600 leading-relaxed">
               Bienvenidos a Sellospro, tu tienda de confianza para sellos de
-              alta calidad. Fundada en 2001, nuestra pasión por la precisión y
-              el detalle nos ha convertido en líderes del mercado. Empezamos
-              como un pequeño negocio familiar y hemos crecido hasta
-              convertirnos en un referente para profesionales y entusiastas.
+              alta calidad. Nos dedicamos a la produccion y venta de sellos desde
+              1980. Hemos ido creciendo como un Negocio familiar a traves de los años, 
+              donde de generación en generación que hemos ido perfeccionando el arte de hacer
+              sellos personalizados.
             </p>
             <p className="text-gray-600 leading-relaxed mt-4">
               Nuestro compromiso es ofrecer productos duraderos y un servicio al

@@ -10,7 +10,9 @@ export default function Footer() {
         <div>
           <h2 className="text-2xl font-bold text-red-600">Sellospro</h2>
           <p className="mt-3 text-sm text-gray-500">
-            Calidad y diseño a tu medida.
+            Lunes a Viernes de 10 a 15hs.
+            <br />
+            Bermejo 477, Mar del Plata. <br />
           </p>
         </div>
 
