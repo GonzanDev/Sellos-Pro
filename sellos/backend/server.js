@@ -76,60 +76,150 @@ async function sendConfirmationEmail({
   // Configuramos SendGrid con tu API Key
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // Construimos la lista de productos para el cuerpo del correo.
   const cartHtml = cart
     .map((item) => {
+      // Formateamos los detalles de personalización (si existen)
       const customizationHtml = item.customization
         ? Object.entries(item.customization)
-
             .map(([key, value]) => {
-              if (!value) return "";
-
-              return `<p style="margin: 2px 0; font-size: 12px;"><strong>${key}:</strong> ${value}</p>`;
+              if (!value) return ""; // Ignoramos campos vacíos
+              // Damos un formato especial a los comentarios
+              if (key === "comentarios") {
+                return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
+              }
+              // Formato estándar para otros campos
+              return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
+                "line",
+                "Línea "
+              )}:</strong> ${value}</p>`;
             })
-
             .join("")
-        : "";
+        : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>'; // Mensaje si no hay personalización
 
+      // Creamos la fila de la tabla para este producto
       return `
-    <li style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
-      <p><strong>Producto:</strong> ${item.name} (x${item.qty || 1})</p>
-      <div style="padding-left: 15px;">${customizationHtml}</div>
-    </li>`;
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <p style="margin: 0; font-weight: bold; color: #333;">${
+              item.name || item.title
+            } (x${item.qty || item.quantity})</p>
+            <div style="padding-left: 10px; margin-top: 5px;">${customizationHtml}</div>
+          </td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; color: #333;">
+            AR$ ${(item.price || item.unit_price).toFixed(2)}
+          </td>
+        </tr>
+      `;
     })
-    .join("");
+    .join(""); // Unimos todas las filas
 
+  // --- Construcción del HTML de Entrega ---
+  // Definimos el texto según el método de entrega
   const deliveryHtml =
     deliveryMethod === "shipping"
-      ? `<h3>📦 Dirección de Envío</h3><p>${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-      : `<h3>🏪 Método de Entrega</h3><p>Retiro en el local.</p>`;
+      ? `<h4>📦 Dirección de Envío</h4><p style="margin: 5px 0; color: #555;">${address.street}, ${address.city}, CP ${address.postalCode}</p>`
+      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Avenida Luro 3247, Mar del Plata)</p>`;
 
+  // Enlace a la página de estado del pedido
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
-  // Creamos el objeto del mensaje para SendGrid
+  // --- Plantilla HTML Principal del Correo ---
+  // Usamos tablas para compatibilidad y estilos inline
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header { background-color: #e30613; color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; color: #333; line-height: 1.6; }
+        .content h2 { color: #e30613; margin-top: 0; }
+        .content h3 { color: #333; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .order-summary table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .order-summary th { text-align: left; color: #888; font-size: 12px; padding-bottom: 5px; border-bottom: 2px solid #eee; }
+        .total-row strong { font-size: 18px; color: #e30613; }
+        .button-container { text-align: center; margin-top: 30px; }
+        .button { background-color: #e30613; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; }
+        .footer { background-color: #f4f4f4; color: #888; text-align: center; padding: 15px; font-size: 12px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>SellosPro</h1>
+        </div>
+        <div class="content">
+          <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
+          <p>Hemos recibido tu pedido y lo estamos procesando. A continuación, encontrarás los detalles:</p>
+          
+          <h3>📄 Datos del Pedido</h3>
+          <p style="margin: 5px 0;"><strong>ID del Pedido:</strong> ${externalReference}</p>
+          
+          <h3>👤 Datos del Comprador</h3>
+          <p style="margin: 5px 0;"><strong>Nombre:</strong> ${
+            buyer?.name || "N/D"
+          }</p>
+          <p style="margin: 5px 0;"><strong>Email:</strong> ${
+            buyer?.email || "N/D"
+          }</p>
+          <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${
+            buyer?.phone || "N/D"
+          }</p>
+          
+          <h3>🚚 Información de Entrega</h3>
+          ${deliveryHtml}
+
+          <h3>🛒 Resumen del Pedido</h3>
+          <div class="order-summary">
+            <table cellpadding="0" cellspacing="0">
+              <thead>
+                <tr>
+                  <th style="padding-bottom: 8px;">Producto</th>
+                  <th style="padding-bottom: 8px; text-align: right;">Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${cartHtml}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td style="padding-top: 15px; border-top: 2px solid #eee; text-align: right; font-weight: bold;" colspan="1">Total:</td>
+                  <td style="padding-top: 15px; border-top: 2px solid #eee; text-align: right;" class="total-row"><strong>AR$ ${Number(
+                    total || 0
+                  ).toFixed(2)}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="button-container">
+            <a href="${orderStatusLink}" class="button">Ver Estado del Pedido</a>
+          </div>
+          
+          <p style="margin-top: 30px; font-size: 12px; color: #888;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        </div>
+        <div class="footer">
+          &copy; ${new Date().getFullYear()} SellosPro. Todos los derechos reservados.
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  // Preparamos los datos del mensaje para SendGrid
   const msg = {
     to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
     from: process.env.EMAIL_FROM,
-    subject: `🧾 Confirmación de tu pedido en SellosPro (${externalReference})`,
-    html: `
-      <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
-      <p><strong>ID del Pedido:</strong> ${externalReference}</p>
-      <hr>
-      ${deliveryHtml}
-      <hr>
-      <h3>🛒 Resumen de tu pedido:</h3>
-      <ul style="list-style:none;padding:0;margin:0;">${cartHtml}</ul>
-      <h3>Total: AR$ ${Number(total || 0).toFixed(2)}</h3>
-      <hr>
-      <p style="margin-top: 20px;">
-        <a href="${orderStatusLink}" style="background-color: #e30613; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px;">
-          Ver Estado del Pedido
-        </a>
-      </p>
-    `,
+    subject: `Confirmación de tu pedido en SellosPro (${externalReference})`,
+    html: emailHtml, // Usamos la plantilla HTML que acabamos de crear
   };
 
   try {
+    // Intentamos enviar el correo
     await sgMail.send(msg);
     console.log(
       `✅ Correo de confirmación enviado via SendGrid para el pedido ${externalReference}.`
