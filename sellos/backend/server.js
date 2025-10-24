@@ -118,7 +118,7 @@ async function sendConfirmationEmail({
   const deliveryHtml =
     deliveryMethod === "shipping"
       ? `<h4>📦 Dirección de Envío</h4><p style="margin: 5px 0; color: #555;">${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Avenida Luro 3247, Mar del Plata)</p>`;
+      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Bermejo 477, Mar del Plata)</p>`;
 
   // Enlace a la página de estado del pedido
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
@@ -197,7 +197,7 @@ async function sendConfirmationEmail({
           </div>
 
           <div class="button-container">
-            <a href="${orderStatusLink}" class="button">Ver Estado del Pedido</a>
+            <a href="${orderStatusLink}" style="color: white class="button">Ver Estado del Pedido</a>
           </div>
           
           <p style="margin-top: 30px; font-size: 12px; color: #888;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
