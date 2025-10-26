@@ -197,7 +197,7 @@
   "description": "Incluye sello automático + almohadilla + tinta.",
   "price": 35000,
   "image": "/images/kit-logo.png",
-  "category": "Kit"
+  "category": "Kits"
 },
 {
   "id": 18,
@@ -205,7 +205,7 @@
   "description": "Incluye sello automático + almohadilla + tinta textil.",
   "price": 45000,
   "image": "/images/kit-logo.png",
-  "category": "Kit"
+  "category": "Kits"
 },
 {
   "id": 19,
@@ -213,7 +213,7 @@
   "description": "Agrega almohadilla + tinta para los sellos que lo requieran.",
   "price": 10000,
   "image": "/images/kit-escolar.png",
-  "category": "Kit"
+  "category": "Kits"
 }
 
 ]

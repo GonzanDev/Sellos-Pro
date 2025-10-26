@@ -43,7 +43,7 @@ export default function ProductPage({ showToast }) {
 
   const category = product.category?.toLowerCase();
   const isCustomizable = ["automáticos", "tintas"].includes(category);
-  const isKit = category === "kit";
+  const isKit = category === "kits";
   const isSchool = category === "escolar";
 
   const handleAddToCart = () => {

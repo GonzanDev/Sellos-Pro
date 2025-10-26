@@ -1,13 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 const kits = {
   "Kit 1": { width: 4, height: 4 },
   "Kit 2": { width: 5, height: 3 },
   "Kit 3": { width: 6, height: 4 },
+  "Kit 4": { width: 7, height: 5 },
+  "Kit 5": { width: 8, height: 6 },
 };
 
 export default function PersonalizerLogo({ customization, setCustomization }) {
   const fileInputRef = useRef(null);
+
+  // ✅ Seleccionar "Kit 1" por defecto al cargar el componente
+  useEffect(() => {
+    if (!customization.selectedKit) {
+      const defaultKit = kits["Kit 1"];
+      setCustomization({
+        ...customization,
+        selectedKit: "Kit 1",
+        width: defaultKit.width,
+        height: defaultKit.height,
+      });
+    }
+  }, [customization, setCustomization]);
 
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
@@ -31,11 +46,18 @@ export default function PersonalizerLogo({ customization, setCustomization }) {
     }
   };
 
-  const width = customization.width || 3;
-  const height = customization.height || 3;
+  const selectedKit = customization.selectedKit
+    ? kits[customization.selectedKit]
+    : kits["Kit 1"];
+
+  const scale = 15; // Escala visual del rectángulo (px por cm)
 
   return (
     <div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Seleccionar tamaño de kit
+      </label>
+
       <div className="flex flex-wrap gap-2">
         {Object.keys(kits).map((kitName) => (
           <button
@@ -51,6 +73,46 @@ export default function PersonalizerLogo({ customization, setCustomization }) {
           </button>
         ))}
       </div>
+
+      {selectedKit && (
+        <>
+          <div className="flex gap-6 mt-3">
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-1">Ancho</p>
+              <div className="px-3 py-2 bg-gray-100 rounded-md text-sm border">
+                {selectedKit.width} cm
+              </div>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-1">Alto</p>
+              <div className="px-3 py-2 bg-gray-100 rounded-md text-sm border">
+                {selectedKit.height} cm
+              </div>
+            </div>
+          </div>
+
+          {/* 🟥 Vista previa del tamaño del kit */}
+          <div className="mt-4">
+            <p className="text-sm font-medium text-gray-700 mb-2">
+              Vista previa del área de sello
+            </p>
+            <div className="flex justify-center items-center">
+              <div
+                className="border-2 border-gray-400 bg-gray-100 rounded-sm flex items-center justify-center"
+                style={{
+                  width: `${selectedKit.width * scale}px`,
+                  height: `${selectedKit.height * scale}px`,
+                }}
+              >
+                <span className="text-xs text-gray-600">
+                  {selectedKit.width}×{selectedKit.height} cm
+                </span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -69,34 +131,6 @@ export default function PersonalizerLogo({ customization, setCustomization }) {
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Ancho (cm)
-        </label>
-        <input
-          type="number"
-          value={width}
-          onChange={(e) => handleChange("width", Number(e.target.value))}
-          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
-          min={1}
-          step={1}
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Alto (cm)
-        </label>
-        <input
-          type="number"
-          value={height}
-          onChange={(e) => handleChange("height", Number(e.target.value))}
-          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
-          min={1}
-          step={1}
         />
       </div>
 

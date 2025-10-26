@@ -68,6 +68,7 @@ export default function CatalogPage() {
                 <option value="Numeradores">Numeradores</option>
                 <option value="Almohadillas">Almohadillas</option>
                 <option value="Tintas">Tintas</option>
+                <option value="Kits">Kits</option>
                 <option value="Otros">Otros</option>
               </select>
               <ChevronDown
