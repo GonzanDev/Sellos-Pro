@@ -12,14 +12,10 @@ export default function PersonalizerSchool({
 
   const colors = product.colors || [];
 
-  // 🔤 Lista de fuentes disponibles (podés ampliarla si querés)
-  const fonts = [
-    { label: "Arial", value: "arial" },
-    { label: "Times New Roman", value: "times" },
-    { label: "Comic Sans MS", value: "comic" },
-    { label: "Courier New", value: "courier" },
-    { label: "Montserrat", value: "montserrat" },
-  ];
+  // 🔠 Letras A-Z para seleccionar tipo de fuente
+  const letters = Array.from({ length: 26 }, (_, i) =>
+    String.fromCharCode(65 + i)
+  );
 
   return (
     <div className="space-y-4">
@@ -42,21 +38,24 @@ export default function PersonalizerSchool({
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Dibujito
         </label>
-        <select
-          value={customization.icon || ""}
-          onChange={(e) => handleChange("icon", e.target.value)}
+        <input
+          type="number"
+          min="0"
+          max="158"
+          value={customization.icon || 0}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            if (value >= 0 && value <= 158) handleChange("icon", value);
+          }}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
-        >
-          <option value="">Elegir...</option>
-          <option value="estrella">⭐ Estrella</option>
-          <option value="corazon">❤️ Corazón</option>
-          <option value="lapiz">✏️ Lápiz</option>
-        </select>
+          placeholder="Ej: 12"
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          Ingresá un número entre 0 y 158. El valor <strong>0</strong> significa sin dibujito.
+        </p>
       </div>
 
-
-
-      {/* Fuente */}
+      {/* 🔤 Selector de tipo de letra (A–Z) */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Tipo de letra
@@ -66,20 +65,23 @@ export default function PersonalizerSchool({
           onChange={(e) => handleChange("font", e.target.value)}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
-          <option value="">Elegir fuente...</option>
-          {fonts.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
+          <option value="">Elegir tipo (A-Z)...</option>
+          {letters.map((letter) => (
+            <option key={letter} value={letter}>
+              {letter}
             </option>
           ))}
         </select>
+        <p className="text-xs text-gray-500 mt-1">
+          Consultá la imagen con los modelos A–Z para ver cómo es cada fuente.
+        </p>
       </div>
-      
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Detalles
-        </label>
-            <div className="flex gap-4">
+      {/* Detalles */}
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Detalles
+      </label>
+      <div className="flex gap-4">
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -97,7 +99,6 @@ export default function PersonalizerSchool({
           Grado
         </label>
       </div>
-
 
       {/* Color */}
       <ColorPicker

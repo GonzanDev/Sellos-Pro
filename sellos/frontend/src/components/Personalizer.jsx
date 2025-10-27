@@ -11,16 +11,12 @@ export default function Personalizer({
   };
 
   const colors = product.colors || [];
-  const maxLines = product.maxLines || 3;
+  const maxLines = product.maxLines || 4;
 
-  // Lista de fuentes disponibles
-  const fonts = [
-    { label: "Arial", value: "Arial" },
-    { label: "Times New Roman", value: "Times New Roman" },
-    { label: "Courier New", value: "Courier New" },
-    { label: "Montserrat", value: "Montserrat" },
-    { label: "Comic Sans MS", value: "Comic Sans MS" },
-  ];
+  // Generar letras A a Z
+  const letters = Array.from({ length: 26 }, (_, i) =>
+    String.fromCharCode(65 + i)
+  );
 
   return (
     <div>
@@ -41,23 +37,39 @@ export default function Personalizer({
           </div>
         ))}
 
-        {/* 🔹 Selección de letra (fuente) */}
+        {/* 🔹 Selector de letra A–Z */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Tipo de letra
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Tipo de letra (A–Z)
           </label>
-          <select
-            value={customization.font || ""}
-            onChange={(e) => handleChange("font", e.target.value)}
-            className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
-          >
-            <option value="">Seleccionar fuente...</option>
-            {fonts.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
+
+          <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
+            {letters.map((letter) => (
+              <button
+                key={letter}
+                type="button"
+                onClick={() => handleChange("font", letter)}
+                className={`flex items-center justify-center w-9 h-9 text-sm font-semibold rounded border transition 
+                  ${
+                    customization.font === letter
+                      ? "bg-red-600 text-white border-red-600"
+                      : "bg-white border-gray-300 hover:bg-gray-100"
+                  }`}
+              >
+                {letter}
+              </button>
             ))}
-          </select>
+          </div>
+
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => handleChange("font", "")}
+              className="text-xs text-gray-500 hover:text-gray-800"
+            >
+              Borrar selección
+            </button>
+          </div>
         </div>
 
         {/* 🔹 Selector de color */}

@@ -76,19 +76,21 @@
     "image": "/images/automatico-n3.png",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true }
-    ]
+    ],
+    "maxLines": 5
   },
   {
     "id": 6,
     "category": "Automáticos",
     "name": "Automático N°4",
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
-    "price": 29000,
+    "price": 0.50,
     "image": "/images/automatico-n4.png",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": true }
-    ]
+    ],
+    "maxLines": 6
   },
   {
     "id": 7,
