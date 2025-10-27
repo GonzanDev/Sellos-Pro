@@ -232,6 +232,59 @@ async function sendConfirmationEmail({
   }
 }
 
+async function sendBudgetRequestEmail({ product, customization, quantity }) {
+  if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
+    console.error("❌ Credenciales de SendGrid no configuradas.");
+    return; // No detenemos la app, solo logueamos
+  }
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+  // Formateamos la personalización para el correo
+  const customizationHtml = customization
+    ? Object.entries(customization)
+        .map(([key, value]) => {
+          if (!value) return "";
+          if (key === "logoPreview")
+            return `<p><strong>Logo:</strong> <em>(El cliente adjuntó un logo)</em></p>`;
+          return `<p><strong>${key.replace(
+            "line",
+            "Línea "
+          )}:</strong> ${value}</p>`;
+        })
+        .join("")
+    : "Sin detalles.";
+
+  const msg = {
+    to: process.env.EMAIL_FROM, // Se envía a tu correo de negocio
+    from: process.env.EMAIL_FROM, // Remitente verificado
+    subject: `⚠️ Solicitud de Presupuesto: ${product.name}`,
+    html: `
+      <h2>Nueva Solicitud de Presupuesto</h2>
+      <p>Se ha solicitado un presupuesto para el siguiente producto con personalización.</p>
+      <hr>
+      <h3>Producto</h3>
+      <p><strong>Nombre:</strong> ${product.name}</p>
+      <p><strong>ID:</strong> ${product.id}</p>
+      <p><strong>Cantidad solicitada:</strong> ${quantity}</p>
+      <hr>
+      <h3>Detalles de Personalización</h3>
+      ${customizationHtml}
+      <hr>
+      <p>Por favor, revisa la solicitud y prepárate para que el cliente te contacte (o contáctalo si pediste su email).</p>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log(
+      `✅ Correo de solicitud de presupuesto enviado para ${product.name}.`
+    );
+  } catch (error) {
+    console.error("❌ Error al enviar correo de presupuesto:", error);
+    if (error.response) console.error(error.response.body);
+  }
+}
+
 // ==============================================================================
 // 🚀 CONFIGURACIÓN DEL SERVIDOR EXPRESS
 // ==============================================================================
@@ -423,6 +476,28 @@ router.post("/send-email", async (req, res) => {
   } catch (error) {
     console.error("Error enviando correo de prueba:", error);
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ==============================================================================
+// 💸 ¡NUEVA RUTA! PARA MANEJAR SOLICITUDES DE PRESUPUESTO
+// ==============================================================================
+router.post("/request-budget", async (req, res) => {
+  console.log("📨 Solicitud de presupuesto recibida:", req.body);
+  const { product, customization, quantity } = req.body;
+
+  if (!product || !customization) {
+    return res
+      .status(400)
+      .json({ error: "Faltan datos del producto o la personalización." });
+  }
+
+  try {
+    await sendBudgetRequestEmail({ product, customization, quantity });
+    res.status(200).json({ success: true, message: "Solicitud recibida." });
+  } catch (error) {
+    console.error("❌ Error al procesar solicitud de presupuesto:", error);
+    res.status(500).json({ error: "No se pudo procesar la solicitud." });
   }
 });
 
