@@ -5,7 +5,11 @@
     "name": "Promo Escolar",
     "description": "Kit de sello automático ideal para uso escolar.",
     "price": 20000,
-    "image": "/images/automatico-escolar.png",
+    "image": "/images/Escolar/EscolaresPic.jpg",
+    "thumbnails": [
+      "/images/Escolar/Dibujos.jpg",
+      "/images/Escolar/LetrasPic.jpg"
+    ],
     "colors": [
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
       { "name": "Verde", "hex": "#57FF00", "stock": true },
@@ -22,7 +26,12 @@
     "name": "PROMO Automático 842",
     "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
     "price": 20000,
-    "image": "/images/automatico-shiny.png",
+    "image": "/images/842 Estandar/Estandar.jpg",
+    "thumbnails": [
+      "/images/842 Estandar/EstandarColores.jpg",
+      "/images/842 Estandar/EstandarTransparentes.jpg",
+      "/images/Escolar/LetrasPic.jpg"
+    ],
     "colors": [
       { "name": "Negro", "hex": "#0D0907", "stock": false },
       { "name": "Amarillo", "hex": "#ECF40B", "stock": true },
@@ -94,12 +103,21 @@
   },
   {
     "id": 7,
-    "category": "Fechadores",
-    "name": "Fechador 3mm",
-    "description": "Fechador manual de 3mm, ideal para oficinas.",
-    "price": 8000,
-    "image": "/images/fechador-3mm.png",
-    "requiresPad": true
+    "category": "Automáticos",
+    "name": "Automatico linea PASTEL",
+    "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
+    "price": 20000,
+    "image": "/images/Pastel/Pastel.jpg",
+    "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg"
+    ],
+    "colors": [
+      { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
+      { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
+      { "name": "Violeta Pastel", "hex": "#ad36e0", "stock": true },
+      { "name": "Turquesa Pastel", "hex": "#afeeee", "stock": true },
+      { "name": "Amarillo Pastel", "hex": "#fdfd96", "stock": true }
+    ]
 
   },
   {

@@ -2,10 +2,11 @@ import React, { useRef, useEffect } from "react";
 
 const kits = {
   "Kit 1": { width: 4, height: 4 },
-  "Kit 2": { width: 5, height: 3 },
-  "Kit 3": { width: 6, height: 4 },
-  "Kit 4": { width: 7, height: 5 },
-  "Kit 5": { width: 8, height: 6 },
+  "Kit 2": { width: 10, height: 6 },
+  "Kit 3": { width: 12, height: 8 },
+  "Kit 4": { width: 10, height: 15 },
+  "Kit 5": { width: 15, height: 9 },
+  "Kit 6": { width: 20, height: 13 },
 };
 
 export default function PersonalizerLogo({ customization, setCustomization }) {
