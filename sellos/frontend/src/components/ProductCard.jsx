@@ -10,7 +10,7 @@ export default function ProductCard({ product, addToCart }) {
       <Link to={`/product/${product.id}`} className="block">
         {/* --- CONTENEDOR DE IMAGEN AJUSTADO --- */}
         {/* Usamos aspect-square para mantener proporción 1:1 y bg-white */}
-        <div className="aspect-square w-full bg-white flex items-center justify-center p-4 overflow-hidden">
+        <div className="aspect-square w-full bg-white flex items-center justify-center  overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
@@ -30,31 +30,24 @@ export default function ProductCard({ product, addToCart }) {
             ${price.toLocaleString("es-AR")}
           </p>
         </div>
-        <button
-          onClick={() => addToCart(product)}
-          className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm" // Ajuste de tamaño de texto
-        >
-          Agregar
-        </button>
+        {isKitProduct ? (
+          // Botón para productos kit/logo: lleva a la página de producto para personalizar
+          <Link
+            to={`/product/${product.id}`}
+            className="mt-4 w-full block text-center py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300 text-sm"
+          >
+            Personalizar y Cotizar
+          </Link>
+        ) : (
+          // Botón estándar para agregar al carrito
+          <button
+            onClick={() => addToCart(product)}
+            className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
+          >
+            Agregar
+          </button>
+        )}
       </div>
-
-      {isKitProduct ? (
-        // Botón para productos kit/logo: lleva a la página de producto para personalizar
-        <Link
-          to={`/product/${product.id}`}
-          className="mt-4 w-full block text-center py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300 text-sm"
-        >
-          Personalizar y Cotizar
-        </Link>
-      ) : (
-        // Botón estándar para agregar al carrito
-        <button
-          onClick={() => addToCart(product)}
-          className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
-        >
-          Agregar
-        </button>
-      )}
     </div>
   );
 }

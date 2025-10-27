@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// --- Importaciones necesarias ---
-import { Helmet } from "react-helmet-async";
 // Importamos 'Send' para el nuevo botón y 'Heart' que faltaba
 import { ShoppingCart, Heart, X, Send } from "lucide-react";
 import Personalizer from "../components/Personalizer";
@@ -38,13 +36,8 @@ export default function ProductPage({ showToast }) {
       </div>
     );
   if (!product) {
-    // Añadimos Helmet también para la página de "No encontrado"
     return (
       <>
-        <Helmet>
-          <title>Producto no encontrado - SellosPro</title>
-          <meta name="robots" content="noindex" />
-        </Helmet>
         <div className="flex flex-col items-center justify-center py-20">
           <p className="text-lg">Producto no encontrado</p>
           <button
@@ -125,13 +118,11 @@ export default function ProductPage({ showToast }) {
   )}... Calidad profesional en Mar del Plata.`;
 
   return (
-    <div className="bg-white py-8 md:py-12">
+    <div className="= py-8 md:py-12">
       {" "}
       {/* Fondo blanco para la página */}
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-      </Helmet>
+      <title>{pageTitle}</title>
+      <meta name="description" content={pageDescription} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Columna de Imágenes */}
@@ -263,7 +254,7 @@ export default function ProductPage({ showToast }) {
                       >
                         -
                       </button>
-                      <span className="px-4 py-2 font-semibold border-l border-r">
+                      <span className="px-4 py-2 font-semibold ">
                         {quantity}
                       </span>
                       <button
@@ -284,11 +275,6 @@ export default function ProductPage({ showToast }) {
                 )}
               </div>
             </div>
-            {/* Botón Favoritos (funcionalidad pendiente) */}
-            <button className="w-full flex items-center justify-center gap-2 mt-4 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
-              <Heart size={20} />
-              Añadir a Favoritos
-            </button>
           </div>
         </div>
       </div>
