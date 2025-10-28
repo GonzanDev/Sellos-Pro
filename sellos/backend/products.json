@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": "Escolar",
+    "category": ["Escolar"],
     "name": "Promo Escolar",
     "description": "Kit de sello automático ideal para uso escolar.",
     "price": 20000,
@@ -22,7 +22,27 @@
   },
   {
     "id": 2,
-    "category": "Automáticos",
+    "category": ["Escolar"],
+    "name": "Promo Escolar VERTICAL",
+    "description": "Kit de sello automático ideal para uso escolar.",
+    "price": 20000,
+    "image": "/images/Pastel/Pastel.jpg",
+    "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg",
+      "/images/Escolar/Dibujos.jpg",
+      "/images/Escolar/LetrasPic.jpg"
+    ],
+    "colors": [
+      { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
+      { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
+      { "name": "Violeta Pastel", "hex": "#ad36e0", "stock": true },
+      { "name": "Turquesa Pastel", "hex": "#afeeee", "stock": true },
+      { "name": "Amarillo Pastel", "hex": "#fdfd96", "stock": true }
+    ]
+  },
+  {
+    "id": 3,
+    "category": ["Automáticos"],
     "name": "PROMO Automático 842",
     "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
     "price": 20000,
@@ -46,12 +66,15 @@
     ]
   },
   {
-    "id": 3,
-    "category": "Automáticos",
+    "id": 4,
+    "category": ["Automáticos"],
     "name": "Mouse Stamp",
     "description": "Sello con formato de mouse, ergonómico y portátil.",
     "price": 26000,
-    "image": "/images/mouse-stamp.png",
+    "image": "/images/Mouse/Mouse.jpg",
+        "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg"
+    ],
     "colors": [
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
       { "name": "Cromado", "hex": "#9C9C9C", "stock": true },
@@ -59,17 +82,18 @@
       { "name": "Azul", "hex": "#1368E8", "stock": true },
       { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
       { "name": "Rosa", "hex": "#F540A8", "stock": true }
-
-      
     ]
   },
   {
-    "id": 4,
-    "category": "Automáticos",
-    "name": "Handy Stamp",
+    "id": 5,
+    "category": ["Automáticos"],
+    "name": "Handy Stamp Pocket",
     "description": "Sello automático compacto y fácil de transportar.",
     "price": 26000,
-    "image": "/images/handy-stamp.png",
+    "image": "/images/Handy/Handy.jpg",
+            "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg"
+    ],
     "colors": [
       { "name": "Azul Oscuro", "hex": "#001F54", "stock": true },
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
@@ -77,23 +101,24 @@
     ]
   },
   {
-    "id": 5,
-    "category": "Automáticos",
+    "id": 6,
+    "category": ["Automáticos"],
     "name": "Automático N°3",
     "description": "Sello automático de un tamaño mayor al estándar N°3.",
     "price": 26000,
-    "image": "/images/automatico-n3.png",
-    "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": true }
+    "image": "/images/843/843.jpg",
+    "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg"
     ],
+    "colors": [{ "name": "Negro", "hex": "#000000", "stock": true }],
     "maxLines": 5
   },
   {
-    "id": 6,
-    "category": "Automáticos",
+    "id": 7,
+    "category": ["Automáticos"],
     "name": "Automático N°4",
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
-    "price": 0.50,
+    "price": 0.5,
     "image": "/images/automatico-n4.png",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -102,15 +127,13 @@
     "maxLines": 6
   },
   {
-    "id": 7,
-    "category": "Automáticos",
+    "id": 8,
+    "category": ["Automáticos"],
     "name": "Automatico linea PASTEL",
     "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
     "price": 20000,
     "image": "/images/Pastel/Pastel.jpg",
-    "thumbnails": [
-      "/images/Escolar/LetrasPic.jpg"
-    ],
+    "thumbnails": ["images/Pastel/Pastel1.jpg", "/images/Escolar/LetrasPic.jpg"],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
       { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
@@ -118,31 +141,19 @@
       { "name": "Turquesa Pastel", "hex": "#afeeee", "stock": true },
       { "name": "Amarillo Pastel", "hex": "#fdfd96", "stock": true }
     ]
-
   },
   {
-    "id": 8,
-    "category": "Fechadores",
+    "id": 9,
+    "category": ["Fechadores"],
     "name": "Fechador 5mm",
     "description": "Fechador manual de 5mm, resistente y duradero.",
     "price": 10000,
     "image": "/images/fechador-5mm.png",
     "requiresPad": true
-
-  },
-  {
-    "id": 9,
-    "category": "Fechadores",
-    "name": "Fechador 8mm",
-    "description": "Fechador manual de 8mm, para impresión clara y legible.",
-    "price": 12000,
-    "image": "/images/fechador-8mm.png",
-    "requiresPad": true
-
   },
   {
     "id": 10,
-    "category": "Numeradores",
+    "category": ["Numeradores"],
     "name": "Numerador 4 dígitos",
     "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
     "price": 8000,
@@ -151,7 +162,7 @@
   },
   {
     "id": 11,
-    "category": "Numeradores",
+    "category": ["Numeradores"],
     "name": "Numerador 6 dígitos",
     "description": "Numerador manual de 6 dígitos, ideal para documentos.",
     "price": 10000,
@@ -160,7 +171,7 @@
   },
   {
     "id": 12,
-    "category": "Numeradores",
+    "category": ["Numeradores"],
     "name": "Numerador 8 dígitos",
     "description": "Numerador manual de 8 dígitos, resistente y confiable.",
     "price": 12000,
@@ -169,7 +180,7 @@
   },
   {
     "id": 13,
-    "category": "Almohadillas",
+    "category": ["Almohadillas"],
     "name": "Almohadilla Universal",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 7000,
@@ -177,12 +188,12 @@
   },
   {
     "id": 14,
-    "category": "Tintas",
+    "category": ["Tintas"],
     "name": "Tinta AL AGUA - Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
-    "price": 0.50,
-    "image": "/images/tinta-chica.png",
-        "colors": [
+    "price": 0.5,
+    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": true },
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
@@ -197,7 +208,7 @@
   },
   {
     "id": 15,
-    "category": "Tintas",
+    "category": ["Tintas"],
     "name": "Botella Grande",
     "description": "Botella grande de tinta de 250ml.",
     "price": 25000,
@@ -205,35 +216,43 @@
   },
   {
     "id": 16,
-    "category": "Otros",
+    "category": ["Otros"],
     "name": "Sello Abecedario",
     "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
     "price": 10000,
     "image": "/images/sello-abecedario.png"
   },
   {
-  "id": 17,
-  "name": "Kit Sello Logo 1 - Hasta 6x4cm",
-  "description": "Incluye sello automático + almohadilla + tinta.",
-  "price": 35000,
-  "image": "/images/kit-logo.png",
-  "category": "Kits"
-},
-{
-  "id": 18,
-  "name": "PROMO Textil",
-  "description": "Incluye sello automático + almohadilla + tinta textil.",
-  "price": 45000,
-  "image": "/images/kit-logo.png",
-  "category": "Kits"
-},
-{
-  "id": 19,
-  "name": "Almohadilla + Tinta",
-  "description": "Agrega almohadilla + tinta para los sellos que lo requieran.",
-  "price": 10000,
-  "image": "/images/kit-escolar.png",
-  "category": "Kits"
-}
-
+    "id": 17,
+    "category": ["Kits"],
+    "name": "Kit Sello Logo 1 - Hasta 6x4cm",
+    "description": "Incluye sello automático + almohadilla + tinta.",
+    "price": 35000,
+    "image": "/images/kit-logo.png"
+  },
+  {
+    "id": 18,
+    "category": ["Kits"],
+    "name": "PROMO Textil",
+    "description": "Incluye sello automático + almohadilla + tinta textil.",
+    "price": 45000,
+    "image": "/images/kit-logo.png"
+  },
+  {
+    "id": 19,
+    "category": ["Tintas", "Almohadillas"],
+    "name": "Almohadilla + Tinta",
+    "description": "Agrega almohadilla + tinta para los sellos que lo requieran.",
+    "price": 10000,
+    "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
+  },
+  {
+    "id": 20,
+    "category": ["Automáticos", "Fechadores"],
+    "name": "Fechador automatico",
+    "description": "Sello fechador automatico importado. Primera calidad.",
+    "price": 19000,
+    "image": "/images/FechadorAutom/Fechador.jpg",
+        "thumbnails": ["/images/FechadorAutom/Fechador2.jpg" ]
+  }
 ]

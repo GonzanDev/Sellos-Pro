@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// Importamos 'Send' para el nuevo botón y 'Heart' que faltaba
 import { ShoppingCart, Heart, X, Send } from "lucide-react";
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
+// --- Agrega el ColorPicker si aún no está importado ---
+import ColorPicker from "../components/ColorPicker";
+// ----------------------------------------------------
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
 
@@ -20,9 +22,7 @@ export default function ProductPage({ showToast }) {
   const [customization, setCustomization] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  // --- Estado para controlar el modal ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // --- ¡NUEVO! Estado de carga para el botón de presupuesto ---
   const [isSendingBudget, setIsSendingBudget] = useState(false);
 
   const product = products.find((p) => String(p.id) === id);
@@ -51,10 +51,23 @@ export default function ProductPage({ showToast }) {
     );
   }
 
-  const category = product.category?.toLowerCase();
-  const isCustomizable = ["automáticos", "tintas"].includes(category);
-  const isKit = category === "kits"; // Asegúrate que esta categoría sea correcta
-  const isSchool = category === "escolar";
+  const categories = (
+    Array.isArray(product.category)
+      ? product.category
+      : typeof product.category === "string"
+      ? [product.category]
+      : []
+  ).map((c) => c.toLowerCase());
+
+  // --- ✅ NUEVA LÓGICA DE CATEGORÍAS CORREGIDA ---
+  const isKit = categories.includes("kits");
+  const isSchool = categories.includes("escolar");
+  const isInk = categories.includes("tintas"); // Identificamos las tintas
+  const isDateStamp = categories.includes("fechadores"); // <-- AÑADIDO: Identifica fechadores
+
+ // isCustomizable: Solo si es Automático Y NO es Tinta Y NO es Fechador (u otros no personalizables)
+ const isCustomizable = categories.includes("automáticos") && !isInk && !isDateStamp;
+ // ----------------------------------------------// ----------------------------------------------
 
   const handleAddToCart = () => {
     const productToAdd = {
@@ -66,29 +79,27 @@ export default function ProductPage({ showToast }) {
     showToast(`${product.name} agregado al carrito`);
   };
 
-  // --- ¡NUEVO! Función para solicitar presupuesto ---
   const handleRequestBudget = async () => {
-    // Validamos que se haya subido un logo
+    // ... (Tu función handleRequestBudget no necesita cambios) ...
     if (isKit && !customization.logoPreview) {
       showToast("Por favor, sube un logo para solicitar el presupuesto.");
       return;
     }
 
-    setIsSendingBudget(true); // Mostramos estado de carga
+    setIsSendingBudget(true);
     try {
       const response = await fetch(`${API_URL}/request-budget`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          product: { id: product.id, name: product.name }, // Enviamos info básica del producto
-          customization: customization, // Enviamos todos los detalles de personalización
-          quantity: quantity, // Enviamos la cantidad (aunque para kits puede ser 1 siempre)
+          product: { id: product.id, name: product.name },
+          customization: customization,
+          quantity: quantity,
         }),
       });
 
       if (response.ok) {
         showToast("Solicitud de presupuesto enviada. Te contactaremos pronto.");
-        // Opcional: limpiar el formulario o redirigir
         setCustomization({});
       } else {
         const errorData = await response.json();
@@ -102,7 +113,7 @@ export default function ProductPage({ showToast }) {
       console.error("Error enviando solicitud de presupuesto:", err);
       showToast("Error de conexión al enviar la solicitud.");
     } finally {
-      setIsSendingBudget(false); // Quitamos estado de carga
+      setIsSendingBudget(false);
     }
   };
 
@@ -116,6 +127,12 @@ export default function ProductPage({ showToast }) {
     0,
     120
   )}... Calidad profesional en Mar del Plata.`;
+
+  // --- Función para manejar el cambio de color para tintas ---
+  const handleColorChange = (hex) => {
+    setCustomization((prev) => ({ ...prev, color: hex }));
+  };
+  // --------------------------------------------------------
 
   return (
     <div className="= py-8 md:py-12">
@@ -195,6 +212,7 @@ export default function ProductPage({ showToast }) {
                 Personaliza tu Sello
               </h2>
 
+              {/* Muestra Personalizer SOLO si es customizable (ej: automático) y NO es tinta */}
               {isCustomizable && (
                 <Personalizer
                   product={product}
@@ -202,6 +220,16 @@ export default function ProductPage({ showToast }) {
                   setCustomization={setCustomization}
                 />
               )}
+
+              {/* Muestra SOLO ColorPicker si es Tinta */}
+              {isInk && (
+                <ColorPicker
+                  colors={product.colors || []} // Colores del producto
+                  value={customization.color}
+                  onChange={handleColorChange}
+                />
+              )}
+
               {isKit && (
                 <PersonalizerLogo
                   customization={customization}
@@ -219,15 +247,49 @@ export default function ProductPage({ showToast }) {
               {/* Sección Almohadilla */}
               {product.requiresPad &&
                 (() => {
-                  const padProduct = products.find((p) => p.id === 19); // Asegúrate que el ID es correcto
+                  const padProduct = products.find((p) => p.id === 19);
                   if (!padProduct) return null;
+
                   const handleAddPad = () => {
                     addToCart({ ...padProduct, qty: 1 });
                     showToast(`${padProduct.name} agregado al carrito`);
                   };
+
                   return (
                     <div className="mt-6 border-t border-gray-300 pt-4">
-                      {/* ... (código sección almohadilla) ... */}
+                      <h3 className="text-md font-semibold text-gray-800 mb-2">
+                        ¿No tienes Almohadilla + Tinta?
+                      </h3>
+
+                      <div className="flex gap-4 items-center mb-3">
+                        {/* <-- AQUÍ SE AGREGA LA IMAGEN --> */}
+                        <img
+                          src={padProduct.image}
+                          alt={padProduct.name}
+                          className="w-16 h-16 object-contain border rounded-md p-1 bg-white flex-shrink-0"
+                        />
+
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">
+                            Este producto requiere una almohadilla + tinta para
+                            su uso. ¡Añade el kit!
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-lg font-bold text-gray-900">
+                              {padProduct.name}: ${padProduct.price.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Botón de añadir separado al final del bloque */}
+                      <button
+                        onClick={handleAddPad}
+                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 transition"
+                      >
+                        <ShoppingCart size={18} />
+                        Añadir {padProduct.name} al Carrito
+                      </button>
                     </div>
                   );
                 })()}
@@ -306,9 +368,9 @@ export default function ProductPage({ showToast }) {
           </div>
           {/* Añadimos estilos para la animación fade-in si no los tienes globalmente */}
           <style>{`
-            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-            .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-          `}</style>
+              @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+              .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+            `}</style>
         </div>
       )}
     </div>

@@ -3,14 +3,29 @@ import { Link } from "react-router-dom";
 
 export default function ProductCard({ product, addToCart }) {
   const price = typeof product.price === "number" ? product.price : 0;
-  const isKitProduct = product.category?.toLowerCase() === "kits";
+
+  // --- ✅ CORRECCIÓN AQUÍ ---
+  // 1. Estandarizamos 'category' para que SIEMPRE sea un array.
+  const categories = (
+    Array.isArray(product.category)
+      ? product.category
+      : typeof product.category === "string"
+      ? [product.category]
+      : []
+  )
+  .filter(c => typeof c === 'string') // Nos aseguramos que solo sean strings
+  .map((c) => c.toLowerCase()); // 2. Pasamos todo a minúsculas
+
+  // 3. Verificamos si "kits" está INCLUIDO en el array.
+  const isKitProduct = categories.includes("kits");
+  // --- Fin de la corrección ---
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group flex flex-col">
       <Link to={`/product/${product.id}`} className="block">
         {/* --- CONTENEDOR DE IMAGEN AJUSTADO --- */}
         {/* Usamos aspect-square para mantener proporción 1:1 y bg-white */}
-        <div className="aspect-square w-full bg-white flex items-center justify-center  overflow-hidden">
+        <div className="aspect-square w-full bg-white flex items-center justify-center  overflow-hidden">
           <img
             src={product.image}
             alt={product.name}

@@ -12,11 +12,32 @@ export default function CatalogPage() {
   const [category, setCategory] = useState("all");
 
   const sortedAndFilteredProducts = useMemo(() => {
+    // --- ✅ INICIO DE LA CORRECCIÓN ---
     const filtered = products.filter((p) => {
+      // 1. Si la categoría es "all", mostrar todo
       if (category === "all") return true;
-      return p.category === category;
-    });
 
+      // 2. Estandarizar p.category para que SIEMPRE sea un array
+      // (Maneja si es un array, un string, o undefined/null)
+      const productCategories = Array.isArray(p.category)
+        ? p.category
+        : typeof p.category === "string"
+        ? [p.category]
+        : [];
+
+      // 3. Convertir todo a minúsculas para una comparación segura
+      const productCategoriesLower = productCategories
+        .filter(c => typeof c === 'string') // Filtra por si hay nulls en el array
+        .map(c => c.toLowerCase());
+      
+      const selectedCategoryLower = category.toLowerCase();
+
+      // 4. Comprobar si el array de categorías del producto INCLUYE la categoría seleccionada
+      return productCategoriesLower.includes(selectedCategoryLower);
+    });
+    // --- ✅ FIN DE LA CORRECCIÓN ---
+
+    // El resto de tu lógica de ordenamiento (sort) está perfecta y no necesita cambios
     let processableProducts = [...filtered];
 
     switch (sortBy) {

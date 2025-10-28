@@ -40,7 +40,7 @@ export default function Personalizer({
         {/* 🔹 Selector de letra A–Z */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tipo de letra (A–Z)
+            Tipo de letra (A–Z) (Ver en imagen)
           </label>
 
           <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
