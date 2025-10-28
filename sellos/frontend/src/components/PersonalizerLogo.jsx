@@ -34,6 +34,7 @@ export default function PersonalizerLogo({ customization, setCustomization }) {
     if (file) {
       const fileUrl = URL.createObjectURL(file);
       handleChange("logoPreview", fileUrl);
+      handleChange("logoFile", file);
       handleChange("fileName", file.name);
     }
   };

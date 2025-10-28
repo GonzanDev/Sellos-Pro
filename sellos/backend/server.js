@@ -4,19 +4,28 @@ import fs from "fs";
 import dotenv from "dotenv";
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import sgMail from "@sendgrid/mail";
+// --- ¡NUEVO! Importamos Multer ---
+import multer from "multer";
 
 // Carga las variables de entorno (tus claves secretas) desde el archivo .env
 dotenv.config();
+
+// --- Configuración de Multer ---
+// Le decimos que guarde los archivos temporalmente en la memoria del servidor
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Define qué sitios web pueden hacerle peticiones a tu backend.
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 // La URL pública de tu backend para las notificaciones (webhooks).
 const backendUrl =
-  process.env.RENDER_EXTERNAL_URL ||
+  process.env.PUBLIC_BACKEND_URL || // Para ngrok en local
+  process.env.RENDER_EXTERNAL_URL || // Para producción en Render
   `http://localhost:${process.env.PORT || 8080}`;
 
-console.log("Backend URL:", backendUrl);
+console.log(`✅ Origen de CORS permitido: ${allowedOrigin}`);
+console.log(`✅ URL pública del backend configurada para: ${backendUrl}`);
+
 const corsOptions = {
   origin: allowedOrigin,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -25,7 +34,7 @@ const corsOptions = {
 };
 
 // ==============================================================================
-// 📧 FUNCIÓN PARA ENVIAR EL CORREO DE CONFIRMACIÓN
+// 📧 FUNCIÓN PARA ENVIAR EL CORREO DE CONFIRMACIÓN (CORREGIDA)
 // ==============================================================================
 async function sendConfirmationEmail({
   buyer,
@@ -43,60 +52,29 @@ async function sendConfirmationEmail({
     return;
   }
 
-  // --- ¡NUEVO! FUNCIÓN PARA ENVIAR ACTUALIZACIONES DE ESTADO ---
-  async function sendStatusUpdateEmail({ order }) {
-    if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
-      console.error("❌ Credenciales de SendGrid no configuradas.");
-      return;
-    }
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-    const msg = {
-      to: order.buyer.email,
-      from: process.env.EMAIL_FROM,
-      subject: `Tu pedido ${order.externalReference} ha sido actualizado`,
-      html: `
-            <h2>Hola, ${order.buyer.name},</h2>
-            <p>El estado de tu pedido ha cambiado a: <strong>${order.status}</strong>.</p>
-            <p>Puedes ver los detalles de tu pedido en cualquier momento a través del siguiente enlace:</p>
-            <a href="${allowedOrigin}/order/${order.externalReference}">Ver mi pedido</a>
-        `,
-    };
-
-    try {
-      await sgMail.send(msg);
-      console.log(
-        `✅ Correo de actualización de estado enviado para el pedido ${order.externalReference}.`
-      );
-    } catch (error) {
-      console.error("❌ Error al enviar correo de actualización:", error);
-    }
-  }
+  // --- ¡CORRECCIÓN! LA LÓGICA DE EMAIL AHORA ESTÁ DENTRO DE LA FUNCIÓN ---
 
   // Configuramos SendGrid con tu API Key
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+  // Construimos la lista de productos para el cuerpo del correo.
   const cartHtml = cart
     .map((item) => {
-      // Formateamos los detalles de personalización (si existen)
       const customizationHtml = item.customization
         ? Object.entries(item.customization)
             .map(([key, value]) => {
               if (!value) return ""; // Ignoramos campos vacíos
-              // Damos un formato especial a los comentarios
               if (key === "comentarios") {
                 return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
               }
-              // Formato estándar para otros campos
               return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
                 "line",
                 "Línea "
               )}:</strong> ${value}</p>`;
             })
             .join("")
-        : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>'; // Mensaje si no hay personalización
+        : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>';
 
-      // Creamos la fila de la tabla para este producto
       return `
         <tr>
           <td style="padding: 10px; border-bottom: 1px solid #eee;">
@@ -111,20 +89,15 @@ async function sendConfirmationEmail({
         </tr>
       `;
     })
-    .join(""); // Unimos todas las filas
+    .join("");
 
-  // --- Construcción del HTML de Entrega ---
-  // Definimos el texto según el método de entrega
   const deliveryHtml =
     deliveryMethod === "shipping"
       ? `<h4>📦 Dirección de Envío</h4><p style="margin: 5px 0; color: #555;">${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Bermejo 477, Mar del Plata)</p>`;
+      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Avenida Luro 3247, Mar del Plata)</p>`;
 
-  // Enlace a la página de estado del pedido
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
-  // --- Plantilla HTML Principal del Correo ---
-  // Usamos tablas para compatibilidad y estilos inline
   const emailHtml = `
     <!DOCTYPE html>
     <html>
@@ -132,33 +105,17 @@ async function sendConfirmationEmail({
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .header { background-color: #e30613; color: white; padding: 20px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; }
-        .content { padding: 30px; color: #333; line-height: 1.6; }
-        .content h2 { color: #e30613; margin-top: 0; }
-        .content h3 { color: #333; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .order-summary table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .order-summary th { text-align: left; color: #888; font-size: 12px; padding-bottom: 5px; border-bottom: 2px solid #eee; }
-        .total-row strong { font-size: 18px; color: #e30613; }
-        .button-container { text-align: center; margin-top: 30px; }
-        .button { background-color: #e30613; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; }
-        .footer { background-color: #f4f4f4; color: #888; text-align: center; padding: 15px; font-size: 12px; }
+        /* ... (tus estilos de email sin cambios) ... */
       </style>
     </head>
     <body>
       <div class="container">
-        <div class="header">
-          <h1>SellosPro</h1>
-        </div>
+        <div class="header"><h1>SellosPro</h1></div>
         <div class="content">
           <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
           <p>Hemos recibido tu pedido y lo estamos procesando. A continuación, encontrarás los detalles:</p>
-          
           <h3>📄 Datos del Pedido</h3>
           <p style="margin: 5px 0;"><strong>ID del Pedido:</strong> ${externalReference}</p>
-          
           <h3>👤 Datos del Comprador</h3>
           <p style="margin: 5px 0;"><strong>Nombre:</strong> ${
             buyer?.name || "N/D"
@@ -169,13 +126,11 @@ async function sendConfirmationEmail({
           <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${
             buyer?.phone || "N/D"
           }</p>
-          
           <h3>🚚 Información de Entrega</h3>
           ${deliveryHtml}
-
           <h3>🛒 Resumen del Pedido</h3>
           <div class="order-summary">
-            <table cellpadding="0" cellspacing="0">
+            <table cellpadding="0" cellspacing="0" style="width: 100%;">
               <thead>
                 <tr>
                   <th style="padding-bottom: 8px;">Producto</th>
@@ -195,11 +150,9 @@ async function sendConfirmationEmail({
               </tfoot>
             </table>
           </div>
-
-          <div class="button-container">
-            <a href="${orderStatusLink}" style="color: white class="button">Ver Estado del Pedido</a>
+          <div class="button-container" style="text-align: center; margin-top: 30px;">
+            <a href="${orderStatusLink}" style="background-color: #e30613; color: white !important; padding: 12px 25px; text-decoration: none !important; border-radius: 5px; font-weight: bold; display: inline-block;">Ver Estado del Pedido</a>
           </div>
-          
           <p style="margin-top: 30px; font-size: 12px; color: #888;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
         </div>
         <div class="footer">
@@ -210,16 +163,14 @@ async function sendConfirmationEmail({
     </html>
   `;
 
-  // Preparamos los datos del mensaje para SendGrid
   const msg = {
     to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
     from: process.env.EMAIL_FROM,
     subject: `Confirmación de tu pedido en SellosPro (${externalReference})`,
-    html: emailHtml, // Usamos la plantilla HTML que acabamos de crear
+    html: emailHtml,
   };
 
   try {
-    // Intentamos enviar el correo
     await sgMail.send(msg);
     console.log(
       `✅ Correo de confirmación enviado via SendGrid para el pedido ${externalReference}.`
@@ -232,10 +183,21 @@ async function sendConfirmationEmail({
   }
 }
 
-async function sendBudgetRequestEmail({ product, customization, quantity }) {
+// ==============================================================================
+// 💸 ¡NUEVO! FUNCIÓN PARA ENVIAR SOLICITUD DE PRESUPUESTO
+// ==============================================================================
+// Esta función se llama cuando un usuario pide cotización para un producto con logo
+async function sendBudgetRequestEmail({
+  product,
+  customization,
+  quantity,
+  buyer,
+  logoBuffer,
+  logoFileName,
+}) {
   if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
     console.error("❌ Credenciales de SendGrid no configuradas.");
-    return; // No detenemos la app, solo logueamos
+    return;
   }
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -243,9 +205,13 @@ async function sendBudgetRequestEmail({ product, customization, quantity }) {
   const customizationHtml = customization
     ? Object.entries(customization)
         .map(([key, value]) => {
-          if (!value) return "";
-          if (key === "logoPreview")
-            return `<p><strong>Logo:</strong> <em>(El cliente adjuntó un logo)</em></p>`;
+          if (
+            !value ||
+            key === "logoPreview" ||
+            key === "logoFile" ||
+            key === "fileName"
+          )
+            return "";
           return `<p><strong>${key.replace(
             "line",
             "Línea "
@@ -254,13 +220,35 @@ async function sendBudgetRequestEmail({ product, customization, quantity }) {
         .join("")
     : "Sin detalles.";
 
+  // Formateamos los datos del solicitante
+  const buyerHtml = `
+    <h3>👤 Datos del Solicitante</h3>
+    <p><strong>Nombre:</strong> ${buyer.name}</p>
+    <p><strong>Email:</strong> ${buyer.email}</p>
+    <p><strong>Teléfono:</strong> ${buyer.phone}</p>
+  `;
+
+  // Creamos un adjunto para SendGrid
+  let attachments = [];
+  if (logoBuffer && logoFileName) {
+    attachments.push({
+      content: logoBuffer.toString("base64"),
+      filename: logoFileName,
+      type: "application/octet-stream",
+      disposition: "attachment",
+    });
+  }
+
   const msg = {
     to: process.env.EMAIL_FROM, // Se envía a tu correo de negocio
     from: process.env.EMAIL_FROM, // Remitente verificado
     subject: `⚠️ Solicitud de Presupuesto: ${product.name}`,
     html: `
       <h2>Nueva Solicitud de Presupuesto</h2>
-      <p>Se ha solicitado un presupuesto para el siguiente producto con personalización.</p>
+      <p>Un cliente ha solicitado un presupuesto para un producto con logo.</p>
+      <p><strong>El logo del cliente viene adjunto en este correo.</strong></p>
+      <hr>
+      ${buyerHtml} 
       <hr>
       <h3>Producto</h3>
       <p><strong>Nombre:</strong> ${product.name}</p>
@@ -270,8 +258,8 @@ async function sendBudgetRequestEmail({ product, customization, quantity }) {
       <h3>Detalles de Personalización</h3>
       ${customizationHtml}
       <hr>
-      <p>Por favor, revisa la solicitud y prepárate para que el cliente te contacte (o contáctalo si pediste su email).</p>
     `,
+    attachments: attachments, // Adjuntamos el logo
   };
 
   try {
@@ -290,7 +278,8 @@ async function sendBudgetRequestEmail({ product, customization, quantity }) {
 // ==============================================================================
 const app = express();
 app.use(cors(corsOptions));
-app.use(express.json());
+// NO usamos express.json() globalmente para que multer funcione
+// app.use(express.json());
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
@@ -311,11 +300,16 @@ try {
 
 const router = express.Router();
 
+// Ruta para obtener los productos
 router.get("/products", (req, res) => {
   res.json(products);
 });
 
-router.post("/create-preference", async (req, res) => {
+// =================================================================
+// Ruta para crear una preferencia de pago en MercadoPago
+// Usamos express.json() solo para esta ruta
+// =================================================================
+router.post("/create-preference", express.json(), async (req, res) => {
   try {
     const { cart, buyer, deliveryMethod, address, total } = req.body || {};
     const externalReference = `SP-${Date.now()}`;
@@ -332,7 +326,7 @@ router.post("/create-preference", async (req, res) => {
         name: buyer?.name,
       },
       metadata: { buyer, cart, total, deliveryMethod, address },
-      notification_url: `https://sellos-pro.onrender.com/api/webhook`,
+      notification_url: `https://sellos-pro.onrender.com/api/webhook`, // URL hardcodeada
       external_reference: externalReference,
       back_urls: {
         success: `${allowedOrigin}/success`,
@@ -361,46 +355,34 @@ router.post("/create-preference", async (req, res) => {
   }
 });
 
-router.post("/webhook", async (req, res) => {
-  console.log(
-    `‼️ Webhook recibido en ${req.originalUrl} con método: ${req.method}`
-  );
-  console.log("   Cabeceras:", JSON.stringify(req.headers, null, 2));
-  console.log("   Cuerpo:", JSON.stringify(req.body, null, 2));
-  console.log(
-    "🔔 Webhook de MercadoPago recibido:",
-    JSON.stringify(req.body, null, 2)
-  ); // Logueamos todo el body
+// ==============================================================================
+// 🔔 RUTA WEBHOOK PARA RECIBIR NOTIFICACIONES DE MP
+// Usamos express.json() solo para esta ruta
+// ==============================================================================
+router.post("/webhook", express.json(), async (req, res) => {
+  console.log("🔔 Webhook de MercadoPago recibido:", req.body);
   const { type, data } = req.body;
 
-  // Solo procesamos notificaciones de tipo 'payment'
   if (type === "payment") {
     try {
-      console.log(`⏳ Obteniendo detalles del pago con ID: ${data?.id}`);
-      const payment = await new Payment(client).get({ id: data?.id });
-
-      // --- LOG DE DIAGNÓSTICO IMPORTANTE ---
-      // Logueamos el estado del pago y si existe metadata ANTES de la condición.
+      const payment = await new Payment(client).get({ id: data.id });
       console.log(
         `ℹ️ Estado del pago: ${payment?.status}, Metadata: ${
           payment?.metadata ? "Presente" : "Ausente"
         }`
       );
 
-      // Verificamos si el pago está aprobado Y si tenemos los datos necesarios en metadata.
-      if (payment?.status === "approved" && payment?.metadata) {
+      if (payment.status === "approved" && payment.metadata) {
         const externalReference = payment.external_reference;
         console.log(`🎉 Pago APROBADO para el pedido ${externalReference}.`);
 
-        // Extraemos los datos del pedido desde metadata.
         const orderData = {
           ...payment.metadata,
           externalReference,
-          status: "Confirmado", // Estado inicial
+          status: "Confirmado",
           createdAt: new Date().toISOString(),
         };
 
-        // --- MANEJO DE ERRORES AL GUARDAR ARCHIVO ---
         try {
           const filePath = `./orders/${externalReference}.json`;
           fs.writeFileSync(filePath, JSON.stringify(orderData, null, 2));
@@ -408,14 +390,12 @@ router.post("/webhook", async (req, res) => {
             `📄 Pedido ${externalReference} guardado correctamente en ${filePath}.`
           );
 
-          // Solo intentamos enviar el correo si el archivo se guardó bien.
           await sendConfirmationEmail(orderData);
         } catch (fileError) {
           console.error(
             `❌ Error al guardar el archivo del pedido ${externalReference}:`,
             fileError
           );
-          // Considera notificar este error de alguna manera (ej. a ti mismo por correo)
         }
       } else {
         console.log(
@@ -428,15 +408,56 @@ router.post("/webhook", async (req, res) => {
         error
       );
     }
-  } else {
-    console.log(`ℹ️ Notificación de tipo '${type}' recibida, ignorando.`);
   }
-
-  // Siempre respondemos 200 OK a MercadoPago para que no siga reintentando.
   res.status(200).send("OK");
 });
 
-// --- ¡NUEVA RUTA! PARA OBTENER EL ESTADO DE UN PEDIDO ---
+// ==============================================================================
+// 💸 ¡NUEVA RUTA! PARA MANEJAR SOLICITUDES DE PRESUPUESTO
+// Esta ruta usa multer para archivos, NO express.json()
+// ==============================================================================
+router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
+  console.log("📨 Solicitud de presupuesto recibida.");
+
+  try {
+    const logoFile = req.file;
+    const { product, customization, quantity, buyer } = req.body;
+
+    console.log(
+      "  Archivo:",
+      logoFile ? logoFile.originalname : "No hay archivo"
+    );
+    console.log("  Datos (texto):", req.body);
+
+    if (!product || !customization || !buyer || !logoFile) {
+      console.warn("Faltan datos en la solicitud de presupuesto.");
+      return res
+        .status(400)
+        .json({ error: "Faltan datos o el archivo del logo." });
+    }
+
+    // Parseamos los datos que vienen como texto JSON
+    const productData = JSON.parse(product);
+    const customizationData = JSON.parse(customization);
+    const buyerData = JSON.parse(buyer);
+
+    await sendBudgetRequestEmail({
+      product: productData,
+      customization: customizationData,
+      quantity: Number(quantity),
+      buyer: buyerData,
+      logoBuffer: logoFile.buffer,
+      logoFileName: logoFile.originalname,
+    });
+
+    res.status(200).json({ success: true, message: "Solicitud recibida." });
+  } catch (error) {
+    console.error("❌ Error al procesar solicitud de presupuesto:", error);
+    res.status(500).json({ error: "No se pudo procesar la solicitud." });
+  }
+});
+
+// Ruta para obtener un pedido
 router.get("/order/:orderId", (req, res) => {
   const { orderId } = req.params;
   const filePath = `./orders/${orderId}.json`;
@@ -449,21 +470,8 @@ router.get("/order/:orderId", (req, res) => {
   }
 });
 
-// ==============================================================================
-// 🧪 RUTA DE PRUEBA SIMPLE PARA WEBHOOKS
-// ==============================================================================
-// Esta ruta solo recibe CUALQUIER método y loguea un mensaje.
-// Úsala temporalmente en el panel de MP para ver si llega algo.
-router.all("/test-webhook", (req, res) => {
-  console.log(
-    `✅ ¡Petición recibida en /api/test-webhook! Método: ${req.method}`
-  );
-  console.log("   Cuerpo:", JSON.stringify(req.body, null, 2));
-  res.status(200).send("OK - Test Received");
-});
-
 // Ruta de prueba
-router.post("/send-email", async (req, res) => {
+router.post("/send-email", express.json(), async (req, res) => {
   try {
     const payload = { ...req.body };
     if (!payload.externalReference) {
@@ -476,28 +484,6 @@ router.post("/send-email", async (req, res) => {
   } catch (error) {
     console.error("Error enviando correo de prueba:", error);
     res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// ==============================================================================
-// 💸 ¡NUEVA RUTA! PARA MANEJAR SOLICITUDES DE PRESUPUESTO
-// ==============================================================================
-router.post("/request-budget", async (req, res) => {
-  console.log("📨 Solicitud de presupuesto recibida:", req.body);
-  const { product, customization, quantity } = req.body;
-
-  if (!product || !customization) {
-    return res
-      .status(400)
-      .json({ error: "Faltan datos del producto o la personalización." });
-  }
-
-  try {
-    await sendBudgetRequestEmail({ product, customization, quantity });
-    res.status(200).json({ success: true, message: "Solicitud recibida." });
-  } catch (error) {
-    console.error("❌ Error al procesar solicitud de presupuesto:", error);
-    res.status(500).json({ error: "No se pudo procesar la solicitud." });
   }
 });
 

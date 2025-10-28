@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ShoppingCart, Heart, X, Send } from "lucide-react";
+import { ShoppingCart, Heart, X, Send, User, Mail, Phone } from "lucide-react";
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
@@ -23,8 +23,15 @@ export default function ProductPage({ showToast }) {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // --- Estados para la solicitud de presupuesto ---
   const [isSendingBudget, setIsSendingBudget] = useState(false);
-
+  const [buyerInfo, setBuyerInfo] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [formErrors, setFormErrors] = useState({});
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const product = products.find((p) => String(p.id) === id);
 
   if (loading)
@@ -80,28 +87,74 @@ export default function ProductPage({ showToast }) {
     showToast(`${product.name} agregado al carrito`);
   };
 
-  const handleRequestBudget = async () => {
-    // ... (Tu función handleRequestBudget no necesita cambios) ...
+  // --- Manejador para el formulario de datos del comprador ---
+  const handleBuyerChange = (e) => {
+    const { name, value } = e.target;
+    setBuyerInfo((prev) => ({ ...prev, [name]: value }));
+    // Limpiamos el error de este campo al empezar a escribir
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const handleOpenBudgetModal = () => {
+    // Validamos que se haya subido un logo ANTES de abrir el modal
     if (isKit && !customization.logoPreview) {
-      showToast("Por favor, sube un logo para solicitar el presupuesto.");
+      showToast("Por favor, sube un logo antes de cotizar.");
+      return;
+    }
+    setFormErrors({}); // Limpiamos errores antiguos
+    setIsBudgetModalOpen(true); // Abrimos el modal
+  };
+
+  const handleRequestBudget = async () => {
+    // Validación de campos del formulario
+    const errors = {};
+    if (!buyerInfo.name.trim()) errors.name = "El nombre es obligatorio.";
+    if (!buyerInfo.email.trim() || !/\S+@\S+\.\S+/.test(buyerInfo.email))
+      errors.email = "El email no es válido.";
+    if (!buyerInfo.phone.trim()) errors.phone = "El teléfono es obligatorio.";
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      showToast("Por favor, completa tus datos de contacto.");
       return;
     }
 
+    setFormErrors({});
     setIsSendingBudget(true);
+
+    // --- Construimos un FormData para enviar el archivo ---
+    const formData = new FormData();
+    formData.append(
+      "product",
+      JSON.stringify({ id: product.id, name: product.name })
+    );
+
+    // Quitamos los archivos del objeto de personalización antes de enviarlo como JSON
+    const { logoFile, logoPreview, ...customizationDetails } = customization;
+    formData.append("customization", JSON.stringify(customizationDetails));
+
+    formData.append("quantity", quantity);
+    formData.append("buyer", JSON.stringify(buyerInfo));
+
+    // Adjuntamos el archivo del logo
+    if (logoFile) {
+      formData.append("logoFile", logoFile);
+    }
+
     try {
       const response = await fetch(`${API_URL}/request-budget`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product: { id: product.id, name: product.name },
-          customization: customization,
-          quantity: quantity,
-        }),
+        // No establecemos 'Content-Type', el navegador lo hace por nosotros
+        body: formData,
       });
 
       if (response.ok) {
         showToast("Solicitud de presupuesto enviada. Te contactaremos pronto.");
         setCustomization({});
+        setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos el formulario
+        setIsBudgetModalOpen(false); // Cerramos el modal
       } else {
         const errorData = await response.json();
         showToast(
@@ -210,7 +263,10 @@ export default function ProductPage({ showToast }) {
 
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-                Personaliza tu Sello
+                {/* --- TÍTULO CONDICIONAL --- */}
+                {isKit
+                  ? "Completa los datos para cotizar"
+                  : "Personaliza tu Sello"}
               </h2>
 
               {/* Muestra Personalizer SOLO si es customizable (ej: automático) y NO es tinta */}
@@ -321,8 +377,10 @@ export default function ProductPage({ showToast }) {
 
                         <div>
                           <p className="text-sm text-gray-600 mb-1">
-                            Si le vas a dar mucho uso, te damos la opcion agregar a tu compra un
-                            frasquito de nuestra tinta especial para sellos que estira su vida útil. Con unas gotitas es suficiente para recargarlo.
+                            Si le vas a dar mucho uso, te damos la opcion
+                            agregar a tu compra un frasquito de nuestra tinta
+                            especial para sellos que estira su vida útil. Con
+                            unas gotitas es suficiente para recargarlo.
                           </p>
                           <span className="text-lg font-bold text-gray-900">
                             {inkRefill.name}: ${inkRefill.price.toFixed(2)}
@@ -346,8 +404,7 @@ export default function ProductPage({ showToast }) {
                 {isKit ? (
                   // Botón para solicitar presupuesto (solo para kits)
                   <button
-                    onClick={handleRequestBudget}
-                    disabled={isSendingBudget}
+                    onClick={handleOpenBudgetModal}
                     className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     <Send size={20} />
@@ -418,6 +475,127 @@ export default function ProductPage({ showToast }) {
               @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
               .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
             `}</style>
+        </div>
+      )}
+      {/* --- ¡NUEVO! MODAL PARA SOLICITUD DE PRESUPUESTO --- */}
+      {isBudgetModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in"
+          onClick={() => setIsBudgetModalOpen(false)} // Cierra al hacer clic fuera
+        >
+          <div
+            className="relative bg-white rounded-lg shadow-xl w-full max-w-md"
+            onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer clic dentro
+          >
+            {/* Header del Modal */}
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Solicitar Presupuesto
+              </h3>
+              <button
+                onClick={() => setIsBudgetModalOpen(false)}
+                className="p-1 rounded-full text-gray-500 hover:bg-gray-200"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Cuerpo del Modal (el formulario) */}
+            <div className="p-6 space-y-4">
+              <p className="text-sm text-gray-600">
+                Por favor, completa tus datos para que podamos contactarte con
+                la cotización para tu <strong>{product.name}</strong>.
+              </p>
+
+              {/* Campo Nombre */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nombre y Apellido
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <User size={16} className="text-gray-400" />
+                  </span>
+                  <input
+                    type="text"
+                    name="name"
+                    value={buyerInfo.name}
+                    onChange={handleBuyerChange}
+                    className="w-full pl-10 border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+                    placeholder="Tu nombre"
+                  />
+                </div>
+                {formErrors.name && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
+                )}
+              </div>
+              {/* Campo Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <Mail size={16} className="text-gray-400" />
+                  </span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={buyerInfo.email}
+                    onChange={handleBuyerChange}
+                    className="w-full pl-10 border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+                    placeholder="tu@email.com"
+                  />
+                </div>
+                {formErrors.email && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formErrors.email}
+                  </p>
+                )}
+              </div>
+              {/* Campo Teléfono */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Teléfono (WhatsApp)
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <Phone size={16} className="text-gray-400" />
+                  </span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={buyerInfo.phone}
+                    onChange={handleBuyerChange}
+                    className="w-full pl-10 border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+                    placeholder="223 123-4567"
+                  />
+                </div>
+                {formErrors.phone && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formErrors.phone}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Footer del Modal (Botón de envío) */}
+            <div className="p-4 bg-gray-50 border-t rounded-b-lg">
+              <button
+                onClick={handleRequestBudget} // Llama a la función de envío
+                disabled={isSendingBudget}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                <Send size={20} />
+                {isSendingBudget ? "Enviando..." : "Confirmar Solicitud"}
+              </button>
+            </div>
+          </div>
+          {/* Estilos para la animación (si no los tienes globales) */}
+          <style>{`
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+          `}</style>
         </div>
       )}
     </div>
