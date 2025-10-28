@@ -65,9 +65,10 @@ export default function ProductPage({ showToast }) {
   const isInk = categories.includes("tintas"); // Identificamos las tintas
   const isDateStamp = categories.includes("fechadores"); // <-- AÑADIDO: Identifica fechadores
 
- // isCustomizable: Solo si es Automático Y NO es Tinta Y NO es Fechador (u otros no personalizables)
- const isCustomizable = categories.includes("automáticos") && !isInk && !isDateStamp;
- // ----------------------------------------------// ----------------------------------------------
+  // isCustomizable: Solo si es Automático Y NO es Tinta Y NO es Fechador (u otros no personalizables)
+  const isCustomizable =
+    categories.includes("automáticos") && !isInk && !isDateStamp;
+  // ----------------------------------------------// ----------------------------------------------
 
   const handleAddToCart = () => {
     const productToAdd = {
@@ -289,6 +290,52 @@ export default function ProductPage({ showToast }) {
                       >
                         <ShoppingCart size={18} />
                         Añadir {padProduct.name} al Carrito
+                      </button>
+                    </div>
+                  );
+                })()}
+
+              {/* Sección Frasquito de Tinta opcional */}
+              {categories.includes("automáticos") &&
+                (() => {
+                  const inkRefill = products.find((p) => p.id === 24);
+                  if (!inkRefill) return null;
+
+                  const handleAddInk = () => {
+                    addToCart({ ...inkRefill, qty: 1 });
+                    showToast(`${inkRefill.name} agregado al carrito`);
+                  };
+
+                  return (
+                    <div className="mt-6 border-t border-gray-300 pt-4">
+                      <h3 className="text-md font-semibold text-gray-800 mb-2">
+                        ¿Vas a necesitar un frasquito para cargar tu sello?
+                      </h3>
+
+                      <div className="flex gap-4 items-center mb-3">
+                        <img
+                          src={inkRefill.image}
+                          alt={inkRefill.name}
+                          className="w-16 h-16 object-contain border rounded-md p-1 bg-white flex-shrink-0"
+                        />
+
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">
+                            Si le vas a dar mucho uso, te damos la opcion agregar a tu compra un
+                            frasquito de nuestra tinta especial para sellos que estira su vida útil. Con unas gotitas es suficiente para recargarlo.
+                          </p>
+                          <span className="text-lg font-bold text-gray-900">
+                            {inkRefill.name}: ${inkRefill.price.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleAddInk}
+                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 transition"
+                      >
+                        <ShoppingCart size={18} />
+                        Añadir {inkRefill.name} al Carrito
                       </button>
                     </div>
                   );

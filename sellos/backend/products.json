@@ -29,8 +29,7 @@
     "image": "/images/Pastel/Pastel.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
-      "/images/Escolar/Dibujos.jpg",
-      "/images/Escolar/LetrasPic.jpg"
+      "/images/Escolar/Dibujos.jpg"
     ],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
@@ -43,14 +42,14 @@
   {
     "id": 3,
     "category": ["Automáticos"],
-    "name": "PROMO Automático 842",
+    "name": "PROMO Automático N°2",
     "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
     "price": 20000,
     "image": "/images/842 Estandar/Estandar.jpg",
     "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg",
       "/images/842 Estandar/EstandarColores.jpg",
-      "/images/842 Estandar/EstandarTransparentes.jpg",
-      "/images/Escolar/LetrasPic.jpg"
+      "/images/842 Estandar/EstandarTransparentes.jpg"
     ],
     "colors": [
       { "name": "Negro", "hex": "#0D0907", "stock": false },
@@ -73,7 +72,8 @@
     "price": 26000,
     "image": "/images/Mouse/Mouse.jpg",
         "thumbnails": [
-      "/images/Escolar/LetrasPic.jpg"
+      "/images/Escolar/LetrasPic.jpg",
+      "/images/Mouse/Mouse2.jpg"
     ],
     "colors": [
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
@@ -95,9 +95,16 @@
       "/images/Escolar/LetrasPic.jpg"
     ],
     "colors": [
-      { "name": "Azul Oscuro", "hex": "#001F54", "stock": true },
+      { "name": "Negro", "hex": "#0D0907", "stock": false },
+      { "name": "Verde", "hex": "#57FF00", "stock": true },
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
-      { "name": "Verde Oscuro", "hex": "#006400", "stock": false }
+      { "name": "Ruby", "hex": "#A30000", "stock": true },
+      { "name": "Azul", "hex": "#0008FF", "stock": true },
+      { "name": "Azul Aqua", "hex": "#000475", "stock": true },
+      { "name": "Violeta", "hex": "#6C369B", "stock": false },
+      { "name": "Fucsia", "hex": "#E40078", "stock": true },
+      { "name": "Amatista", "hex": "#9966CC", "stock": true },
+      { "name": "Rosa", "hex": "#F540A8", "stock": false }
     ]
   },
   {
@@ -120,6 +127,9 @@
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
     "price": 0.5,
     "image": "/images/automatico-n4.png",
+    "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg"
+    ],
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": true }
@@ -133,7 +143,7 @@
     "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
     "price": 20000,
     "image": "/images/Pastel/Pastel.jpg",
-    "thumbnails": ["images/Pastel/Pastel1.jpg", "/images/Escolar/LetrasPic.jpg"],
+    "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Pastel/Pastel1.jpg"],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
       { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
@@ -145,14 +155,30 @@
   {
     "id": 9,
     "category": ["Fechadores"],
-    "name": "Fechador 5mm",
-    "description": "Fechador manual de 5mm, resistente y duradero.",
+    "name": "Fechador 3mm",
+    "description": "Fechador manual de 3mm, resistente y duradero.",
     "price": 10000,
-    "image": "/images/fechador-5mm.png",
+    "image": "/images/Fechadores/Fechador3mm.jpg",
+    "requiresPad": true
+  },
+  { "id": 10,
+    "category": ["Fechadores"],
+    "name": "Fechador 4mm",
+    "description": "Fechador manual de 4mm, resistente y duradero.",
+    "price": 12000,
+    "image": "/images/Fechadores/Fechador3mm.jpg",
+    "requiresPad": true
+  },
+  { "id": 11,
+    "category": ["Fechadores"],
+    "name": "Fechador 5mm",
+    "description": "Fechador manual de 5mm, ideal para documentos.",
+    "price": 15000,
+    "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
   },
   {
-    "id": 10,
+    "id": 12,
     "category": ["Numeradores"],
     "name": "Numerador 4 dígitos",
     "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
@@ -161,7 +187,7 @@
     "requiresPad": true
   },
   {
-    "id": 11,
+    "id": 13,
     "category": ["Numeradores"],
     "name": "Numerador 6 dígitos",
     "description": "Numerador manual de 6 dígitos, ideal para documentos.",
@@ -170,16 +196,16 @@
     "requiresPad": true
   },
   {
-    "id": 12,
+    "id": 14,
     "category": ["Numeradores"],
     "name": "Numerador 8 dígitos",
     "description": "Numerador manual de 8 dígitos, resistente y confiable.",
     "price": 12000,
-    "image": "/images/numerador-8.png",
+    "image": "/images/Numeradores/Numerador8B.jpg",
     "requiresPad": true
   },
   {
-    "id": 13,
+    "id": 15,
     "category": ["Almohadillas"],
     "name": "Almohadilla Universal",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
@@ -187,7 +213,7 @@
     "image": "/images/almohadilla.png"
   },
   {
-    "id": 14,
+    "id": 16,
     "category": ["Tintas"],
     "name": "Tinta AL AGUA - Frasco Chiquito",
     "description": "Tinta en frasco pequeño de 28ml.",
@@ -207,7 +233,7 @@
     ]
   },
   {
-    "id": 15,
+    "id": 17,
     "category": ["Tintas"],
     "name": "Botella Grande",
     "description": "Botella grande de tinta de 250ml.",
@@ -215,7 +241,7 @@
     "image": "/images/tinta-grande.png"
   },
   {
-    "id": 16,
+    "id": 18,
     "category": ["Otros"],
     "name": "Sello Abecedario",
     "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
@@ -223,7 +249,7 @@
     "image": "/images/sello-abecedario.png"
   },
   {
-    "id": 17,
+    "id": 20,
     "category": ["Kits"],
     "name": "Kit Sello Logo 1 - Hasta 6x4cm",
     "description": "Incluye sello automático + almohadilla + tinta.",
@@ -231,7 +257,7 @@
     "image": "/images/kit-logo.png"
   },
   {
-    "id": 18,
+    "id": 21,
     "category": ["Kits"],
     "name": "PROMO Textil",
     "description": "Incluye sello automático + almohadilla + tinta textil.",
@@ -247,12 +273,29 @@
     "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
   },
   {
-    "id": 20,
+    "id": 22,
     "category": ["Automáticos", "Fechadores"],
     "name": "Fechador automatico",
     "description": "Sello fechador automatico importado. Primera calidad.",
     "price": 19000,
     "image": "/images/FechadorAutom/Fechador.jpg",
         "thumbnails": ["/images/FechadorAutom/Fechador2.jpg" ]
+  },
+  {
+    "id": 23,
+    "category": ["Fechadores", "Otros"],
+    "name": "Fechador ELAB/VTO + Fecha",
+    "description": "Fechador especial que incluye ELAB/VTO junto a la fecha.",
+    "price": 19000,
+    "image": "/images/fechador-8mm.png",
+    "requiresPad": true
+  },
+  { "id": 24,
+    "category": ["Tintas"],
+    "name": "Tinta NEGRA al agua / Frasco Chico",
+    "description": "Tinta negra para sumar a tu pedido de automático.",
+    "price": 5000,
+    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "requiresPad": false
   }
 ]
