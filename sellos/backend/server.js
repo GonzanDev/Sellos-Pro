@@ -83,7 +83,7 @@ async function sendConfirmationEmail({
             } (x${item.qty || item.quantity})</p>
             <div style="padding-left: 10px; margin-top: 5px;">${customizationHtml}</div>
           </td>
-          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; color: #333;">
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; color: #333; font-weight: bold;">
             AR$ ${(item.price || item.unit_price).toFixed(2)}
           </td>
         </tr>
@@ -91,50 +91,73 @@ async function sendConfirmationEmail({
     })
     .join("");
 
+  // --- DIRECCIÓN ACTUALIZADA ---
   const deliveryHtml =
     deliveryMethod === "shipping"
       ? `<h4>📦 Dirección de Envío</h4><p style="margin: 5px 0; color: #555;">${address.street}, ${address.city}, CP ${address.postalCode}</p>`
-      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Avenida Luro 3247, Mar del Plata)</p>`;
+      : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Bermejo 477, Mar del Plata)</p>`;
 
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
+  // --- NUEVA PLANTILLA HTML PROFESIONAL ---
   const emailHtml = `
     <!DOCTYPE html>
-    <html>
+    <html lang="es">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        /* ... (tus estilos de email sin cambios) ... */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .header { background-color: #e30613; color: white; padding: 25px; text-align: center; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: bold; }
+        .content { padding: 30px; color: #333; line-height: 1.6; }
+        .content h2 { color: #e30613; margin-top: 0; font-size: 22px; }
+        .content h3 { color: #333; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 8px; font-size: 18px; }
+        .info-box { background-color: #f9f9f9; border-radius: 5px; padding: 15px; margin-top: 10px; }
+        .order-summary table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .order-summary th { text-align: left; color: #888; font-size: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; }
+        .total-row strong { font-size: 18px; color: #e30613; }
+        .button-container { text-align: center; margin-top: 30px; }
+        .button { background-color: #e30613; color: white !important; padding: 14px 28px; text-decoration: none !important; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px; border: none; cursor: pointer; }
+        .footer { background-color: #f9f9f9; color: #888; text-align: center; padding: 20px; font-size: 12px; border-top: 1px solid #e0e0e0; }
+        a { color: #e30613; text-decoration: none; }
       </style>
     </head>
     <body>
       <div class="container">
-        <div class="header"><h1>SellosPro</h1></div>
+        <div class="header">
+          <h1>SellosPro</h1>
+        </div>
         <div class="content">
           <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
           <p>Hemos recibido tu pedido y lo estamos procesando. A continuación, encontrarás los detalles:</p>
-          <h3>📄 Datos del Pedido</h3>
-          <p style="margin: 5px 0;"><strong>ID del Pedido:</strong> ${externalReference}</p>
-          <h3>👤 Datos del Comprador</h3>
-          <p style="margin: 5px 0;"><strong>Nombre:</strong> ${
-            buyer?.name || "N/D"
-          }</p>
-          <p style="margin: 5px 0;"><strong>Email:</strong> ${
-            buyer?.email || "N/D"
-          }</p>
-          <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${
-            buyer?.phone || "N/D"
-          }</p>
+          
+          <div class="info-box">
+            <h3>📄 Datos del Pedido</h3>
+            <p style="margin: 5px 0;"><strong>ID del Pedido:</strong> ${externalReference}</p>
+            <h3>👤 Datos del Comprador</h3>
+            <p style="margin: 5px 0;"><strong>Nombre:</strong> ${
+              buyer?.name || "N/D"
+            }</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> ${
+              buyer?.email || "N/D"
+            }</p>
+            <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${
+              buyer?.phone || "N/D"
+            }</p>
+          </div>
+          
           <h3>🚚 Información de Entrega</h3>
           ${deliveryHtml}
+
           <h3>🛒 Resumen del Pedido</h3>
           <div class="order-summary">
             <table cellpadding="0" cellspacing="0" style="width: 100%;">
               <thead>
                 <tr>
-                  <th style="padding-bottom: 8px;">Producto</th>
-                  <th style="padding-bottom: 8px; text-align: right;">Precio</th>
+                  <th>Producto</th>
+                  <th style="text-align: right;">Precio</th>
                 </tr>
               </thead>
               <tbody>
@@ -150,10 +173,14 @@ async function sendConfirmationEmail({
               </tfoot>
             </table>
           </div>
-          <div class="button-container" style="text-align: center; margin-top: 30px;">
-            <a href="${orderStatusLink}" style="background-color: #e30613; color: white !important; padding: 12px 25px; text-decoration: none !important; border-radius: 5px; font-weight: bold; display: inline-block;">Ver Estado del Pedido</a>
+
+          <div class="button-container">
+            <a href="${orderStatusLink}" class="button" style="color: white !important;">Ver Estado del Pedido</a>
           </div>
-          <p style="margin-top: 30px; font-size: 12px; color: #888;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          
+          <p style="margin-top: 30px; font-size: 12px; color: #888;">Si tienes alguna pregunta, no dudes en <a href="mailto:${
+            process.env.EMAIL_FROM
+          }">contactarnos</a>.</p>
         </div>
         <div class="footer">
           &copy; ${new Date().getFullYear()} SellosPro. Todos los derechos reservados.
@@ -166,6 +193,7 @@ async function sendConfirmationEmail({
   const msg = {
     to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
     from: process.env.EMAIL_FROM,
+    name: "Sellospro",
     subject: `Confirmación de tu pedido en SellosPro (${externalReference})`,
     html: emailHtml,
   };
@@ -241,24 +269,53 @@ async function sendBudgetRequestEmail({
 
   const msg = {
     to: process.env.EMAIL_FROM, // Se envía a tu correo de negocio
-    from: process.env.EMAIL_FROM, // Remitente verificado
+    from: {
+      email: process.env.EMAIL_FROM,
+      name: "SellosPro (Cotización)", // Nombre específico para esta alerta
+    }, // Remitente verificado
     subject: `⚠️ Solicitud de Presupuesto: ${product.name}`,
     html: `
-      <h2>Nueva Solicitud de Presupuesto</h2>
-      <p>Un cliente ha solicitado un presupuesto para un producto con logo.</p>
-      <p><strong>El logo del cliente viene adjunto en este correo.</strong></p>
-      <hr>
-      ${buyerHtml} 
-      <hr>
-      <h3>Producto</h3>
-      <p><strong>Nombre:</strong> ${product.name}</p>
-      <p><strong>ID:</strong> ${product.id}</p>
-      <p><strong>Cantidad solicitada:</strong> ${quantity}</p>
-      <hr>
-      <h3>Detalles de Personalización</h3>
-      ${customizationHtml}
-      <hr>
-    `,
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+        .header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; color: #333; line-height: 1.6; }
+        .content h3 { color: #333; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 8px; font-size: 18px; }
+        .footer { background-color: #f9f9f9; color: #888; text-align: center; padding: 20px; font-size: 12px; border-top: 1px solid #e0e0e0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header" style="background-color: #0d6efd;">
+          <h1>Solicitud de Presupuesto</h1>
+        </div>
+        <div class="content">
+          <p>Se ha recibido una nueva solicitud de presupuesto para un producto con logo.</p>
+          <p><strong>El logo del cliente viene adjunto en este correo.</strong></p>
+          <hr>
+          ${buyerHtml} 
+          <hr>
+          <h3>Producto Solicitado</h3>
+          <p><strong>Nombre:</strong> ${product.name}</p>
+          <p><strong>ID:</strong> ${product.id}</p>
+          <p><strong>Cantidad solicitada:</strong> ${quantity}</p>
+          <hr>
+          <h3>Detalles de Personalización</h3>
+          ${customizationHtml}
+          <hr>
+        </div>
+        <div class="footer">
+          &copy; ${new Date().getFullYear()} SellosPro.
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
     attachments: attachments, // Adjuntamos el logo
   };
 
