@@ -400,7 +400,7 @@ export default function ProductPage({ showToast }) {
                 })()}
 
               {/* --- BOTONES CONDICIONALES --- */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
+              <div className="flex  items-center gap-4 mt-6">
                 {isKit ? (
                   // Botón para solicitar presupuesto (solo para kits)
                   <button
