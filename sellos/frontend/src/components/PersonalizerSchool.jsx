@@ -26,8 +26,8 @@ export default function PersonalizerSchool({
         </label>
         <input
           type="text"
-          value={customization.name || ""}
-          onChange={(e) => handleChange("name", e.target.value)}
+          value={customization.Nombre || ""}
+          onChange={(e) => handleChange("Nombre", e.target.value)}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
           placeholder="Nombre del alumno"
         />
@@ -42,16 +42,17 @@ export default function PersonalizerSchool({
           type="number"
           min="0"
           max="158"
-          value={customization.icon || 0}
+          value={customization.Dibujo || 0}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value >= 0 && value <= 158) handleChange("icon", value);
+            if (value >= 0 && value <= 158) handleChange("Dibujo", value);
           }}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
           placeholder="Ej: 12"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Ingresá un número entre 0 y 158. El valor <strong>0</strong> significa sin dibujito.
+          Ingresá un número entre 0 y 158. El valor <strong>0</strong> significa
+          sin dibujito.
         </p>
       </div>
 
@@ -61,8 +62,8 @@ export default function PersonalizerSchool({
           Tipo de letra
         </label>
         <select
-          value={customization.font || ""}
-          onChange={(e) => handleChange("font", e.target.value)}
+          value={customization.Fuente || ""}
+          onChange={(e) => handleChange("Fuente", e.target.value)}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
           <option value="">Elegir tipo (A-Z)...</option>
@@ -85,16 +86,16 @@ export default function PersonalizerSchool({
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
-            checked={customization.hoja || false}
-            onChange={(e) => handleChange("hoja", e.target.checked)}
+            checked={customization.Hoja || false}
+            onChange={(e) => handleChange("Hoja", e.target.checked)}
           />
           Hoja
         </label>
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
-            checked={customization.grado || false}
-            onChange={(e) => handleChange("grado", e.target.checked)}
+            checked={customization.Grado || false}
+            onChange={(e) => handleChange("Grado", e.target.checked)}
           />
           Grado
         </label>
@@ -113,8 +114,8 @@ export default function PersonalizerSchool({
           Comentarios adicionales
         </label>
         <textarea
-          value={customization.comentarios || ""}
-          onChange={(e) => handleChange("comentarios", e.target.value)}
+          value={customization.Comentarios || ""}
+          onChange={(e) => handleChange("Comentarios", e.target.value)}
           rows="3"
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 resize-none"
           placeholder="Aclaraciones, detalles de diseño, etc."

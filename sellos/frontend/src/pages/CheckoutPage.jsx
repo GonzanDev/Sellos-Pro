@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -19,6 +19,12 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState({});
   const [formValid, setFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const formatValue = (value) => {
+    if (typeof value === "boolean") {
+      return value ? "Sí" : "No";
+    }
+    return String(value);
+  };
 
   const finalTotal =
     deliveryMethod === "shipping" ? total + SHIPPING_COST : total;
@@ -184,7 +190,7 @@ export default function CheckoutPage() {
                   <div className="ml-3 text-sm">
                     <p className="font-medium">Retiro en el local</p>
                     <p className="text-xs text-gray-500">
-                      Avenida Luro 3247, Mar del Plata
+                      Bermejo 477, Mar del Plata
                     </p>
                   </div>
                 </label>
@@ -253,17 +259,18 @@ export default function CheckoutPage() {
         {/* Columna de Resumen */}
         <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
           <h2 className="text-2xl font-semibold mb-6">Resumen del pedido</h2>
-          <div className="flex-1 space-y-4 overflow-y-auto">
+          <div className="flex-1 space-y-4 ">
             {cart.map((item) => (
-              <div
+              <Link
                 key={item.cartItemId}
-                className="flex items-start gap-4 border-b pb-4"
+                to={`/product/${item.id}`}
+                className="flex items-start gap-4  pb-4 last:pb-0 last:border-0 p-2 -m-2 rounded-lg "
               >
                 <div className="relative flex-shrink-0">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-16 h-16 object-contain rounded-md border"
+                    className="w-16 h-16 object-fit rounded-md border"
                   />
                   <span className="absolute -top-2 -right-2 bg-gray-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                     {item.qty}
@@ -331,7 +338,7 @@ export default function CheckoutPage() {
 
                           return (
                             <p key={key}>
-                              <strong>{key}:</strong> {String(value)}
+                              <strong>{key}:</strong> {formatValue(value)}
                             </p>
                           );
                         }
@@ -344,7 +351,7 @@ export default function CheckoutPage() {
                 <p className="font-semibold text-sm mt-1">
                   AR$ {(item.price * item.qty).toFixed(2)}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
 

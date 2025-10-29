@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const slides = [
   {
-    title: "¡Personaliza tu Sello!",
+    title: "WEB EN CONSTRUCCIÓN",
     subtitle: "Calidad y diseño a tu medida.",
     buttonText: "Ver Catálogo",
     link: "/catalog",

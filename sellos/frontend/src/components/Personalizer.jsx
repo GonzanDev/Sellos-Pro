@@ -48,10 +48,10 @@ export default function Personalizer({
               <button
                 key={letter}
                 type="button"
-                onClick={() => handleChange("font", letter)}
+                onClick={() => handleChange("Fuente", letter)}
                 className={`flex items-center justify-center w-9 h-9 text-sm font-semibold rounded border transition 
                   ${
-                    customization.font === letter
+                    customization.Fuente === letter
                       ? "bg-red-600 text-white border-red-600"
                       : "bg-white border-gray-300 hover:bg-gray-100"
                   }`}
@@ -64,7 +64,7 @@ export default function Personalizer({
           <div className="mt-2">
             <button
               type="button"
-              onClick={() => handleChange("font", "")}
+              onClick={() => handleChange("Fuente", "")}
               className="text-xs text-gray-500 hover:text-gray-800"
             >
               Borrar selección
@@ -86,8 +86,8 @@ export default function Personalizer({
           Comentarios adicionales
         </label>
         <textarea
-          value={customization.comentarios || ""}
-          onChange={(e) => handleChange("comentarios", e.target.value)}
+          value={customization.Comentarios || ""}
+          onChange={(e) => handleChange("Comentarios", e.target.value)}
           rows="3"
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 resize-none"
           placeholder="Aclaraciones, detalles de diseño, etc."

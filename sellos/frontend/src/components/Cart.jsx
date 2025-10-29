@@ -21,6 +21,12 @@ const CustomizationDetails = ({ customization }) => {
     return null;
   }
 
+  const formatValue = (value) => {
+    if (typeof value === "boolean") {
+      return value ? "Sí" : "No";
+    }
+    return String(value);
+  };
   return (
     <div className="mt-2 text-xs text-gray-500 space-y-1 border-t border-gray-200 pt-2">
       {/* 3. Renderizamos los otros detalles primero */}
@@ -53,7 +59,7 @@ const CustomizationDetails = ({ customization }) => {
                 <span className="font-medium capitalize text-gray-600">
                   {key.replace("line", "Línea ")}:
                 </span>{" "}
-                {String(value)}
+                {formatValue(value)}
               </p>
             );
         }
@@ -93,6 +99,11 @@ export default function Cart() {
     total = 0,
   } = useCart();
   const navigate = useNavigate();
+
+  const handleProductClick = (id) => {
+    closeCart(); // Cierra el modal
+    navigate(`/product/${id}`); // Navega a la página del producto
+  };
 
   const handleCheckout = () => {
     closeCart();
@@ -136,22 +147,33 @@ export default function Cart() {
                   key={item.cartItemId}
                   className="flex items-start gap-4 py-4"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-20 h-20 object-contain rounded-lg border border-gray-200 bg-white"
-                  />
-                  <div className="flex-1">
+                  {/* --- CAMBIO AQUÍ --- */}
+                  {/* Convertimos la imagen en un botón clickeable */}
+                  <button
+                    onClick={() => handleProductClick(item.id)}
+                    className="w-20 h-20 object-contain rounded-lg border border-gray-200 bg-white flex-shrink-0"
+                    aria-label={`Ver ${item.name}`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-fit rounded-md"
+                    />
+                  </button>
+                  <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold text-gray-800">
+                      <button
+                        onClick={() => handleProductClick(item.id)}
+                        className="text-left"
+                      >
+                        <h3 className="font-semibold text-gray-800 hover:text-red-600 transition-colors">
                           {item.name}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
                           AR$ {item.price.toFixed(2)}
                         </p>
-                      </div>
-                      <p className="text-md font-semibold text-gray-900">
+                      </button>
+                      <p className="text-md font-semibold text-gray-900 flex-shrink-0">
                         AR$ {(item.price * (item.qty || 1)).toFixed(2)}
                       </p>
                     </div>
