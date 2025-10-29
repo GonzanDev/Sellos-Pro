@@ -192,8 +192,10 @@ async function sendConfirmationEmail({
 
   const msg = {
     to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
-    from: process.env.EMAIL_FROM,
-    name: "Sellospro",
+    from: {
+      email: process.env.EMAIL_FROM,
+      name: "SellosPro", // Nombre específico para esta alerta
+    },
     subject: `Confirmación de tu pedido en SellosPro (${externalReference})`,
     html: emailHtml,
   };

@@ -323,7 +323,7 @@ export default function ProductPage({ showToast }) {
                         <img
                           src={padProduct.image}
                           alt={padProduct.name}
-                          className="w-16 h-16 object-contain border rounded-md p-1 bg-white flex-shrink-0"
+                          className="w-16 h-16 object-cover  rounded-md bg-white flex-shrink-0"
                         />
 
                         <div>
@@ -342,7 +342,7 @@ export default function ProductPage({ showToast }) {
                       {/* Botón de añadir separado al final del bloque */}
                       <button
                         onClick={handleAddPad}
-                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 transition"
+                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
                       >
                         <ShoppingCart size={18} />
                         Añadir {padProduct.name} al Carrito
@@ -372,7 +372,7 @@ export default function ProductPage({ showToast }) {
                         <img
                           src={inkRefill.image}
                           alt={inkRefill.name}
-                          className="w-16 h-16 object-contain border rounded-md p-1 bg-white flex-shrink-0"
+                          className="w-16 h-16 object-cover  rounded-md bg-white flex-shrink-0"
                         />
 
                         <div>
@@ -390,7 +390,7 @@ export default function ProductPage({ showToast }) {
 
                       <button
                         onClick={handleAddInk}
-                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 transition"
+                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
                       >
                         <ShoppingCart size={18} />
                         Añadir {inkRefill.name} al Carrito

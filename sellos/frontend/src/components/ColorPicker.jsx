@@ -29,7 +29,7 @@ export default function ColorPicker({ colors = [], value, onChange }) {
             {!color.stock && (
               // --- CAMBIO DE POSICIÓN ---
               // Movido 4px más abajo (de -bottom-7 a -bottom-8)
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-red-600 font-medium whitespace-nowrap">
+              <span className="relative text-xs text-red-600 whitespace-nowrap">
                 {" "}
                 Sin stock
               </span>
