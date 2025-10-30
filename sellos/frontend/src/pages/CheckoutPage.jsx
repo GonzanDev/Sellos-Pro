@@ -264,6 +264,11 @@ export default function CheckoutPage() {
               <Link
                 key={item.cartItemId}
                 to={`/product/${item.id}`}
+                state={{
+                  cartItemId: item.cartItemId,
+                  customization: item.customization,
+                  quantity: item.qty,
+                }}
                 className="flex items-start gap-4  pb-4 last:pb-0 last:border-0 p-2 -m-2 rounded-lg "
               >
                 <div className="relative flex-shrink-0">
@@ -338,7 +343,8 @@ export default function CheckoutPage() {
 
                           return (
                             <p key={key}>
-                              <strong>{key}:</strong> {formatValue(value)}
+                              <strong>{key.replace("line", "Línea ")}:</strong>{" "}
+                              {formatValue(value)}
                             </p>
                           );
                         }

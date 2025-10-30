@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
+// No necesitamos 'uuid' ya que usamos 'crypto.randomUUID()'
+// import { v4 as uuidv4 } from "uuid";
 
 const CartContext = createContext(null);
 
@@ -19,8 +21,6 @@ export const useCart = () => {
 const CART_LS_KEY = "cart_v1";
 
 // Función CLAVE: Crea una "huella digital" para un objeto de personalización.
-// Esto nos permite comparar dos personalizaciones de forma fiable, incluso si
-// las propiedades están en un orden diferente.
 const getCustomizationKey = (customization) => {
   if (!customization || Object.keys(customization).length === 0) {
     return "{}";
@@ -44,7 +44,7 @@ export function CartProvider({ children }) {
     try {
       const saved = localStorage.getItem(CART_LS_KEY);
       const initialCart = saved ? JSON.parse(saved) : [];
-      // Aseguramos que cada item, incluso los viejos, tenga un ID único para poder borrarlo.
+      // Aseguramos que cada item, incluso los viejos, tenga un ID único.
       return initialCart.map((item) => ({
         ...item,
         cartItemId: item.cartItemId || crypto.randomUUID(),
@@ -75,18 +75,18 @@ export function CartProvider({ children }) {
       );
 
       if (existingItem) {
-        // Si ya existe un producto IDÉNTICO (misma personalización), incrementamos la cantidad
+        // Si ya existe un producto IDÉNTICO, incrementamos la cantidad
         return prevCart.map((item) =>
           item.cartItemId === existingItem.cartItemId
-            ? { ...item, qty: (item.qty || 1) + 1 }
+            ? { ...item, qty: (item.qty || 1) + (productToAdd.qty || 1) } // Sumamos la cantidad
             : item
         );
       } else {
-        // Si es nuevo o tiene una personalización diferente, lo agregamos como un item nuevo.
+        // Si es nuevo, lo agregamos como un item nuevo.
         const newCartItem = {
           ...productToAdd,
-          cartItemId: crypto.randomUUID(), // Asignamos un ID único a esta entrada del carrito
-          qty: 1,
+          cartItemId: crypto.randomUUID(), // Asignamos un ID único
+          qty: productToAdd.qty || 1, // Usamos la cantidad del producto (para la pág. de producto)
         };
         return [...prevCart, newCartItem];
       }
@@ -94,8 +94,7 @@ export function CartProvider({ children }) {
     openCart();
   };
 
-  // Ahora, para eliminar y actualizar, usamos el ID único del carrito (cartItemId),
-  // lo que evita cualquier ambigüedad.
+  // Usamos el ID único del carrito (cartItemId)
   const removeFromCart = (cartItemId) =>
     setCart((prev) => prev.filter((p) => p.cartItemId !== cartItemId));
 
@@ -106,6 +105,20 @@ export function CartProvider({ children }) {
       }
       return prev.map((p) => (p.cartItemId === cartItemId ? { ...p, qty } : p));
     });
+  };
+
+  // --- ¡NUEVA FUNCIÓN AÑADIDA! ---
+  // Esta función actualiza un item existente en el carrito (identificado por cartItemId)
+  // con los nuevos datos que le pasamos.
+  const updateCartItem = (cartItemId, newProductData) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.cartItemId === cartItemId
+          ? { ...item, ...newProductData } // Sobrescribe el item con los nuevos datos
+          : item
+      )
+    );
+    openCart(); // Abrimos el carrito para mostrar el cambio
   };
 
   const clearCart = () => setCart([]);
@@ -130,6 +143,7 @@ export function CartProvider({ children }) {
     closeCart,
     cartCount,
     total,
+    updateCartItem, // <-- Exponemos la nueva función
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

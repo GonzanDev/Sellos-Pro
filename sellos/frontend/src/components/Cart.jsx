@@ -100,9 +100,15 @@ export default function Cart() {
   } = useCart();
   const navigate = useNavigate();
 
-  const handleProductClick = (id) => {
+  const handleProductClick = (item) => {
     closeCart(); // Cierra el modal
-    navigate(`/product/${id}`); // Navega a la página del producto
+    navigate(`/product/${item.id}`, {
+      state: {
+        cartItemId: item.cartItemId,
+        customization: item.customization,
+        quantity: item.qty,
+      },
+    }); // Navega a la página del producto
   };
 
   const handleCheckout = () => {
@@ -150,7 +156,7 @@ export default function Cart() {
                   {/* --- CAMBIO AQUÍ --- */}
                   {/* Convertimos la imagen en un botón clickeable */}
                   <button
-                    onClick={() => handleProductClick(item.id)}
+                    onClick={() => handleProductClick(item)}
                     className="w-20 h-20 object-contain rounded-lg border border-gray-200 bg-white flex-shrink-0"
                     aria-label={`Ver ${item.name}`}
                   >
@@ -163,7 +169,7 @@ export default function Cart() {
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
                       <button
-                        onClick={() => handleProductClick(item.id)}
+                        onClick={() => handleProductClick(item)}
                         className="text-left"
                       >
                         <h3 className="font-semibold text-gray-800 hover:text-red-600 transition-colors">

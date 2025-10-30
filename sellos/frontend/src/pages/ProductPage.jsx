@@ -1,6 +1,15 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ShoppingCart, Heart, X, Send, User, Mail, Phone } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  ShoppingCart,
+  Heart,
+  X,
+  Send,
+  User,
+  Mail,
+  Phone,
+  RefreshCw,
+} from "lucide-react";
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
@@ -15,12 +24,17 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export default function ProductPage({ showToast }) {
   const { products, loading, error } = useProducts();
-  const { addToCart } = useCart();
+  const { addToCart, updateCartItem } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [customization, setCustomization] = useState({});
-  const [quantity, setQuantity] = useState(1);
+  const location = useLocation();
+  // Verificamos si estamos editando un item existente
+  const existingCartItem = location.state;
+  const isEditing = !!existingCartItem;
+  const [customization, setCustomization] = useState(
+    existingCartItem?.customization || {}
+  );
+  const [quantity, setQuantity] = useState(existingCartItem?.quantity || 1);
   const [activeImage, setActiveImage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // --- Estados para la solicitud de presupuesto ---
@@ -31,6 +45,21 @@ export default function ProductPage({ showToast }) {
     phone: "",
   });
   const [formErrors, setFormErrors] = useState({});
+
+  // --- ¡NUEVO! useEffect para resetear el estado al cambiar de producto ---
+  // Esto soluciona el bug de que la personalización de un producto
+  // se "pegue" al navegar a otro producto desde el carrito.
+  useEffect(() => {
+    // Leemos el state (datos del carrito) de la ubicación actual
+    const newExistingCartItem = location.state;
+
+    // Reiniciamos los estados a sus valores por defecto (o los del item a editar)
+    setCustomization(newExistingCartItem?.customization || {});
+    setQuantity(newExistingCartItem?.quantity || 1);
+    setActiveImage(0); // Volvemos a la primera imagen
+    setFormErrors({}); // Limpiamos errores de formulario
+    setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos datos del comprador
+  }, [id, location.state]);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const product = products.find((p) => String(p.id) === id);
 
@@ -85,6 +114,17 @@ export default function ProductPage({ showToast }) {
     };
     addToCart(productToAdd);
     showToast(`${product.name} agregado al carrito`);
+  };
+  // Esta se llama si estamos en modo "edición"
+  const handleUpdateCartItem = () => {
+    const updatedProductData = {
+      ...product, // Mantenemos los datos base del producto
+      customization: customization,
+      qty: quantity,
+    };
+    // Usamos la nueva función del contexto
+    updateCartItem(existingCartItem.cartItemId, updatedProductData);
+    showToast(`${product.name} actualizado en el carrito`);
   };
 
   // --- Manejador para el formulario de datos del comprador ---
@@ -253,15 +293,15 @@ export default function ProductPage({ showToast }) {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               {product.name}
             </h1>
-      <p className="text-gray-600 mt-4 leading-relaxed">
-       {product.description.split('\n').map((line, index, array) => (
-        <React.Fragment key={index}>
-         {line}
-         {/* Añade un <br /> si NO es la última línea, para evitar un salto extra al final */}
-         {index < array.length - 1 && <br />}
-        </React.Fragment>
-       ))}
-      </p>
+            <p className="text-gray-600 mt-4 leading-relaxed">
+              {product.description.split("\n").map((line, index, array) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {/* Añade un <br /> si NO es la última línea, para evitar un salto extra al final */}
+                  {index < array.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </p>
             {/* --- PRECIO CONDICIONAL --- */}
             <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
               {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
@@ -406,18 +446,19 @@ export default function ProductPage({ showToast }) {
                 })()}
 
               {/* --- BOTONES CONDICIONALES --- */}
-              <div className="flex  items-center gap-4 mt-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
                 {isKit ? (
-                  // Botón para solicitar presupuesto (solo para kits)
+                  // Botón para ABRIR EL MODAL de presupuesto
                   <button
                     onClick={handleOpenBudgetModal}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
                   >
                     <Send size={20} />
-                    {isSendingBudget ? "Enviando..." : "Solicitar Presupuesto"}
+                    Solicitar Presupuesto
                   </button>
                 ) : (
-                  // Botones estándar para otros productos
+                  // --- LÓGICA DE BOTÓN ACTUALIZADA ---
+                  // Mostramos "Actualizar" o "Añadir" según el modo
                   <>
                     <div className="flex items-center border border-gray-300 rounded-md">
                       <button
@@ -436,13 +477,26 @@ export default function ProductPage({ showToast }) {
                         +
                       </button>
                     </div>
-                    <button
-                      onClick={handleAddToCart}
-                      className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
-                    >
-                      <ShoppingCart size={20} />
-                      Añadir al Carrito
-                    </button>
+
+                    {isEditing ? (
+                      // Botón de Actualizar
+                      <button
+                        onClick={handleUpdateCartItem} // <-- Llama a la nueva función
+                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+                      >
+                        <RefreshCw size={20} />
+                        Actualizar Cambios
+                      </button>
+                    ) : (
+                      // Botón de Añadir
+                      <button
+                        onClick={handleAddToCart} // <-- Llama a la función original
+                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
+                      >
+                        <ShoppingCart size={20} />
+                        Añadir al Carrito
+                      </button>
+                    )}
                   </>
                 )}
               </div>
