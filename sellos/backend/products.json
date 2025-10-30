@@ -3,12 +3,15 @@
     "id": 1,
     "category": ["Escolar"],
     "name": "Promo Escolar",
-    "description": "Kit de sello automático ideal para uso escolar.",
+    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \n Si son mas nombres o apellidos recomendamos no poner dibujo. \n Si se elige letra \"cursiva\" recomendamos no poner dibujo. \n Si se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
     "price": 20000,
-    "image": "/images/Escolar/EscolaresPic.jpg",
+    "image": "/images/Escolar/Escolares1.jpg",
     "thumbnails": [
       "/images/Escolar/Dibujos.jpg",
-      "/images/Escolar/LetrasPic.jpg"
+      "/images/Escolar/LetrasPic.jpg",
+      "/images/Escolar/Muestras.jpg",
+      "/images/Escolar/Escolares2.jpg",
+      "/images/Escolar/Escolares3.jpg"
     ],
     "colors": [
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
@@ -24,12 +27,13 @@
     "id": 2,
     "category": ["Escolar"],
     "name": "Promo Escolar VERTICAL",
-    "description": "Kit de sello automático ideal para uso escolar.",
+    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \n Si son mas nombres o apellidos recomendamos no poner dibujo..",
     "price": 20000,
     "image": "/images/Pastel/Pastel.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
-      "/images/Escolar/Dibujos.jpg"
+      "/images/Escolar/Dibujos.jpg",
+      "/images/Pastel/MuestrasVertical.jpg"
     ],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
@@ -43,11 +47,12 @@
     "id": 3,
     "category": ["Automáticos"],
     "name": "PROMO Automático N°2",
-    "description": "Sello automático de la marca Shiny, resistente y de alta duración.",
+    "description": "SUPER PROMO Automático Importado + Goma grabada en laser (texto). \n Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. \n La letra \"cursiva\" se utiliza solo en la 1er línea.",
     "price": 20000,
     "image": "/images/842 Estandar/Estandar.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
+      "images/842 Estandar/Estandar2.jpg",
       "/images/842 Estandar/EstandarColores.jpg",
       "/images/842 Estandar/EstandarTransparentes.jpg"
     ],
@@ -68,7 +73,7 @@
     "id": 4,
     "category": ["Automáticos"],
     "name": "Mouse Stamp",
-    "description": "Sello con formato de mouse, ergonómico y portátil.",
+    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea..",
     "price": 26000,
     "image": "/images/Mouse/Mouse.jpg",
         "thumbnails": [
@@ -88,11 +93,13 @@
     "id": 5,
     "category": ["Automáticos"],
     "name": "Handy Stamp Pocket",
-    "description": "Sello automático compacto y fácil de transportar.",
+    "description": "Sello Handy Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
     "price": 26000,
     "image": "/images/Handy/Handy.jpg",
             "thumbnails": [
-      "/images/Escolar/LetrasPic.jpg"
+      "/images/Escolar/LetrasPic.jpg",
+      "/images/Handy/Handy2.jpg",
+      "/images/Handy/Handy3.jpg"
     ],
     "colors": [
       { "name": "Negro", "hex": "#0D0907", "stock": false },
@@ -142,8 +149,8 @@
     "name": "Automatico linea PASTEL",
     "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
     "price": 20000,
-    "image": "/images/Pastel/Pastel.jpg",
-    "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Pastel/Pastel1.jpg"],
+    "image": "/images/Pastel/Pastel1.jpg",
+    "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Pastel/Pastel.jpg"],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
       { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
@@ -155,8 +162,8 @@
   {
     "id": 9,
     "category": ["Fechadores"],
-    "name": "Fechador 3mm",
-    "description": "Fechador manual de 3mm, resistente y duradero.",
+    "name": "Fechador 3 mm",
+    "description": "Sello fechador manual de 3 mm de alto.",
     "price": 10000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
@@ -164,15 +171,15 @@
   { "id": 10,
     "category": ["Fechadores"],
     "name": "Fechador 4mm",
-    "description": "Fechador manual de 4mm, resistente y duradero.",
+    "description": "Sello fechador manual de 4 mm de alto.",
     "price": 12000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
   },
   { "id": 11,
     "category": ["Fechadores"],
-    "name": "Fechador 5mm",
-    "description": "Fechador manual de 5mm, ideal para documentos.",
+    "name": "Fechador 5 mm",
+    "description": "Fechador manual de 5 mm, ideal para documentos.",
     "price": 15000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
@@ -189,19 +196,19 @@
   {
     "id": 13,
     "category": ["Numeradores"],
-    "name": "Numerador 6 dígitos",
-    "description": "Numerador manual de 6 dígitos, ideal para documentos.",
-    "price": 10000,
-    "image": "/images/numerador-6.png",
-    "requiresPad": true
-  },
-  {
-    "id": 14,
-    "category": ["Numeradores"],
     "name": "Numerador 8 dígitos",
     "description": "Numerador manual de 8 dígitos, resistente y confiable.",
-    "price": 12000,
+    "price": 10000,
     "image": "/images/Numeradores/Numerador8B.jpg",
+    "requiresPad": true
+  },
+    {
+    "id": 14,
+    "category": ["Numeradores"],
+    "name": "Numerador 12 dígitos",
+    "description": "Numerador manual de 12 dígitos, ideal para documentos.",
+    "price": 12000,
+    "image": "/images/Numeradores/Numerador12B.jpg",
     "requiresPad": true
   },
   {
@@ -216,7 +223,7 @@
     "id": 16,
     "category": ["Tintas"],
     "name": "Tinta AL AGUA - Frasco Chiquito",
-    "description": "Tinta en frasco pequeño de 28ml.",
+    "description": "Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 0.5,
     "image": "/images/TintaFrasquito/Frasquito.jpg",
     "colors": [
@@ -267,8 +274,8 @@
   {
     "id": 19,
     "category": ["Tintas", "Almohadillas"],
-    "name": "Almohadilla + Tinta",
-    "description": "Agrega almohadilla + tinta para los sellos que lo requieran.",
+    "name": "Almohadilla de Fieltro + Tinta Especial al Agua",
+    "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 10000,
     "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
   },

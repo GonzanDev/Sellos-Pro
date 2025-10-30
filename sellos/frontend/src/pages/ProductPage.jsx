@@ -253,9 +253,15 @@ export default function ProductPage({ showToast }) {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               {product.name}
             </h1>
-            <p className="text-gray-600 mt-4 leading-relaxed">
-              {product.description}
-            </p>
+      <p className="text-gray-600 mt-4 leading-relaxed">
+       {product.description.split('\n').map((line, index, array) => (
+        <React.Fragment key={index}>
+         {line}
+         {/* Añade un <br /> si NO es la última línea, para evitar un salto extra al final */}
+         {index < array.length - 1 && <br />}
+        </React.Fragment>
+       ))}
+      </p>
             {/* --- PRECIO CONDICIONAL --- */}
             <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
               {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
