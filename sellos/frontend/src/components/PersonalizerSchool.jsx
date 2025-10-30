@@ -78,28 +78,40 @@ export default function PersonalizerSchool({
         </p>
       </div>
 
-      {/* Detalles */}
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        Detalles
-      </label>
-      <div className="flex gap-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={customization.Hoja || false}
-            onChange={(e) => handleChange("Hoja", e.target.checked)}
-          />
-          Hoja
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={customization.Grado || false}
-            onChange={(e) => handleChange("Grado", e.target.checked)}
-          />
-          Grado
-        </label>
-      </div>
+      {/* Detalles: solo visibles si el producto es el Vertical (id = 2) */}
+      {product.id === 2 && (
+        <>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Detalles
+          </label>
+          <div className="flex flex-wrap gap-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={customization.Hoja || false}
+                onChange={(e) => handleChange("Hoja", e.target.checked)}
+              />
+              Hoja N°
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={customization.Materia || false}
+                onChange={(e) => handleChange("Materia", e.target.checked)}
+              />
+              Materia
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={customization.Año || false}
+                onChange={(e) => handleChange("Año", e.target.checked)}
+              />
+              Año
+            </label>
+          </div>
+        </>
+      )}
 
       {/* Color */}
       <ColorPicker

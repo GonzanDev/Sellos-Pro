@@ -71,9 +71,9 @@
   },
   {
     "id": 4,
-    "category": ["Automáticos"],
+    "category": ["Automáticos", "Portátiles"],
     "name": "Mouse Stamp",
-    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea..",
+    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
     "price": 26000,
     "image": "/images/Mouse/Mouse.jpg",
         "thumbnails": [
@@ -91,7 +91,7 @@
   },
   {
     "id": 5,
-    "category": ["Automáticos"],
+    "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
     "description": "Sello Handy Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
     "price": 26000,
