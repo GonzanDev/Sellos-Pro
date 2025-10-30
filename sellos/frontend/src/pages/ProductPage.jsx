@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react"; // Importamos useMemo
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
@@ -28,9 +28,42 @@ export default function ProductPage({ showToast }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  // Verificamos si estamos editando un item existente
+
+  // --- LÓGICA DE PRODUCTO Y PESTAÑAS ---
+  const product = products.find((p) => String(p.id) === id);
+
+  // 2. Usamos useMemo para calcular valores derivados del producto.
+  const { isKit, isSchool, isCustomizable, isInk, isDateStamp } =
+    useMemo(() => {
+      const categories = (
+        Array.isArray(product?.category)
+          ? product.category
+          : typeof product?.category === "string"
+          ? [product.category]
+          : []
+      ).map((c) => c.toLowerCase());
+
+      const isKit = categories.includes("kits");
+      const isSchool = categories.includes("escolar");
+      const isInk = categories.includes("tintas");
+      const isDateStamp = categories.includes("fechadores");
+      const isCustomizable =
+        categories.includes("automáticos") && !isInk && !isDateStamp;
+
+      return {
+        isKit,
+        isSchool,
+        isCustomizable,
+        isInk,
+        isDateStamp,
+      };
+    }, [product]); // Depende solo del producto
+
+  // 3. Obtenemos los datos de la "edición" desde el carrito
   const existingCartItem = location.state;
   const isEditing = !!existingCartItem;
+
+  // 4. Inicializamos los estados
   const [customization, setCustomization] = useState(
     existingCartItem?.customization || {}
   );
@@ -46,9 +79,7 @@ export default function ProductPage({ showToast }) {
   });
   const [formErrors, setFormErrors] = useState({});
 
-  // --- ¡NUEVO! useEffect para resetear el estado al cambiar de producto ---
-  // Esto soluciona el bug de que la personalización de un producto
-  // se "pegue" al navegar a otro producto desde el carrito.
+  // --- useEffect para resetear el estado al cambiar de producto ---
   useEffect(() => {
     // Leemos el state (datos del carrito) de la ubicación actual
     const newExistingCartItem = location.state;
@@ -61,7 +92,6 @@ export default function ProductPage({ showToast }) {
     setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos datos del comprador
   }, [id, location.state]);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
-  const product = products.find((p) => String(p.id) === id);
 
   if (loading)
     return <div className="text-center py-20">Cargando producto...</div>;
@@ -74,6 +104,8 @@ export default function ProductPage({ showToast }) {
   if (!product) {
     return (
       <>
+        <title>Producto no encontrado - SellosPro</title>
+        <meta name="robots" content="noindex" />
         <div className="flex flex-col items-center justify-center py-20">
           <p className="text-lg">Producto no encontrado</p>
           <button
@@ -87,25 +119,6 @@ export default function ProductPage({ showToast }) {
     );
   }
 
-  const categories = (
-    Array.isArray(product.category)
-      ? product.category
-      : typeof product.category === "string"
-      ? [product.category]
-      : []
-  ).map((c) => c.toLowerCase());
-
-  // --- ✅ NUEVA LÓGICA DE CATEGORÍAS CORREGIDA ---
-  const isKit = categories.includes("kits");
-  const isSchool = categories.includes("escolar");
-  const isInk = categories.includes("tintas"); // Identificamos las tintas
-  const isDateStamp = categories.includes("fechadores"); // <-- AÑADIDO: Identifica fechadores
-
-  // isCustomizable: Solo si es Automático Y NO es Tinta Y NO es Fechador (u otros no personalizables)
-  const isCustomizable =
-    categories.includes("automáticos") && !isInk && !isDateStamp;
-  // ----------------------------------------------// ----------------------------------------------
-
   const handleAddToCart = () => {
     const productToAdd = {
       ...product,
@@ -115,31 +128,30 @@ export default function ProductPage({ showToast }) {
     addToCart(productToAdd);
     showToast(`${product.name} agregado al carrito`);
   };
-  // Esta se llama si estamos en modo "edición"
+
   const handleUpdateCartItem = () => {
     const updatedProductData = {
       ...product, // Mantenemos los datos base del producto
       customization: customization,
       qty: quantity,
     };
-    // Usamos la nueva función del contexto
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
     showToast(`${product.name} actualizado en el carrito`);
+    navigate("/"); // Vuelve al inicio o puedes usar navigate(-1) para volver atrás
   };
 
   // --- Manejador para el formulario de datos del comprador ---
   const handleBuyerChange = (e) => {
     const { name, value } = e.target;
     setBuyerInfo((prev) => ({ ...prev, [name]: value }));
-    // Limpiamos el error de este campo al empezar a escribir
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
   const handleOpenBudgetModal = () => {
-    // Validamos que se haya subido un logo ANTES de abrir el modal
-    if (isKit && !customization.logoPreview) {
+    if (isKit && !customization.logoFile) {
+      // Comprobamos 'logoFile'
       showToast("Por favor, sube un logo antes de cotizar.");
       return;
     }
@@ -164,21 +176,16 @@ export default function ProductPage({ showToast }) {
     setFormErrors({});
     setIsSendingBudget(true);
 
-    // --- Construimos un FormData para enviar el archivo ---
     const formData = new FormData();
     formData.append(
       "product",
       JSON.stringify({ id: product.id, name: product.name })
     );
-
-    // Quitamos los archivos del objeto de personalización antes de enviarlo como JSON
     const { logoFile, logoPreview, ...customizationDetails } = customization;
     formData.append("customization", JSON.stringify(customizationDetails));
-
     formData.append("quantity", quantity);
     formData.append("buyer", JSON.stringify(buyerInfo));
 
-    // Adjuntamos el archivo del logo
     if (logoFile) {
       formData.append("logoFile", logoFile);
     }
@@ -186,7 +193,6 @@ export default function ProductPage({ showToast }) {
     try {
       const response = await fetch(`${API_URL}/request-budget`, {
         method: "POST",
-        // No establecemos 'Content-Type', el navegador lo hace por nosotros
         body: formData,
       });
 
@@ -229,98 +235,101 @@ export default function ProductPage({ showToast }) {
   // --------------------------------------------------------
 
   return (
-    <div className="= py-8 md:py-12">
-      {" "}
-      {/* Fondo blanco para la página */}
+    <div className=" py-6 md:py-12">
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-          {/* Columna de Imágenes */}
-          <div>
-            {/* --- CONTENEDOR PRINCIPAL ES UN BOTÓN PARA ABRIR MODAL --- */}
-            <button
-              className="aspect-square bg-white rounded-lg flex items-center justify-center border overflow-hidden relative w-full cursor-pointer hover:opacity-90 transition group" // Añadido group
-              onClick={() => setIsModalOpen(true)}
-            >
-              <img
-                src={images[activeImage]}
-                alt={product.name}
-                className="w-full h-full object-cover" // object-cover para llenar
-              />
-              {/* Icono sutil para indicar zoom */}
-              <div className="absolute bottom-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                  />
-                </svg>
-              </div>
-            </button>
-            {/* Miniaturas */}
-            <div className="flex gap-2 sm:gap-4 mt-4 overflow-x-auto pb-2">
-              {images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveImage(index)}
-                  className={`flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center p-1 border-2 overflow-hidden ${
-                    activeImage === index
-                      ? "border-red-600 ring-1 ring-red-300"
-                      : "border-gray-200 hover:border-red-400"
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-            {/* Aviso debajo de las imágenes */}
-<p className="text-sm text-gray-500 mt-2 text-center italic">
-  💡 Haz clic sobre la imagen para verla en tamaño completo.
-</p>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* --- ESTRUCTURA DE GRID PRINCIPAL --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+          {/* --- COLUMNA 1: IMAGEN E INFORMACIÓN --- */}
+          <div>
+            {/* Contenedor de Imagen y Miniaturas */}
+            <div>
+              <button
+                className="aspect-square bg-white rounded-lg flex items-center justify-center border overflow-hidden relative w-full cursor-pointer hover:opacity-90 transition group"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <img
+                  src={images[activeImage]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                    />
+                  </svg>
+                </div>
+              </button>
+              {images.length > 1 && (
+                <div className="flex gap-2 sm:gap-4 mt-4 overflow-x-auto pb-2">
+                  {images.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveImage(index)}
+                      className={`flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center p-1 border-2 overflow-hidden ${
+                        activeImage === index
+                          ? "border-red-600 ring-1 ring-red-300"
+                          : "border-gray-200 hover:border-red-400"
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+              <p className="text-sm text-gray-500 mt-2 text-center italic">
+                💡 Haz clic sobre la imagen para verla en tamaño completo.
+              </p>
+            </div>
+
+            {/* --- TÍTULO, DESCRIPCIÓN Y PRECIO MOVIDOS AQUÍ --- */}
+            <div className="mt-8 lg:mt-12">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {product.name}
+              </h1>
+              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                {" "}
+                {/* Usamos whitespace-pre-wrap */}
+                {product.description.split("\n").map((line, index, array) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+              <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
+                {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
+              </p>
+            </div>
           </div>
 
-          {/* Columna de Información y Personalización */}
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              {product.name}
-            </h1>
-            <p className="text-gray-600 mt-4 leading-relaxed">
-              {product.description.split("\n").map((line, index, array) => (
-                <React.Fragment key={index}>
-                  {line}
-                  {/* Añade un <br /> si NO es la última línea, para evitar un salto extra al final */}
-                  {index < array.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            {/* --- PRECIO CONDICIONAL --- */}
-            <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
-              {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
-            </p>
+          {/* --- COLUMNA 2: PERSONALIZACIÓN Y ACCIONES --- */}
 
+          <div className="top-24 h-fit">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-                {/* --- TÍTULO CONDICIONAL --- */}
                 {isKit
                   ? "Completa los datos para cotizar"
                   : "Personaliza tu Sello"}
               </h2>
 
-              {/* Muestra Personalizer SOLO si es customizable (ej: automático) y NO es tinta */}
+              {/* --- SIN PESTAÑAS --- */}
               {isCustomizable && (
                 <Personalizer
                   product={product}
@@ -328,16 +337,13 @@ export default function ProductPage({ showToast }) {
                   setCustomization={setCustomization}
                 />
               )}
-
-              {/* Muestra SOLO ColorPicker si es Tinta */}
               {isInk && (
                 <ColorPicker
-                  colors={product.colors || []} // Colores del producto
+                  colors={product.colors || []}
                   value={customization.color}
                   onChange={handleColorChange}
                 />
               )}
-
               {isKit && (
                 <PersonalizerLogo
                   customization={customization}
@@ -357,26 +363,21 @@ export default function ProductPage({ showToast }) {
                 (() => {
                   const padProduct = products.find((p) => p.id === 19);
                   if (!padProduct) return null;
-
                   const handleAddPad = () => {
                     addToCart({ ...padProduct, qty: 1 });
                     showToast(`${padProduct.name} agregado al carrito`);
                   };
-
                   return (
                     <div className="mt-6 border-t border-gray-300 pt-4">
                       <h3 className="text-md font-semibold text-gray-800 mb-2">
                         ¿No tienes Almohadilla + Tinta?
                       </h3>
-
                       <div className="flex gap-4 items-center mb-3">
-                        {/* <-- AQUÍ SE AGREGA LA IMAGEN --> */}
                         <img
                           src={padProduct.image}
                           alt={padProduct.name}
-                          className="w-16 h-16 object-cover  rounded-md bg-white flex-shrink-0"
+                          className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0"
                         />
-
                         <div>
                           <p className="text-sm text-gray-600 mb-1">
                             Este producto requiere una almohadilla + tinta para
@@ -389,8 +390,6 @@ export default function ProductPage({ showToast }) {
                           </div>
                         </div>
                       </div>
-
-                      {/* Botón de añadir separado al final del bloque */}
                       <button
                         onClick={handleAddPad}
                         className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
@@ -403,29 +402,25 @@ export default function ProductPage({ showToast }) {
                 })()}
 
               {/* Sección Frasquito de Tinta opcional */}
-              {categories.includes("automáticos") &&
+              {isCustomizable && // Usamos la variable de useMemo
                 (() => {
                   const inkRefill = products.find((p) => p.id === 24);
                   if (!inkRefill) return null;
-
                   const handleAddInk = () => {
                     addToCart({ ...inkRefill, qty: 1 });
                     showToast(`${inkRefill.name} agregado al carrito`);
                   };
-
                   return (
                     <div className="mt-6 border-t border-gray-300 pt-4">
                       <h3 className="text-md font-semibold text-gray-800 mb-2">
                         ¿Vas a necesitar un frasquito para cargar tu sello?
                       </h3>
-
                       <div className="flex gap-4 items-center mb-3">
                         <img
                           src={inkRefill.image}
                           alt={inkRefill.name}
-                          className="w-16 h-16 object-cover  rounded-md bg-white flex-shrink-0"
+                          className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0"
                         />
-
                         <div>
                           <p className="text-sm text-gray-600 mb-1">
                             Si le vas a dar mucho uso, te damos la opcion
@@ -438,7 +433,6 @@ export default function ProductPage({ showToast }) {
                           </span>
                         </div>
                       </div>
-
                       <button
                         onClick={handleAddInk}
                         className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
@@ -451,7 +445,7 @@ export default function ProductPage({ showToast }) {
                 })()}
 
               {/* --- BOTONES CONDICIONALES --- */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
+              <div className="flex flex-row items-center gap-4 mt-6">
                 {isKit ? (
                   // Botón para ABRIR EL MODAL de presupuesto
                   <button
@@ -463,7 +457,6 @@ export default function ProductPage({ showToast }) {
                   </button>
                 ) : (
                   // --- LÓGICA DE BOTÓN ACTUALIZADA ---
-                  // Mostramos "Actualizar" o "Añadir" según el modo
                   <>
                     <div className="flex items-center border border-gray-300 rounded-md">
                       <button
@@ -482,7 +475,6 @@ export default function ProductPage({ showToast }) {
                         +
                       </button>
                     </div>
-
                     {isEditing ? (
                       // Botón de Actualizar
                       <button
@@ -506,27 +498,26 @@ export default function ProductPage({ showToast }) {
                 )}
               </div>
             </div>
+            {/* Botón Favoritos (eliminado) */}
           </div>
         </div>
       </div>
+
       {/* --- MODAL PARA LA IMAGEN --- */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in" // Simple fade-in animation
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in"
           onClick={() => setIsModalOpen(false)}
         >
-          {/* Contenedor del modal con stopPropagation */}
           <div
             className="relative max-w-3xl max-h-[85vh] bg-white rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Imagen dentro del modal */}
             <img
               src={images[activeImage]}
               alt={product.name}
               className="block max-h-[85vh] w-auto object-contain"
             />
-            {/* Botón para cerrar el modal */}
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 p-2 bg-white/80 rounded-full text-gray-900 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -535,13 +526,9 @@ export default function ProductPage({ showToast }) {
               <X size={24} />
             </button>
           </div>
-          {/* Añadimos estilos para la animación fade-in si no los tienes globalmente */}
-          <style>{`
-              @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-              .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-            `}</style>
         </div>
       )}
+
       {/* --- ¡NUEVO! MODAL PARA SOLICITUD DE PRESUPUESTO --- */}
       {isBudgetModalOpen && (
         <div
@@ -656,13 +643,13 @@ export default function ProductPage({ showToast }) {
               </button>
             </div>
           </div>
-          {/* Estilos para la animación (si no los tienes globales) */}
-          <style>{`
-            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-            .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-          `}</style>
         </div>
       )}
+      {/* Añadimos estilos para la animación fade-in si no los tienes globalmente */}
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+      `}</style>
     </div>
   );
 }

@@ -84,32 +84,33 @@ export default function Personalizer({
           onChange={(hex) => handleChange("color", hex)}
         />
 
-{/* 🖐 Opción de zurdo (solo para Portátiles) - USANDO CHECKBOX GRANDE */}
-    {isPortable && (
-     <div className="pt-4 flex items-center">
-      <input
-       type="checkbox"
-       id="zurdo-checkbox"
-       checked={customization.zurdo || false}
-       onChange={() => handleChange("zurdo", !customization.zurdo)}
-       className="w-5 h-5 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 cursor-pointer" // Aumentado w-5 y h-5
-      />
-      <label
-       htmlFor="zurdo-checkbox"
-       className="ml-2 text-base font-semibold text-gray-800 cursor-pointer" // Aumentado text-base y font-semibold, color más oscuro
-      >
-       Soy zurdo
-      </label>
-      
-     </div>
-    )}
+        {/* 🖐 Opción de zurdo (solo para Portátiles) - USANDO CHECKBOX GRANDE */}
+        {isPortable && (
+          <div className="pt-4 flex items-center">
+            <input
+              type="checkbox"
+              id="zurdo-checkbox"
+              checked={customization.zurdo || false}
+              onChange={() => handleChange("zurdo", !customization.zurdo)}
+              className="w-5 h-5 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 cursor-pointer" // Aumentado w-5 y h-5
+            />
+            <label
+              htmlFor="zurdo-checkbox"
+              className="ml-2 text-base font-semibold text-gray-800 cursor-pointer" // Aumentado text-base y font-semibold, color más oscuro
+            >
+              Soy zurdo
+            </label>
+          </div>
+        )}
 
-    {/* Agrega la nota descriptiva debajo (opcional) */}
-    {isPortable && (
-     <p className="text-sm text-gray-600 mt-1 ml-7"> {/* Aumentado text-sm y ml-7 para alinear un poco mejor */}
-      Activá esta opción si usás el sello con la mano izquierda.
-     </p>
-    )}
+        {/* Agrega la nota descriptiva debajo (opcional) */}
+        {isPortable && (
+          <p className="text-sm text-gray-600 mt-1 ml-7">
+            {" "}
+            {/* Aumentado text-sm y ml-7 para alinear un poco mejor */}
+            Activá esta opción si usás el sello con la mano izquierda.
+          </p>
+        )}
       </div>
 
       {/* 🗒 Comentarios adicionales */}
