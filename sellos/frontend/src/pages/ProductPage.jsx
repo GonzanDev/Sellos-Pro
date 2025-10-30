@@ -286,6 +286,11 @@ export default function ProductPage({ showToast }) {
                 </button>
               ))}
             </div>
+            {/* Aviso debajo de las imágenes */}
+<p className="text-sm text-gray-500 mt-2 text-center italic">
+  💡 Haz clic sobre la imagen para verla en tamaño completo.
+</p>
+
           </div>
 
           {/* Columna de Información y Personalización */}

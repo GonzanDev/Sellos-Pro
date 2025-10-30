@@ -97,7 +97,7 @@ export default function PersonalizerLogo({ customization, setCustomization }) {
           {/* 🟥 Vista previa del tamaño del kit */}
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-700 mb-2">
-              Vista previa del área de sello
+              Vista previa del área de sello (medida maxima del Kit seleccionado)
             </p>
             <div className="flex justify-center items-center">
               <div

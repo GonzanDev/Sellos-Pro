@@ -258,11 +258,11 @@
   {
     "id": 20,
     "category": ["Kits"],
-    "name": "Kit Sello Logo 1 - Hasta 6x4cm",
+    "name": "Kit Sello Logo",
     "description": "Incluye sello automático + almohadilla + tinta.",
-    "price": 35000,
-    "image": "/images/kit-logo.png"
-  },
+    "price": "0",
+    "image": "/images/KitLogo/3.jpg",
+    "thumbnails": ["/images/KitLogo/2.jpg", "/images/KitLogo/1.jpg", "/images/KitLogo/4.jpg", "/images/KitLogo/5.jpg"]  },
   {
     "id": 21,
     "category": ["Kits"],

@@ -12,34 +12,21 @@ export default function CatalogPage() {
   const [category, setCategory] = useState("all");
 
   const sortedAndFilteredProducts = useMemo(() => {
-    // --- ✅ INICIO DE LA CORRECCIÓN ---
     const filtered = products.filter((p) => {
-      // 1. Si la categoría es "all", mostrar todo
       if (category === "all") return true;
-
-      // 2. Estandarizar p.category para que SIEMPRE sea un array
-      // (Maneja si es un array, un string, o undefined/null)
       const productCategories = Array.isArray(p.category)
         ? p.category
         : typeof p.category === "string"
         ? [p.category]
         : [];
-
-      // 3. Convertir todo a minúsculas para una comparación segura
       const productCategoriesLower = productCategories
-        .filter(c => typeof c === 'string') // Filtra por si hay nulls en el array
-        .map(c => c.toLowerCase());
-      
+        .filter((c) => typeof c === "string")
+        .map((c) => c.toLowerCase());
       const selectedCategoryLower = category.toLowerCase();
-
-      // 4. Comprobar si el array de categorías del producto INCLUYE la categoría seleccionada
       return productCategoriesLower.includes(selectedCategoryLower);
     });
-    // --- ✅ FIN DE LA CORRECCIÓN ---
 
-    // El resto de tu lógica de ordenamiento (sort) está perfecta y no necesita cambios
     let processableProducts = [...filtered];
-
     switch (sortBy) {
       case "price-asc":
         processableProducts.sort((a, b) => a.price - b.price);
@@ -72,16 +59,78 @@ export default function CatalogPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-gray-900 self-start sm:self-center">
+        {/* 🔹 Vista para escritorio */}
+        <div className="hidden sm:block">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left">
             Catálogo
           </h1>
-          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            <div className="relative flex-1 sm:flex-none">
+
+          {/* Categorías + Ordenar por */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
+            <div className="flex flex-wrap gap-3">
+              {[
+                "all",
+                "Automáticos",
+                "Fechadores",
+                "Numeradores",
+                "Almohadillas",
+                "Tintas",
+                "Kits",
+                "Otros",
+              ].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium border transition ${
+                    category === cat
+                      ? "bg-black text-white border-black shadow-md"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-100"
+                  }`}
+                >
+                  {cat === "all" ? "Todas" : cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Selector de orden a la derecha */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                Ordenar por:
+              </label>
+              <div className="relative w-48">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full appearance-none bg-white border border-gray-300 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
+                >
+                  <option value="default">Predeterminado</option>
+                  <option value="price-asc">Menor precio</option>
+                  <option value="price-desc">Mayor precio</option>
+                  <option value="name-asc">Nombre (A-Z)</option>
+                </select>
+                <ChevronDown
+                  size={20}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 🔹 Vista para móvil */}
+        <div className="block sm:hidden mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+            Catálogo
+          </h1>
+
+          {/* Filtros sin recuadro, uno al lado del otro */}
+          <div className="flex justify-between items-center gap-3">
+            {/* Selector de categorías */}
+            <div className="relative flex-1">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
+                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-8 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
               >
                 <option value="all">Categorías</option>
                 <option value="Automáticos">Automáticos</option>
@@ -93,32 +142,33 @@ export default function CatalogPage() {
                 <option value="Otros">Otros</option>
               </select>
               <ChevronDown
-                size={20}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                size={18}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
               />
             </div>
 
-            <div className="relative flex-1 sm:flex-none">
+            {/* Selector de orden */}
+            <div className="relative flex-1">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
+                className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-8 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
               >
-                <option value="default">Ordenar por</option>
+                <option value="default">Ordenar</option>
                 <option value="price-asc">Menor precio</option>
                 <option value="price-desc">Mayor precio</option>
                 <option value="name-asc">Nombre (A-Z)</option>
               </select>
               <ChevronDown
-                size={20}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                size={18}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
               />
             </div>
           </div>
         </div>
 
+        {/* 🔹 Catálogo */}
         {sortedAndFilteredProducts.length > 0 ? (
-          // --- AJUSTE RESPONSIVE DE LA GRILLA ---
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6 lg:gap-8">
             {sortedAndFilteredProducts.map((product) => (
               <ProductCard
