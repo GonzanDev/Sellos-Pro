@@ -69,27 +69,23 @@
       { "name": "Amatista", "hex": "#9966CC", "stock": true }
     ]
   },
-  {
-    "id": 4,
-    "category": ["Automáticos", "Portátiles"],
-    "name": "Mouse Stamp",
-    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
-    "price": 26000,
-    "image": "/images/Mouse/Mouse.jpg",
-        "thumbnails": [
-      "/images/Escolar/LetrasPic.jpg",
-      "/images/Mouse/Mouse2.jpg"
-    ],
+    {
+    "id": 8,
+    "category": ["Automáticos"],
+    "name": "Automatico N°2 linea PASTEL",
+    "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
+    "price": 20000,
+    "image": "/images/Pastel/Pastel1.jpg",
+    "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Pastel/Pastel.jpg"],
     "colors": [
-      { "name": "Rojo", "hex": "#FF0000", "stock": true },
-      { "name": "Cromado", "hex": "#9C9C9C", "stock": true },
-      { "name": "Ruby", "hex": "#A30000", "stock": true },
-      { "name": "Azul", "hex": "#1368E8", "stock": true },
-      { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
-      { "name": "Rosa", "hex": "#F540A8", "stock": true }
+      { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
+      { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
+      { "name": "Violeta Pastel", "hex": "#ad36e0", "stock": true },
+      { "name": "Turquesa Pastel", "hex": "#afeeee", "stock": true },
+      { "name": "Amarillo Pastel", "hex": "#fdfd96", "stock": true }
     ]
   },
-  {
+    {
     "id": 5,
     "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
@@ -112,6 +108,26 @@
       { "name": "Fucsia", "hex": "#E40078", "stock": true },
       { "name": "Amatista", "hex": "#9966CC", "stock": true },
       { "name": "Rosa", "hex": "#F540A8", "stock": false }
+    ]
+  },
+  {
+    "id": 4,
+    "category": ["Automáticos", "Portátiles"],
+    "name": "Mouse Stamp",
+    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
+    "price": 26000,
+    "image": "/images/Mouse/Mouse.jpg",
+        "thumbnails": [
+      "/images/Escolar/LetrasPic.jpg",
+      "/images/Mouse/Mouse2.jpg"
+    ],
+    "colors": [
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Cromado", "hex": "#9C9C9C", "stock": true },
+      { "name": "Ruby", "hex": "#A30000", "stock": true },
+      { "name": "Azul", "hex": "#1368E8", "stock": true },
+      { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
+      { "name": "Rosa", "hex": "#F540A8", "stock": true }
     ]
   },
   {
@@ -144,22 +160,6 @@
     "maxLines": 6
   },
   {
-    "id": 8,
-    "category": ["Automáticos"],
-    "name": "Automatico linea PASTEL",
-    "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
-    "price": 20000,
-    "image": "/images/Pastel/Pastel1.jpg",
-    "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Pastel/Pastel.jpg"],
-    "colors": [
-      { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },
-      { "name": "Rosa Pastel", "hex": "#ffb6c1", "stock": true },
-      { "name": "Violeta Pastel", "hex": "#ad36e0", "stock": true },
-      { "name": "Turquesa Pastel", "hex": "#afeeee", "stock": true },
-      { "name": "Amarillo Pastel", "hex": "#fdfd96", "stock": true }
-    ]
-  },
-  {
     "id": 20,
     "category": ["Kits"],
     "name": "Kit Sello Logo",
@@ -175,6 +175,22 @@
     "description": "Incluye sello automático + almohadilla + tinta textil.",
     "price": 45000,
     "image": "/images/kit-logo.png"
+  },
+    {
+    "id": 19,
+    "category": ["Tintas", "Almohadillas"],
+    "name": "Tinta Especial al Agua + Almohadilla de Fieltro",
+    "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
+    "price": 10000,
+    "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
+  },
+  {
+    "id" : 25,
+    "category": ["Tintas", "Almohadillas"],
+    "name": "Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
+    "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
+    "price": 12000,
+    "image": "/images/Almohadilla+Tinta/Alm+TintSR.jpg"
   },
   {
     "id": 9,
@@ -228,14 +244,6 @@
     "image": "/images/Numeradores/Numerador12B.jpg",
     "requiresPad": true
   },
-  {
-    "id": 15,
-    "category": ["Almohadillas"],
-    "name": "Almohadilla Universal",
-    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 7000,
-    "image": "/images/almohadilla.png"
-  },
   { "id": 24,
     "category": ["Tintas"],
     "name": "Tinta NEGRA al agua / Frasco Chico",
@@ -265,6 +273,54 @@
     ]
   },
   {
+    "id": 17,
+    "category": ["Tintas"],
+    "name": "Botella Tinta 500cc al Agua",
+    "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
+    "price": 25000,
+    "image": "/images/TintaBotella/Botella.jpg",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde", "hex": "#00FF00", "stock": true },
+      { "name": "Violeta", "hex": "#44035c", "stock": false },
+      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
+      { "name": "Naranja", "hex": "#FFA500", "stock": true },
+      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
+      { "name": "Marrón", "hex": "#4f3c2f", "stock": false },
+      { "name": "Celeste", "hex": "#009ea3", "stock": true }
+    ]
+  },
+  { "id": 24,
+    "category": ["Tintas"],
+    "name": "Tinta SECADO RAPIDO / Frasco Chico",
+    "description": "Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
+    "price": 5000,
+    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "requiresPad": false
+  },
+    {
+    "id": 17,
+    "category": ["Tintas"],
+    "name": "Botella Tinta SECADO RAPIDO 500cc",
+    "description": "Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
+    "price": 25000,
+    "image": "/images/TintaBotella/BotellaSR.jpg",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde", "hex": "#00FF00", "stock": true },
+      { "name": "Violeta", "hex": "#44035c", "stock": false },
+      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
+      { "name": "Naranja", "hex": "#FFA500", "stock": true },
+      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
+      { "name": "Marrón", "hex": "#4f3c2f", "stock": false },
+      { "name": "Celeste", "hex": "#009ea3", "stock": true }
+    ]
+  },
+  {
     "id": 26,
     "category": ["Tintas"],
     "name": " Tinta Textil ideal para tela",
@@ -288,41 +344,13 @@
     "price": 12000,
     "image": "/images/TintaFrasquito/Pastel.jpg"
   },
-  {
-    "id": 17,
-    "category": ["Tintas"],
-    "name": "Botella Tinta 500cc al Agua",
-    "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 25000,
-    "image": "/images/TintaBotella/Botella.jpg",
-    "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": true },
-      { "name": "Azul", "hex": "#0000FF", "stock": true },
-      { "name": "Rojo", "hex": "#FF0000", "stock": true },
-      { "name": "Verde", "hex": "#00FF00", "stock": true },
-      { "name": "Violeta", "hex": "#44035c", "stock": false },
-      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
-      { "name": "Naranja", "hex": "#FFA500", "stock": true },
-      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
-      { "name": "Marrón", "hex": "#4f3c2f", "stock": false },
-      { "name": "Celeste", "hex": "#009ea3", "stock": true }
-    ]
-  },
-  {
-    "id": 19,
-    "category": ["Tintas", "Almohadillas"],
-    "name": "Tinta Especial al Agua + Almohadilla de Fieltro",
-    "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 10000,
-    "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
-  },
-  {
-    "id" : 25,
-    "category": ["Tintas", "Almohadillas"],
-    "name": "Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
-    "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 12000,
-    "image": "/images/Almohadilla+Tinta/Alm+TintSR.jpg"
+    {
+    "id": 15,
+    "category": ["Almohadillas"],
+    "name": "Almohadilla Universal",
+    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
+    "price": 7000,
+    "image": "/images/almohadilla.png"
   },
   {
     "id": 22,
