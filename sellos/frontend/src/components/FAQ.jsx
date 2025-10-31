@@ -5,12 +5,12 @@ const faqData = [
   {
     question: "¿Cuáles son los plazos de entrega?",
     answer:
-      "La demora depende del tipo de sello que elijas. Generalmente, los sellos estándar estan listos para retirar en 2 días hábiles, mientras que los sellos KIT LOGO personalizados tardan 10 días hábiles desde el momento de la compra. De cualquier modo, el cliente sera avisado por WhatsApp al momento que su pedido este listo para ser retirado.",
+      "Depende del tipo de sello que elijas. Generalmente, los automáticos estan listos para retirar en 2 días hábiles, mientras que los sellos KIT LOGO personalizados tardan 10 días hábiles desde el momento de la compra. Igualmente, el cliente sera avisado vía WhatsApp al momento que su pedido este listo para ser retirado.",
   },
   {
     question: "¿Puedo personalizar mi sello?",
     answer:
-      "¡Claro que sí! Ofrecemos un personalizador en la página de cada producto donde puedes añadir texto, logos y elegir colores para crear tu sello a medida. Si necesitas darnos instrucciones específicas también tienes un cuadro para detallar lo que necesites",
+      "Ofrecemos un personalizador en la página de cada producto donde puedes añadir texto, logos y elegir colores para crear tu sello a medida. Si necesitas darnos instrucciones específicas también tienes un cuadro para detallar lo que necesites.",
   },
   {
     question: "¿Hacen envios?",
@@ -20,7 +20,7 @@ const faqData = [
   {
     question: "¿Donde retiro mi pedido?",
     answer:
-      "Podes encontrarnos en nuestra nuestra tienda para retirar tu pedido en Bermejo 477 de Lunes a Viernes de 10 a 15hs.",
+      "Podes encontrarnos en nuestra nuestra tienda para retirar tu pedido en Bermejo 477 de Lunes a Viernes de 10hs. a 15hs.",
   },
 ];
 

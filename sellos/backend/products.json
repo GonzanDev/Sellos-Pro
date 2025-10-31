@@ -52,7 +52,7 @@
     "image": "/images/842 Estandar/Estandar.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
-      "images/842 Estandar/Estandar2.jpg",
+      "/images/842 Estandar/Estandar2.jpg",
       "/images/842 Estandar/EstandarColores.jpg",
       "/images/842 Estandar/EstandarTransparentes.jpg"
     ],
@@ -160,6 +160,23 @@
     ]
   },
   {
+    "id": 20,
+    "category": ["Kits"],
+    "name": "Kit Sello Logo",
+    "description": "Incluye sello automático + almohadilla + tinta.",
+    "price": "0",
+    "image": "/images/KitLogo/3.jpg",
+    "thumbnails": ["/images/KitLogo/2.jpg", "/images/KitLogo/1.jpg", "/images/KitLogo/4.jpg", "/images/KitLogo/5.jpg"]  
+  },
+  {
+    "id": 21,
+    "category": ["Kits"],
+    "name": "PROMO Textil",
+    "description": "Incluye sello automático + almohadilla + tinta textil.",
+    "price": 45000,
+    "image": "/images/kit-logo.png"
+  },
+  {
     "id": 9,
     "category": ["Fechadores"],
     "name": "Fechador 3 mm",
@@ -219,13 +236,21 @@
     "price": 7000,
     "image": "/images/almohadilla.png"
   },
+  { "id": 24,
+    "category": ["Tintas"],
+    "name": "Tinta NEGRA al agua / Frasco Chico",
+    "description": "Tinta negra para sumar a tu pedido de automático.",
+    "price": 5000,
+    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "requiresPad": false
+  },
   {
     "id": 16,
     "category": ["Tintas"],
-    "name": "Tinta AL AGUA - Frasco Chiquito",
+    "name": "Tinta COLORES al AGUA - Frasco Chiquito",
     "description": "Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 0.5,
-    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "image": "/images/TintaFrasquito/Colores.jpg",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": true },
@@ -240,44 +265,64 @@
     ]
   },
   {
+    "id": 26,
+    "category": ["Tintas"],
+    "name": " Tinta Textil ideal para tela",
+    "description": "Tinta al agua, para sello de goma. Especial para marcar sobre telas con mayor porcentaje de Algodón. Se recomienda no lavar las telas hasta 72 horas después del sellado. De no ser posible, planchar la superficie sellada, logrando que catalice la tinta y se adhiera a las fibras de la tela.  Recomendamos limpiar los sellos con agua una vez utilizados.",
+    "price": 15000,
+    "image": "/images/TintaFrasquito/Tela.jpg"
+  },
+  {
+    "id": 27,
+    "category": ["Tintas"],
+    "name": "Tinta Comestible 444",
+    "description": "Tinta al agua, para sellos de goma. Especial para marcar productos lácteos, carnes, quesos, pastas, masas y otros artículos comestibles. Exenta de sustancias tóxicas.  Recomendamos limpiar los sellos con alcohol una vez utilizados.",
+    "price": 15000,
+    "image": "/images/TintaFrasquito/Comestible.jpg"
+  },
+  {
+    "id": 28,
+    "category": ["Tintas"],
+    "name": "Tinta Pastel BLANCA al Agua",
+    "description": "Para sellos de goma. La tinta Pastel es una tinta para sellar distintos tipos de papeles, cartón, papel kraft, cartulinas, madera sin pintar y distintos tipos de documentos.  Agitar bien antes de usar para mezclar el pigmento con el liquido, al ser AL AGUA prolonga su vida útil como la de todos los materiales.  Recomendamos limpiar los sellos con agua una vez utilizados.",
+    "price": 12000,
+    "image": "/images/TintaFrasquito/Pastel.jpg"
+  },
+  {
     "id": 17,
     "category": ["Tintas"],
-    "name": "Botella Grande",
-    "description": "Botella grande de tinta de 250ml.",
+    "name": "Botella Tinta 500cc al Agua",
+    "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 25000,
-    "image": "/images/tinta-grande.png"
-  },
-  {
-    "id": 18,
-    "category": ["Otros"],
-    "name": "Sello Abecedario",
-    "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
-    "price": 10000,
-    "image": "/images/sello-abecedario.png"
-  },
-  {
-    "id": 20,
-    "category": ["Kits"],
-    "name": "Kit Sello Logo",
-    "description": "Incluye sello automático + almohadilla + tinta.",
-    "price": "0",
-    "image": "/images/KitLogo/3.jpg",
-    "thumbnails": ["/images/KitLogo/2.jpg", "/images/KitLogo/1.jpg", "/images/KitLogo/4.jpg", "/images/KitLogo/5.jpg"]  },
-  {
-    "id": 21,
-    "category": ["Kits"],
-    "name": "PROMO Textil",
-    "description": "Incluye sello automático + almohadilla + tinta textil.",
-    "price": 45000,
-    "image": "/images/kit-logo.png"
+    "image": "/images/TintaBotella/Botella.jpg",
+    "colors": [
+      { "name": "Negro", "hex": "#000000", "stock": true },
+      { "name": "Azul", "hex": "#0000FF", "stock": true },
+      { "name": "Rojo", "hex": "#FF0000", "stock": true },
+      { "name": "Verde", "hex": "#00FF00", "stock": true },
+      { "name": "Violeta", "hex": "#44035c", "stock": false },
+      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
+      { "name": "Naranja", "hex": "#FFA500", "stock": true },
+      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
+      { "name": "Marrón", "hex": "#4f3c2f", "stock": false },
+      { "name": "Celeste", "hex": "#009ea3", "stock": true }
+    ]
   },
   {
     "id": 19,
     "category": ["Tintas", "Almohadillas"],
-    "name": "Almohadilla de Fieltro + Tinta Especial al Agua",
+    "name": "Tinta Especial al Agua + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 10000,
     "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
+  },
+  {
+    "id" : 25,
+    "category": ["Tintas", "Almohadillas"],
+    "name": "Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
+    "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
+    "price": 12000,
+    "image": "/images/Almohadilla+Tinta/Alm+TintSR.jpg"
   },
   {
     "id": 22,
@@ -297,12 +342,12 @@
     "image": "/images/fechador-8mm.png",
     "requiresPad": true
   },
-  { "id": 24,
-    "category": ["Tintas"],
-    "name": "Tinta NEGRA al agua / Frasco Chico",
-    "description": "Tinta negra para sumar a tu pedido de automático.",
-    "price": 5000,
-    "image": "/images/TintaFrasquito/Frasquito.jpg",
-    "requiresPad": false
+  {
+    "id": 18,
+    "category": ["Otros"],
+    "name": "Sello Abecedario",
+    "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
+    "price": 10000,
+    "image": "/images/sello-abecedario.png"
   }
 ]
