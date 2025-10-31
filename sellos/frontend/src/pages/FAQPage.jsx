@@ -22,11 +22,13 @@ export default function FaqPage() {
               Nuestra Historia
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Bienvenidos a Sellospro, tu tienda de confianza para sellos de
-              alta calidad. Nos dedicamos a la produccion y venta de sellos desde
-              1980. Hemos ido creciendo como un Negocio familiar a traves de los años, 
-              donde de generación en generación que hemos ido perfeccionando el arte de hacer
-              sellos personalizados.
+            Bienvenidos a Sellospro, ésta es tu tienda de confianza para obtener sellos de Primera calidad. 
+            Nos dedicamos a la producción, confección y venta de sellos de goma grabados en láser, con bases de madera tratadas y cortadas a medida, con mangos de madera cortados y personalizados para cada pedido en particular.
+            <br /> Con respecto a nuestros automáticos solo trabajamos la línea importada de excelente calidad y durabilidad.  Tenemos todas las medidas, modelos y colores que necesites para simplificarte la vida! 
+            También tenemos almohadillas de fieltro en todas las medidas y tintas de diferentes características para lograr sellar todo tipo de superficies. 
+            <br />Abarcamos la línea de numeradores y fechadores manuales y automáticos, con una gran variedad de modelos.
+            Hemos ido creciendo como un Negocio familiar a través de los años, perfeccionando el arte de hacer sellos personalizados.
+            Somos una marca registrada y nuestra trayectoria nos avala. 
             </p>
             <p className="text-gray-600 leading-relaxed mt-4">
               Nuestro compromiso es ofrecer productos duraderos y un servicio al
