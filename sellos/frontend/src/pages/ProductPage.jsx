@@ -235,7 +235,7 @@ export default function ProductPage({ showToast }) {
   // --------------------------------------------------------
 
   return (
-    <div className=" py-6 md:py-12">
+    <div className=" py-6 md:py-6">
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
 
@@ -293,17 +293,22 @@ export default function ProductPage({ showToast }) {
                   ))}
                 </div>
               )}
-              <p className="text-sm text-gray-500 mt-2 text-center italic">
+              <p className="text-sm text-gray-500 mt-1 text-center italic">
                 💡 Haz clic sobre la imagen para verla en tamaño completo.
               </p>
             </div>
 
             {/* --- TÍTULO, DESCRIPCIÓN Y PRECIO MOVIDOS AQUÍ --- */}
-            <div className="mt-8 lg:mt-12">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                {product.name}
-              </h1>
-              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+            <div>
+              <div className="flex flex-row justify-between items-center gap-4">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {product.name}
+                </h1>
+                <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
+                  {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
+                </p>
+              </div>
+              <p className="text-gray-600 mt-2 leading-relaxed whitespace-pre-wrap">
                 {" "}
                 {/* Usamos whitespace-pre-wrap */}
                 {product.description.split("\n").map((line, index, array) => (
@@ -312,9 +317,6 @@ export default function ProductPage({ showToast }) {
                     {index < array.length - 1 && <br />}
                   </React.Fragment>
                 ))}
-              </p>
-              <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
-                {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
               </p>
             </div>
           </div>
