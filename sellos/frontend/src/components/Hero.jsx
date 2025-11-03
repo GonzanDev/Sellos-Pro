@@ -7,7 +7,7 @@ const slides = [
     subtitle: "Calidad y diseño a tu medida.",
     buttonText: "Ver Catálogo",
     link: "/catalog",
-    bgColor: "bg-[#e30613]",
+    bgImage: "/images/Hero/Hero1r.jpg",
     textColor: "text-white",
   },
   {
@@ -15,7 +15,7 @@ const slides = [
     subtitle: "Recibe tus sellos sin moverte de tu casa.",
     buttonText: "Consultar",
     link: "/contacto", // Corregido el link
-    bgColor: "bg-gray-800",
+    bgImage: "/images/Hero/Hero2r.jpg",
     textColor: "text-white",
   },
   {
@@ -23,7 +23,7 @@ const slides = [
     subtitle: "¡Prepara la vuelta al cole con los mejores sellos!",
     buttonText: "Ver Ofertas",
     link: "/catalog?category=Escolar", // Sugerencia: Link a categoría específica
-    bgColor: "bg-blue-600",
+    bgImage: "/images/Hero/Hero3.jpg",
     textColor: "text-white",
   },
 ];
@@ -100,11 +100,15 @@ export default function Hero() {
         <div
           key={index}
           className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-center p-6 transition-opacity duration-1000 ${
-            slide.bgColor
-          } ${slide.textColor} ${
-            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0" // Controlamos visibilidad y z-index
-          }`}
-          style={{ transition: "opacity 1s ease-in-out" }} // Asegura transición suave
+            slide.textColor
+          } ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+          style={{
+            transition: "opacity 1s ease-in-out",
+            backgroundImage: `url(${slide.bgImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
         >
           {/* Ajustamos tamaños de texto para móvil */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">

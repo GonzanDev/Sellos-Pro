@@ -13,7 +13,7 @@ export default function FaqPage() {
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-12">
           <img
             // Reemplaza esta imagen por la tuya
-            src="https://placehold.co/1200x400/eeeeee/777777?text=Nuestra+Tienda"
+            src="/images/FAQ/Tienda.jpg"
             alt="Equipo de SellosPro"
             className="w-full h-64 object-cover"
           />

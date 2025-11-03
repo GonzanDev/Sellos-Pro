@@ -57,39 +57,91 @@ async function sendConfirmationEmail({
   // Configuramos SendGrid con tu API Key
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // Construimos la lista de productos para el cuerpo del correo.
-  const cartHtml = cart
-    .map((item) => {
-      const customizationHtml = item.customization
-        ? Object.entries(item.customization)
-            .map(([key, value]) => {
-              if (!value) return ""; // Ignoramos campos vacíos
-              if (key === "comentarios") {
-                return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
-              }
-              return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
-                "line",
-                "Línea "
-              )}:</strong> ${value}</p>`;
-            })
-            .join("")
-        : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>';
+const cartHtml = cart
+  .map((item) => {
+    const customizationHtml = item.customization
+      ? Object.entries(item.customization)
+          .map(([key, value]) => {
+            if (!value) return ""; // Ignoramos campos vacíos
 
-      return `
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #eee;">
-            <p style="margin: 0; font-weight: bold; color: #333;">${
-              item.name || item.title
-            } (x${item.qty || item.quantity})</p>
-            <div style="padding-left: 10px; margin-top: 5px;">${customizationHtml}</div>
-          </td>
-          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; color: #333; font-weight: bold;">
-            AR$ ${(item.price || item.unit_price).toFixed(2)}
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
+            // 🎨 Si el campo es "color", mostramos nombre + cuadradito
+            if (key.toLowerCase() === "color") {
+              let colorName = value;
+              if (item.colors && Array.isArray(item.colors)) {
+                const foundColor = item.colors.find(
+                  (c) =>
+                    c.hex.toLowerCase() === String(value).trim().toLowerCase()
+                );
+                if (foundColor) colorName = foundColor.name;
+              }
+
+              return `
+                <p style="margin: 2px 0; font-size: 11px; color: #555;">
+                  <strong>Color:</strong>
+                  <span style="
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    background-color: ${String(value).trim()};
+                    vertical-align: middle;
+                    margin-right: 4px;
+                  "></span>
+                  ${colorName}
+                </p>
+              `;
+            }
+
+            // 🎨 Si el valor es un HEX, mostramos solo el cuadradito
+            const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(String(value).trim());
+            if (isHex) {
+              return `
+                <p style="margin: 2px 0; font-size: 11px; color: #555;">
+                  <strong>${key.replace("line", "Línea ")}:</strong>
+                  <span style="
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    background-color: ${String(value).trim()};
+                    vertical-align: middle;
+                    margin-left: 4px;
+                  "></span>
+                </p>
+              `;
+            }
+
+            // 📝 Si es "comentarios", lo mostramos en cursiva
+            if (key === "comentarios") {
+              return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
+            }
+
+            // 🔤 Caso general
+            return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
+              "line",
+              "Línea "
+            )}:</strong> ${value}</p>`;
+          })
+          .join("")
+      : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>';
+
+    return `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+          <p style="margin: 0; font-weight: bold; color: #333;">${
+            item.name || item.title
+          } (x${item.qty || item.quantity})</p>
+          <div style="padding-left: 10px; margin-top: 5px;">${customizationHtml}</div>
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; color: #333; font-weight: bold;">
+          AR$ ${(item.price || item.unit_price).toFixed(2)}
+        </td>
+      </tr>
+    `;
+  })
+  .join("");
 
   // --- DIRECCIÓN ACTUALIZADA ---
   const deliveryHtml =
@@ -127,7 +179,7 @@ async function sendConfirmationEmail({
     <body>
       <div class="container">
         <div class="header">
-          <h1>SellosPro</h1>
+          <h1>Sellospro</h1>
         </div>
         <div class="content">
           <h2>¡Gracias por tu compra, ${buyer?.name || "Cliente"}!</h2>
@@ -183,7 +235,7 @@ async function sendConfirmationEmail({
           }">contactarnos</a>.</p>
         </div>
         <div class="footer">
-          &copy; ${new Date().getFullYear()} SellosPro. Todos los derechos reservados.
+          &copy; ${new Date().getFullYear()} Sellospro. Todos los derechos reservados.
         </div>
       </div>
     </body>
@@ -194,9 +246,9 @@ async function sendConfirmationEmail({
     to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
     from: {
       email: process.env.EMAIL_FROM,
-      name: "SellosPro", // Nombre específico para esta alerta
+      name: "Sellospro", // Nombre específico para esta alerta
     },
-    subject: `Confirmación de tu pedido en SellosPro (${externalReference})`,
+    subject: `Confirmación de tu pedido en Sellospro (${externalReference})`,
     html: emailHtml,
   };
 
@@ -273,7 +325,7 @@ async function sendBudgetRequestEmail({
     to: process.env.EMAIL_FROM, // Se envía a tu correo de negocio
     from: {
       email: process.env.EMAIL_FROM,
-      name: "SellosPro (Cotización)", // Nombre específico para esta alerta
+      name: "Sellospro (Cotización)", // Nombre específico para esta alerta
     }, // Remitente verificado
     subject: `⚠️ Solicitud de Presupuesto: ${product.name}`,
     html: `
@@ -312,7 +364,7 @@ async function sendBudgetRequestEmail({
           <hr>
         </div>
         <div class="footer">
-          &copy; ${new Date().getFullYear()} SellosPro.
+          &copy; ${new Date().getFullYear()} Sellospro.
         </div>
       </div>
     </body>
