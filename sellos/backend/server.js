@@ -1,23 +1,51 @@
-import express from "express";
-import cors from "cors";
-import fs from "fs";
-import dotenv from "dotenv";
-import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
-import sgMail from "@sendgrid/mail";
+/**
+ * ==============================================================================
+ * 📦 SERVIDOR BACKEND DE E-COMMERCE (Sellospro)
+ * ==============================================================================
+ *
+ * Descripción: Este archivo es el servidor principal de la aplicación, construido
+ * con Node.js y Express. Se encarga de:
+ * 1. Servir productos.
+ * 2. Gestionar la creación de pagos con MercadoPago.
+ * 3. Recibir notificaciones (webhooks) de MercadoPago.
+ * 4. Guardar pedidos confirmados en el sistema de archivos.
+ * 5. Enviar correos transaccionales (confirmación, cotización) con SendGrid.
+ * 6. Manejar la subida de archivos (logos) para cotizaciones con Multer.
+ */
+
+// ==============================================================================
+// 📚 IMPORTACIONES DE MÓDULOS
+// ==============================================================================
+import express from "express"; // Framework web principal para crear el servidor y las rutas API.
+import cors from "cors"; // Middleware para habilitar el Cross-Origin Resource Sharing (permite que el frontend se comunique con este backend).
+import fs from "fs"; // Módulo nativo de Node.js para interactuar con el sistema de archivos (leer/escribir archivos).
+import dotenv from "dotenv"; // Para cargar variables de entorno (claves secretas) desde un archivo .env.
+import { MercadoPagoConfig, Preference, Payment } from "mercadopago"; // SDK de MercadoPago para procesar pagos.
+import sgMail from "@sendgrid/mail"; // SDK de SendGrid para enviar correos electrónicos transaccionales.
 // --- ¡NUEVO! Importamos Multer ---
-import multer from "multer";
+import multer from "multer"; // Middleware para manejar la subida de archivos (ej. logos de clientes).
 
 // Carga las variables de entorno (tus claves secretas) desde el archivo .env
 dotenv.config();
 
+// ==============================================================================
+// ⚙️ CONFIGURACIÓN INICIAL
+// ==============================================================================
+
 // --- Configuración de Multer ---
-// Le decimos que guarde los archivos temporalmente en la memoria del servidor
+// Configura multer para almacenar temporalmente los archivos subidos en la memoria RAM del servidor.
+// Esto es eficiente para archivos pequeños (como logos) que se procesarán y enviarán por email,
+// sin necesidad de guardarlos permanentemente en el disco del servidor.
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Define qué sitios web pueden hacerle peticiones a tu backend.
+// --- Configuración de CORS ---
+// Define qué sitios web (orígenes) tienen permiso para hacer peticiones a este backend.
 const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
-// La URL pública de tu backend para las notificaciones (webhooks).
+// --- Configuración de URL Pública ---
+// Determina la URL pública de este backend.
+// Es crucial para que servicios externos (como MercadoPago) puedan enviar notificaciones (webhooks).
+// Intenta usar variables de entorno de Ngrok (local), Render (producción), o un valor por defecto.
 const backendUrl =
   process.env.PUBLIC_BACKEND_URL || // Para ngrok en local
   process.env.RENDER_EXTERNAL_URL || // Para producción en Render
@@ -26,16 +54,29 @@ const backendUrl =
 console.log(`✅ Origen de CORS permitido: ${allowedOrigin}`);
 console.log(`✅ URL pública del backend configurada para: ${backendUrl}`);
 
+// Opciones de configuración detalladas para CORS.
 const corsOptions = {
-  origin: allowedOrigin,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 204,
+  origin: allowedOrigin, // Solo permite peticiones del origen definido.
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos HTTP permitidos.
+  credentials: true, // Permite el envío de cookies o cabeceras de autorización.
+  optionsSuccessStatus: 204, // Responde con 204 (No Content) a las peticiones OPTIONS (pre-flight).
 };
 
 // ==============================================================================
 // 📧 FUNCIÓN PARA ENVIAR EL CORREO DE CONFIRMACIÓN (CORREGIDA)
 // ==============================================================================
+/**
+ * Envía un correo de confirmación de pedido tanto al cliente como al email del negocio.
+ * Utiliza SendGrid y una plantilla HTML compleja para formatear los detalles del pedido.
+ *
+ * @param {object} params - Objeto con los datos del pedido.
+ * @param {object} params.buyer - Información del comprador (email, nombre, teléfono).
+ * @param {Array<object>} params.cart - Array de productos en el carrito.
+ * @param {number} params.total - Monto total de la compra.
+ * @param {string} params.deliveryMethod - "shipping" (envío) o "pickup" (retiro).
+ * @param {object} params.address - Dirección de envío (si aplica).
+ * @param {string} params.externalReference - ID único del pedido (ej. SP-123456789).
+ */
 async function sendConfirmationEmail({
   buyer,
   cart,
@@ -44,90 +85,94 @@ async function sendConfirmationEmail({
   address,
   externalReference,
 }) {
-  // Verificamos que las credenciales de SendGrid existan
+  // Verificación de seguridad: comprueba que las claves de SendGrid estén cargadas.
   if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
     console.error(
       "❌ Credenciales de SendGrid (SENDGRID_API_KEY o EMAIL_FROM) no configuradas en el archivo .env"
     );
-    return;
+    return; // Detiene la ejecución si faltan claves.
   }
 
   // --- ¡CORRECCIÓN! LA LÓGICA DE EMAIL AHORA ESTÁ DENTRO DE LA FUNCIÓN ---
 
-  // Configuramos SendGrid con tu API Key
+  // Inicializa la API de SendGrid con la clave.
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const cartHtml = cart
-  .map((item) => {
-    const customizationHtml = item.customization
-      ? Object.entries(item.customization)
-          .map(([key, value]) => {
-            if (!value) return ""; // Ignoramos campos vacíos
+  // Genera el HTML para la lista de productos en el carrito.
+  const cartHtml = cart
+    .map((item) => {
+      // Mapea las personalizaciones (color, líneas, comentarios) a HTML legible.
+      const customizationHtml = item.customization
+        ? Object.entries(item.customization)
+            .map(([key, value]) => {
+              if (!value) return ""; // Ignoramos campos vacíos
 
-            // 🎨 Si el campo es "color", mostramos nombre + cuadradito
-            if (key.toLowerCase() === "color") {
-              let colorName = value;
-              if (item.colors && Array.isArray(item.colors)) {
-                const foundColor = item.colors.find(
-                  (c) =>
-                    c.hex.toLowerCase() === String(value).trim().toLowerCase()
-                );
-                if (foundColor) colorName = foundColor.name;
+              // 🎨 Caso especial: Si la clave es "color", muestra el nombre y un cuadro de muestra.
+              if (key.toLowerCase() === "color") {
+                let colorName = value;
+                // Intenta buscar el nombre del color basado en el hex
+                if (item.colors && Array.isArray(item.colors)) {
+                  const foundColor = item.colors.find(
+                    (c) =>
+                      c.hex.toLowerCase() === String(value).trim().toLowerCase()
+                  );
+                  if (foundColor) colorName = foundColor.name;
+                }
+
+                return `
+                  <p style="margin: 2px 0; font-size: 11px; color: #555;">
+                    <strong>Color:</strong>
+                    <span style="
+                      display: inline-block;
+                      width: 10px;
+                      height: 10px;
+                      border: 1px solid #ccc;
+                      border-radius: 2px;
+                      background-color: ${String(value).trim()};
+                      vertical-align: middle;
+                      margin-right: 4px;
+                    "></span>
+                    ${colorName}
+                  </p>
+                `;
               }
 
-              return `
-                <p style="margin: 2px 0; font-size: 11px; color: #555;">
-                  <strong>Color:</strong>
-                  <span style="
-                    display: inline-block;
-                    width: 10px;
-                    height: 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 2px;
-                    background-color: ${String(value).trim()};
-                    vertical-align: middle;
-                    margin-right: 4px;
-                  "></span>
-                  ${colorName}
-                </p>
-              `;
-            }
+              // 🎨 Caso especial: Si el valor es un código HEX, muestra solo un cuadro de muestra.
+              const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(String(value).trim());
+              if (isHex) {
+                return `
+                  <p style="margin: 2px 0; font-size: 11px; color: #555;">
+                    <strong>${key.replace("line", "Línea ")}:</strong>
+                    <span style="
+                      display: inline-block;
+                      width: 10px;
+                      height: 10px;
+                      border: 1px solid #ccc;
+                      border-radius: 2px;
+                      background-color: ${String(value).trim()};
+                      vertical-align: middle;
+                      margin-left: 4px;
+                    "></span>
+                  </p>
+                `;
+              }
 
-            // 🎨 Si el valor es un HEX, mostramos solo el cuadradito
-            const isHex = /^#([0-9A-F]{3}){1,2}$/i.test(String(value).trim());
-            if (isHex) {
-              return `
-                <p style="margin: 2px 0; font-size: 11px; color: #555;">
-                  <strong>${key.replace("line", "Línea ")}:</strong>
-                  <span style="
-                    display: inline-block;
-                    width: 10px;
-                    height: 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 2px;
-                    background-color: ${String(value).trim()};
-                    vertical-align: middle;
-                    margin-left: 4px;
-                  "></span>
-                </p>
-              `;
-            }
+              // 📝 Caso especial: Formato para comentarios.
+              if (key === "comentarios") {
+                return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
+              }
 
-            // 📝 Si es "comentarios", lo mostramos en cursiva
-            if (key === "comentarios") {
-              return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>Comentarios:</strong> <em>${value}</em></p>`;
-            }
+              // 🔤 Caso general: Muestra "Clave: Valor" (ej. "Línea 1: Texto de prueba").
+              return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
+                "line",
+                "Línea "
+              )}:</strong> ${value}</p>`;
+            })
+            .join("")
+        : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>';
 
-            // 🔤 Caso general
-            return `<p style="margin: 2px 0; font-size: 11px; color: #555;"><strong>${key.replace(
-              "line",
-              "Línea "
-            )}:</strong> ${value}</p>`;
-          })
-          .join("")
-      : '<p style="margin: 2px 0; font-size: 11px; color: #888;"><em>Sin personalización</em></p>';
-
-    return `
+      // HTML para cada fila de producto en la tabla del resumen.
+      return `
       <tr>
         <td style="padding: 10px; border-bottom: 1px solid #eee;">
           <p style="margin: 0; font-weight: bold; color: #333;">${
@@ -140,18 +185,21 @@ const cartHtml = cart
         </td>
       </tr>
     `;
-  })
-  .join("");
+    })
+    .join("");
 
   // --- DIRECCIÓN ACTUALIZADA ---
+  // Genera el bloque HTML para la información de entrega (envío o retiro).
   const deliveryHtml =
     deliveryMethod === "shipping"
       ? `<h4>📦 Dirección de Envío</h4><p style="margin: 5px 0; color: #555;">${address.street}, ${address.city}, CP ${address.postalCode}</p>`
       : `<h4>🏪 Método de Entrega</h4><p style="margin: 5px 0; color: #555;">Retiro en el local (Bermejo 477, Mar del Plata)</p>`;
 
+  // Enlace para que el cliente pueda ver el estado de su pedido en el frontend.
   const orderStatusLink = `${allowedOrigin}/order/${externalReference}`;
 
   // --- NUEVA PLANTILLA HTML PROFESIONAL ---
+  // Plantilla principal del correo, usando CSS inline para máxima compatibilidad con clientes de email.
   const emailHtml = `
     <!DOCTYPE html>
     <html lang="es">
@@ -242,16 +290,18 @@ const cartHtml = cart
     </html>
   `;
 
+  // Construye el objeto de mensaje para la API de SendGrid.
   const msg = {
-    to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean),
+    to: [buyer?.email, process.env.EMAIL_FROM].filter(Boolean), // Envía al cliente Y al admin (filtrando valores nulos si el email del comprador no existe).
     from: {
       email: process.env.EMAIL_FROM,
-      name: "Sellospro", // Nombre específico para esta alerta
+      name: "Sellospro", // Nombre que aparece en el "De:".
     },
     subject: `Confirmación de tu pedido en Sellospro (${externalReference})`,
     html: emailHtml,
   };
 
+  // Bloque try/catch para el envío real del correo.
   try {
     await sgMail.send(msg);
     console.log(
@@ -260,6 +310,7 @@ const cartHtml = cart
   } catch (error) {
     console.error("❌ Error al enviar correo con SendGrid:", error);
     if (error.response) {
+      // Si SendGrid devuelve un error detallado, lo mostramos.
       console.error(error.response.body);
     }
   }
@@ -268,7 +319,19 @@ const cartHtml = cart
 // ==============================================================================
 // 💸 ¡NUEVO! FUNCIÓN PARA ENVIAR SOLICITUD DE PRESUPUESTO
 // ==============================================================================
-// Esta función se llama cuando un usuario pide cotización para un producto con logo
+/**
+ * Envía un correo INTERNO (al admin/email del negocio) con una solicitud de cotización.
+ * Este correo incluye los datos del cliente, los detalles del producto y,
+ * crucialmente, adjunta el archivo del logo subido por el cliente.
+ *
+ * @param {object} params
+ * @param {object} params.product - Información del producto a cotizar.
+ * @param {object} params.customization - Detalles de personalización (líneas, etc.).
+ * @param {number} params.quantity - Cantidad solicitada.
+ * @param {object} params.buyer - Datos de contacto del solicitante (nombre, email, tel).
+ * @param {Buffer} params.logoBuffer - El archivo del logo en formato Buffer (directo desde multer).
+ * @param {string} params.logoFileName - El nombre original del archivo del logo.
+ */
 async function sendBudgetRequestEmail({
   product,
   customization,
@@ -277,16 +340,18 @@ async function sendBudgetRequestEmail({
   logoBuffer,
   logoFileName,
 }) {
+  // Verificación de credenciales.
   if (!process.env.SENDGRID_API_KEY || !process.env.EMAIL_FROM) {
     console.error("❌ Credenciales de SendGrid no configuradas.");
     return;
   }
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // Formateamos la personalización para el correo
+  // Formatea los detalles de personalización para el cuerpo del correo.
   const customizationHtml = customization
     ? Object.entries(customization)
         .map(([key, value]) => {
+          // Filtra campos irrelevantes o vacíos (ej. el preview de la imagen o el nombre del archivo).
           if (
             !value ||
             key === "logoPreview" ||
@@ -302,7 +367,7 @@ async function sendBudgetRequestEmail({
         .join("")
     : "Sin detalles.";
 
-  // Formateamos los datos del solicitante
+  // Formatea los datos del solicitante.
   const buyerHtml = `
     <h3>👤 Datos del Solicitante</h3>
     <p><strong>Nombre:</strong> ${buyer.name}</p>
@@ -310,23 +375,24 @@ async function sendBudgetRequestEmail({
     <p><strong>Teléfono:</strong> ${buyer.phone}</p>
   `;
 
-  // Creamos un adjunto para SendGrid
+  // Prepara el archivo adjunto para SendGrid.
   let attachments = [];
   if (logoBuffer && logoFileName) {
     attachments.push({
-      content: logoBuffer.toString("base64"),
-      filename: logoFileName,
-      type: "application/octet-stream",
-      disposition: "attachment",
+      content: logoBuffer.toString("base64"), // El contenido del archivo debe ir en formato Base64.
+      filename: logoFileName, // El nombre original del archivo.
+      type: "application/octet-stream", // Tipo MIME genérico para adjuntos.
+      disposition: "attachment", // Indica que es un adjunto.
     });
   }
 
+  // Construye el mensaje para SendGrid.
   const msg = {
-    to: process.env.EMAIL_FROM, // Se envía a tu correo de negocio
+    to: process.env.EMAIL_FROM, // Se envía solo al correo del negocio.
     from: {
       email: process.env.EMAIL_FROM,
-      name: "Sellospro (Cotización)", // Nombre específico para esta alerta
-    }, // Remitente verificado
+      name: "Sellospro (Cotización)", // Nombre descriptivo para la alerta.
+    },
     subject: `⚠️ Solicitud de Presupuesto: ${product.name}`,
     html: `
     <!DOCTYPE html>
@@ -370,9 +436,10 @@ async function sendBudgetRequestEmail({
     </body>
     </html>
   `,
-    attachments: attachments, // Adjuntamos el logo
+    attachments: attachments, // ¡Importante! Adjuntamos el logo.
   };
 
+  // Envío del correo.
   try {
     await sgMail.send(msg);
     console.log(
@@ -387,21 +454,37 @@ async function sendBudgetRequestEmail({
 // ==============================================================================
 // 🚀 CONFIGURACIÓN DEL SERVIDOR EXPRESS
 // ==============================================================================
-const app = express();
+const app = express(); // Instancia principal de Express.
+
+// Aplica la configuración de CORS a todas las rutas.
 app.use(cors(corsOptions));
-// NO usamos express.json() globalmente para que multer funcione
+
+// IMPORTANTE: No usamos express.json() de forma global.
+// Esto se debe a que `multer` (para subida de archivos "multipart/form-data")
+// y `express.json()` (para "application/json") son middlewares de parseo de
+// cuerpo (body) y no pueden operar simultáneamente en la misma ruta fácilmente.
+//
+// En su lugar, aplicaremos `express.json()` (o `multer`) solo a las rutas
+// específicas que lo necesiten.
 // app.use(express.json());
 
+// ==============================================================================
+// ⚙️ CONFIGURACIÓN DE CLIENTES Y DATOS
+// ==============================================================================
+
+// Configura el cliente de MercadoPago con el Access Token secreto.
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
 });
 
-// Al iniciar, nos aseguramos de que la carpeta 'orders' exista.
+// Verificación de inicio: Asegura que el directorio para guardar pedidos exista.
 if (!fs.existsSync("./orders")) {
   fs.mkdirSync("./orders");
   console.log("📁 Directorio 'orders' creado.");
 }
 
+// Carga la lista de productos desde un archivo JSON local.
+// Esto actúa como una base de datos simple para los productos.
 let products = [];
 try {
   products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
@@ -409,22 +492,42 @@ try {
   console.error("🔴 Error leyendo products.json:", error.message);
 }
 
+// Creamos un enrutador de Express para organizar las rutas bajo el prefijo /api.
 const router = express.Router();
 
-// Ruta para obtener los productos
+// ==============================================================================
+// ↔️ RUTAS DE LA API
+// ==============================================================================
+
+/**
+ * @route   GET /api/products
+ * @desc    Obtiene la lista completa de productos desde el archivo local.
+ * @access  Público
+ * @returns {Array<object>} Un array con todos los productos.
+ */
 router.get("/products", (req, res) => {
   res.json(products);
 });
 
-// =================================================================
-// Ruta para crear una preferencia de pago en MercadoPago
-// Usamos express.json() solo para esta ruta
-// =================================================================
+/**
+ * @route   POST /api/create-preference
+ * @desc    Crea una preferencia de pago en MercadoPago.
+ * @access  Público
+ * @middleware express.json() - Esta ruta SÍ usa el parser de JSON para el body.
+ * @body    {Array} cart - Carrito de compras.
+ * @body    {object} buyer - Datos del comprador.
+ * @body    {string} deliveryMethod - Método de entrega ("shipping" o "pickup").
+ * @body    {object} address - Dirección de envío (si aplica).
+ * @body    {number} total - Total de la compra.
+ * @returns {object} { preferenceId, init_point } - ID de la preferencia y URL de pago.
+ */
 router.post("/create-preference", express.json(), async (req, res) => {
   try {
     const { cart, buyer, deliveryMethod, address, total } = req.body || {};
+    // Genera un ID único para este pedido, basado en la fecha actual (timestamp).
     const externalReference = `SP-${Date.now()}`;
 
+    // Construye el cuerpo de la preferencia según la API de MercadoPago.
     const preferenceBody = {
       items: (cart || []).map((item) => ({
         title: item.name,
@@ -436,20 +539,26 @@ router.post("/create-preference", express.json(), async (req, res) => {
         email: buyer?.email,
         name: buyer?.name,
       },
+      // Metadata: ¡Crucial! Guardamos los datos de la orden (carrito, envío, etc.)
+      // para recuperarlos en el webhook cuando el pago sea aprobado.
       metadata: { buyer, cart, total, deliveryMethod, address },
-      notification_url: `https://sellos-pro.onrender.com/api/webhook`, // URL hardcodeada
-      external_reference: externalReference,
+      // URL a la que MercadoPago enviará la notificación de pago (webhook).
+      notification_url: `https://sellos-pro.onrender.com/api/webhook`, // TODO: Usar la variable `backendUrl`
+      external_reference: externalReference, // Nuestro ID de pedido.
       back_urls: {
+        // URLs a las que el cliente es redirigido tras el pago.
         success: `${allowedOrigin}/success`,
         failure: `${allowedOrigin}/failure`,
         pending: `${allowedOrigin}/pending`,
       },
-      auto_return: "approved",
+      auto_return: "approved", // Redirige automáticamente si el pago es aprobado.
     };
 
+    // Crea la preferencia usando el SDK de MP.
     const preference = new Preference(client);
     const result = await preference.create({ body: preferenceBody });
 
+    // Devuelve al frontend la URL de pago (init_point) y el ID.
     res.status(200).json({
       preferenceId: result.id ?? result.body?.id,
       init_point: result.init_point ?? result.body?.init_point,
@@ -466,16 +575,20 @@ router.post("/create-preference", express.json(), async (req, res) => {
   }
 });
 
-// ==============================================================================
-// 🔔 RUTA WEBHOOK PARA RECIBIR NOTIFICACIONES DE MP
-// Usamos express.json() solo para esta ruta
-// ==============================================================================
+/**
+ * @route   POST /api/webhook
+ * @desc    Recibe notificaciones de pago (webhooks) desde MercadoPago.
+ * @access  Público (Llamado por MercadoPago)
+ * @middleware express.json() - Esta ruta también usa el parser de JSON.
+ */
 router.post("/webhook", express.json(), async (req, res) => {
   console.log("🔔 Webhook de MercadoPago recibido:", req.body);
   const { type, data } = req.body;
 
+  // Nos interesa solo el evento de tipo 'payment'.
   if (type === "payment") {
     try {
+      // Obtenemos los detalles completos del pago usando el ID proporcionado por el webhook.
       const payment = await new Payment(client).get({ id: data.id });
       console.log(
         `ℹ️ Estado del pago: ${payment?.status}, Metadata: ${
@@ -483,28 +596,35 @@ router.post("/webhook", express.json(), async (req, res) => {
         }`
       );
 
+      // ¡El paso más importante!
+      // Verificamos que el pago esté 'approved' (aprobado) y
+      // que contenga la 'metadata' que enviamos al crear la preferencia.
       if (payment.status === "approved" && payment.metadata) {
         const externalReference = payment.external_reference;
         console.log(`🎉 Pago APROBADO para el pedido ${externalReference}.`);
 
+        // Combinamos la metadata (carrito, cliente, etc.) con los datos del pago.
         const orderData = {
-          ...payment.metadata,
+          ...payment.metadata, // Contiene cart, buyer, total, deliveryMethod, address
           externalReference,
-          status: "Confirmado",
+          status: "Confirmado", // Marcamos el pedido como confirmado.
           createdAt: new Date().toISOString(),
         };
 
+        // Bloque try/catch para guardar la orden y enviar el email.
         try {
+          // 1. Guardar la orden como un archivo JSON en el servidor.
           const filePath = `./orders/${externalReference}.json`;
           fs.writeFileSync(filePath, JSON.stringify(orderData, null, 2));
           console.log(
             `📄 Pedido ${externalReference} guardado correctamente en ${filePath}.`
           );
 
+          // 2. Enviar el email de confirmación al cliente y al admin.
           await sendConfirmationEmail(orderData);
         } catch (fileError) {
           console.error(
-            `❌ Error al guardar el archivo del pedido ${externalReference}:`,
+            `❌ Error al guardar el archivo o enviar email para ${externalReference}:`,
             fileError
           );
         }
@@ -520,26 +640,39 @@ router.post("/webhook", express.json(), async (req, res) => {
       );
     }
   }
+
+  // Respondemos 200 OK a MercadoPago para confirmar que recibimos el webhook.
+  // Si no respondemos 200, MP seguirá intentando enviarlo.
   res.status(200).send("OK");
 });
 
-// ==============================================================================
-// 💸 ¡NUEVA RUTA! PARA MANEJAR SOLICITUDES DE PRESUPUESTO
-// Esta ruta usa multer para archivos, NO express.json()
-// ==============================================================================
+/**
+ * @route   POST /api/request-budget
+ * @desc    (¡NUEVA!) Recibe una solicitud de presupuesto con un logo adjunto.
+ * @access  Público
+ * @middleware upload.single('logoFile') - ¡Esta ruta usa Multer! NO usa express.json().
+ * @form-data {string} product - Datos del producto (en formato JSON string).
+ * @form-data {string} customization - Detalles (en formato JSON string).
+ * @form-data {string} quantity - Cantidad (en formato JSON string).
+ * @form-data {string} buyer - Datos del cliente (en formato JSON string).
+ * @form-data {File}   logoFile - El archivo del logo adjunto (campo "logoFile").
+ */
 router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
   console.log("📨 Solicitud de presupuesto recibida.");
 
   try {
+    // El archivo (logo) se encuentra en req.file gracias a multer.
     const logoFile = req.file;
+    // Los demás campos de texto (que vienen del form-data) están en req.body.
     const { product, customization, quantity, buyer } = req.body;
 
     console.log(
       "  Archivo:",
       logoFile ? logoFile.originalname : "No hay archivo"
     );
-    console.log("  Datos (texto):", req.body);
+    // console.log("  Datos (texto):", req.body); // Descomentar para debug
 
+    // Validación de entrada.
     if (!product || !customization || !buyer || !logoFile) {
       console.warn("Faltan datos en la solicitud de presupuesto.");
       return res
@@ -547,18 +680,21 @@ router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
         .json({ error: "Faltan datos o el archivo del logo." });
     }
 
-    // Parseamos los datos que vienen como texto JSON
+    // IMPORTANTE: Como los datos vienen de un 'multipart/form-data',
+    // los objetos (product, buyer, etc.) se envían desde el frontend como
+    // strings JSON. Necesitamos parsearlos de vuelta a objetos JavaScript.
     const productData = JSON.parse(product);
     const customizationData = JSON.parse(customization);
     const buyerData = JSON.parse(buyer);
 
+    // Llamamos a la función de email, pasando el buffer del archivo.
     await sendBudgetRequestEmail({
       product: productData,
       customization: customizationData,
       quantity: Number(quantity),
       buyer: buyerData,
-      logoBuffer: logoFile.buffer,
-      logoFileName: logoFile.originalname,
+      logoBuffer: logoFile.buffer, // El buffer del archivo (contenido) desde la memoria.
+      logoFileName: logoFile.originalname, // El nombre original del archivo.
     });
 
     res.status(200).json({ success: true, message: "Solicitud recibida." });
@@ -568,23 +704,40 @@ router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
   }
 });
 
-// Ruta para obtener un pedido
+/**
+ * @route   GET /api/order/:orderId
+ * @desc    Obtiene los datos de un pedido específico guardado localmente (JSON).
+ * @access  Público
+ * @param   {string} orderId - El ID del pedido (ej. SP-123456789).
+ * @returns {object} Los datos del pedido si se encuentra.
+ * @returns {404} { error: "Pedido no encontrado." } si no existe.
+ */
 router.get("/order/:orderId", (req, res) => {
   const { orderId } = req.params;
   const filePath = `./orders/${orderId}.json`;
 
+  // Verifica si el archivo JSON de la orden existe.
   if (fs.existsSync(filePath)) {
+    // Si existe, lo lee y lo devuelve.
     const orderData = fs.readFileSync(filePath, "utf-8");
     res.status(200).json(JSON.parse(orderData));
   } else {
+    // Si no existe, devuelve un error 404.
     res.status(404).json({ error: "Pedido no encontrado." });
   }
 });
 
-// Ruta de prueba
+/**
+ * @route   POST /api/send-email
+ * @desc    Ruta de prueba (testing/debug) para forzar el envío de un correo de confirmación.
+ * @access  Desarrollo
+ * @middleware express.json()
+ * @body    {object} Payload simulado de una orden (requiere cart, buyer, total, etc.).
+ */
 router.post("/send-email", express.json(), async (req, res) => {
   try {
     const payload = { ...req.body };
+    // Aseguramos que tenga un ID de referencia para la prueba
     if (!payload.externalReference) {
       payload.externalReference = `TEST-${Date.now()}`;
     }
@@ -598,9 +751,18 @@ router.post("/send-email", express.json(), async (req, res) => {
   }
 });
 
+// ==============================================================================
+// 🚀 INICIO DEL SERVIDOR
+// ==============================================================================
+
+// Aplica el enrutador a la app principal bajo el prefijo /api.
+// Todas las rutas definidas en `router` serán accesibles (ej. /api/products, /api/webhook).
 app.use("/api", router);
 
+// Define el puerto del servidor, tomando el valor de .env o usando 8080 por defecto.
 const PORT = process.env.PORT || 8080;
+
+// Inicia el servidor y escucha en el puerto definido.
 app.listen(PORT, () => {
   console.log(`✅ Backend corriendo en el puerto ${PORT}`);
 });

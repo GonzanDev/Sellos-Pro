@@ -1,8 +1,36 @@
-import React, { useState, useEffect, useMemo } from "react"; // Importamos useMemo
+/**
+ * ==============================================================================
+ * 📦 PÁGINA: Detalle de Producto (ProductPage.jsx)
+ * ==============================================================================
+ *
+ * Descripción:
+ * Esta es la página más compleja del frontend. Muestra el detalle de un
+ * producto individual y maneja toda la lógica de personalización.
+ *
+ * Responsabilidades Clave:
+ * 1. Obtener y mostrar el producto (basado en el 'id' de la URL).
+ * 2. Determinar el TIPO de producto (Kit, Escolar, Estándar, Tinta)
+ * usando 'useMemo' para analizar sus categorías.
+ * 3. Renderizar DINÁMICAMENTE el personalizador correcto
+ * (<Personalizer />, <PersonalizerLogo />, <PersonalizerSchool />, o <ColorPicker />).
+ * 4. Manejar el "Modo Edición": Si se accede desde el carrito (vía location.state),
+ * precarga la 'customization' y 'quantity' existentes.
+ * 5. Manejar Acciones Condicionales:
+ * - "Añadir al Carrito" (para productos nuevos).
+ * - "Actualizar Cambios" (para productos en "Modo Edición").
+ * - "Solicitar Presupuesto" (para productos "Kit" con logo), que
+ * incluye un modal, un formulario de contacto, y una llamada a la API
+ * del backend con 'FormData' para enviar el archivo.
+ * 6. Manejar "Cross-selling" (venta cruzada) sugiriendo productos
+ * relacionados como almohadillas o tinta.
+ * 7. Gestionar la galería de imágenes (thumbnails y modal de zoom).
+ */
+
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
-  Heart,
+  Heart, // (No se usa actualmente)
   X,
   Send,
   User,
@@ -10,31 +38,36 @@ import {
   Phone,
   RefreshCw,
 } from "lucide-react";
+// --- Importa TODOS los personalizadores ---
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
-// --- Agrega el ColorPicker si aún no está importado ---
 import ColorPicker from "../components/ColorPicker";
 // ----------------------------------------------------
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
 
-// Definimos la URL de la API
+// URL del backend
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export default function ProductPage({ showToast }) {
-  const { products, loading, error } = useProducts();
-  const { addToCart, updateCartItem } = useCart();
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // --- 1. HOOKS: Obtención de Datos y Contexto ---
+  const { products, loading, error } = useProducts(); // Lista completa de productos
+  const { addToCart, updateCartItem } = useCart(); // Funciones del carrito
+  const { id } = useParams(); // ID del producto desde la URL (ej. /product/5)
+  const navigate = useNavigate(); // Para redirigir
+  const location = useLocation(); // Para leer el "state" (modo edición)
 
-  // --- LÓGICA DE PRODUCTO Y PESTAÑAS ---
+  // --- 2. LÓGICA DE PRODUCTO: Encontrar el producto actual ---
+  // Busca el producto en la lista completa.
   const product = products.find((p) => String(p.id) === id);
 
-  // 2. Usamos useMemo para calcular valores derivados del producto.
+  // --- 3. LÓGICA DE CATEGORÍA (Optimizada con useMemo) ---
+  // `useMemo` recalcula estas banderas solo si el `product` cambia.
+  // Este es el "cerebro" que decide qué UI mostrar.
   const { isKit, isSchool, isCustomizable, isInk, isDateStamp } =
     useMemo(() => {
+      // Normaliza las categorías a un array de minúsculas
       const categories = (
         Array.isArray(product?.category)
           ? product.category
@@ -43,10 +76,12 @@ export default function ProductPage({ showToast }) {
           : []
       ).map((c) => c.toLowerCase());
 
+      // Define las banderas booleanas
       const isKit = categories.includes("kits");
       const isSchool = categories.includes("escolar");
       const isInk = categories.includes("tintas");
       const isDateStamp = categories.includes("fechadores");
+      // "Personalizable" es un automático estándar (que no es tinta ni fechador)
       const isCustomizable =
         categories.includes("automáticos") && !isInk && !isDateStamp;
 
@@ -57,20 +92,24 @@ export default function ProductPage({ showToast }) {
         isInk,
         isDateStamp,
       };
-    }, [product]); // Depende solo del producto
+    }, [product]); // Dependencia: solo el objeto 'product'
 
-  // 3. Obtenemos los datos de la "edición" desde el carrito
+  // --- 4. LÓGICA DE "MODO EDICIÓN" ---
+  // `location.state` es null a menos que naveguemos desde el carrito.
   const existingCartItem = location.state;
+  // Si `existingCartItem` no es nulo, estamos en "Modo Edición".
   const isEditing = !!existingCartItem;
 
-  // 4. Inicializamos los estados
+  // --- 5. ESTADOS LOCALES DE LA PÁGINA ---
   const [customization, setCustomization] = useState(
-    existingCartItem?.customization || {}
+    existingCartItem?.customization || {} // Precarga la personalización si editamos
   );
-  const [quantity, setQuantity] = useState(existingCartItem?.quantity || 1);
-  const [activeImage, setActiveImage] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // --- Estados para la solicitud de presupuesto ---
+  const [quantity, setQuantity] = useState(existingCartItem?.quantity || 1); // Precarga la cantidad si editamos
+  const [activeImage, setActiveImage] = useState(0); // Imagen activa en la galería
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal de zoom de imagen
+
+  // --- Estados para el Modal de Presupuesto (para "Kits") ---
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [isSendingBudget, setIsSendingBudget] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState({
     name: "",
@@ -79,20 +118,30 @@ export default function ProductPage({ showToast }) {
   });
   const [formErrors, setFormErrors] = useState({});
 
-  // --- useEffect para resetear el estado al cambiar de producto ---
+  /**
+   * --------------------------------------------------------------------------
+   * 🧠 EFECTO: Resetear Estado al Cambiar de Producto
+   * --------------------------------------------------------------------------
+   * Este hook es VITAL. Si el usuario está en `/product/5` y hace clic
+   * en un link a `/product/10`, el componente no se "desmonta", solo se
+   * actualiza. Este hook detecta ese cambio (en `id` o `location.state`)
+   * y resetea todos los estados locales a sus valores por defecto (o a los
+   * nuevos valores de "edición" si se da el caso).
+   */
   useEffect(() => {
-    // Leemos el state (datos del carrito) de la ubicación actual
+    // Re-leemos el state (datos del carrito) por si cambió
     const newExistingCartItem = location.state;
 
-    // Reiniciamos los estados a sus valores por defecto (o los del item a editar)
+    // Reiniciamos los estados
     setCustomization(newExistingCartItem?.customization || {});
     setQuantity(newExistingCartItem?.quantity || 1);
     setActiveImage(0); // Volvemos a la primera imagen
     setFormErrors({}); // Limpiamos errores de formulario
     setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos datos del comprador
-  }, [id, location.state]);
-  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+    setIsBudgetModalOpen(false); // Cerramos el modal por si acaso
+  }, [id, location.state]); // Dependencias: el ID del producto y el state de navegación
 
+  // --- 6. GUARD CLAUSES (Carga, Error, No Encontrado) ---
   if (loading)
     return <div className="text-center py-20">Cargando producto...</div>;
   if (error)
@@ -101,6 +150,7 @@ export default function ProductPage({ showToast }) {
         Error al cargar el producto.
       </div>
     );
+  // Si 'loading' terminó pero el 'product' no se encontró
   if (!product) {
     return (
       <>
@@ -119,6 +169,11 @@ export default function ProductPage({ showToast }) {
     );
   }
 
+  // --- 7. MANEJADORES DE ACCIONES (Handlers) ---
+
+  /**
+   * Añade el producto (con su personalización y cantidad) al carrito.
+   */
   const handleAddToCart = () => {
     const productToAdd = {
       ...product,
@@ -129,6 +184,9 @@ export default function ProductPage({ showToast }) {
     showToast(`${product.name} agregado al carrito`);
   };
 
+  /**
+   * "Modo Edición": Actualiza un ítem *existente* en el carrito.
+   */
   const handleUpdateCartItem = () => {
     const updatedProductData = {
       ...product, // Mantenemos los datos base del producto
@@ -137,21 +195,28 @@ export default function ProductPage({ showToast }) {
     };
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
     showToast(`${product.name} actualizado en el carrito`);
-    navigate("/"); // Vuelve al inicio o puedes usar navigate(-1) para volver atrás
+    navigate("/"); // Redirige al inicio (o podría ser -1 para "atrás")
   };
 
-  // --- Manejador para el formulario de datos del comprador ---
+  /**
+   * Manejador para los inputs del formulario de presupuesto (en el modal).
+   */
   const handleBuyerChange = (e) => {
     const { name, value } = e.target;
     setBuyerInfo((prev) => ({ ...prev, [name]: value }));
+    // Limpia el error de este campo al empezar a escribir
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
+  /**
+   * Abre el modal de presupuesto.
+   * Valida que se haya subido un logo si el producto es un "Kit".
+   */
   const handleOpenBudgetModal = () => {
+    // Validación: No abrir el modal si es un Kit y falta el logo.
     if (isKit && !customization.logoFile) {
-      // Comprobamos 'logoFile'
       showToast("Por favor, sube un logo antes de cotizar.");
       return;
     }
@@ -159,8 +224,15 @@ export default function ProductPage({ showToast }) {
     setIsBudgetModalOpen(true); // Abrimos el modal
   };
 
+  /**
+   * --------------------------------------------------------------------------
+   * 🚀 ACCIÓN: Enviar Solicitud de Presupuesto (API Call)
+   * --------------------------------------------------------------------------
+   * Esta es la lógica para contactar al backend y enviar la solicitud de
+   * presupuesto (para productos "Kit").
+   */
   const handleRequestBudget = async () => {
-    // Validación de campos del formulario
+    // 1. Validación del formulario de contacto (en el modal)
     const errors = {};
     if (!buyerInfo.name.trim()) errors.name = "El nombre es obligatorio.";
     if (!buyerInfo.email.trim() || !/\S+@\S+\.\S+/.test(buyerInfo.email))
@@ -174,34 +246,46 @@ export default function ProductPage({ showToast }) {
     }
 
     setFormErrors({});
-    setIsSendingBudget(true);
+    setIsSendingBudget(true); // Activa el estado de carga
 
+    // 2. Construcción de FormData
+    // Se usa FormData porque vamos a enviar un ARCHIVO (logoFile).
+    // No se puede usar JSON para enviar archivos.
     const formData = new FormData();
+
+    // Añadimos los datos como pares clave/valor.
+    // Los objetos se envían como strings JSON.
     formData.append(
       "product",
       JSON.stringify({ id: product.id, name: product.name })
     );
+    // Excluimos el 'logoFile' y 'logoPreview' de la personalización JSON.
     const { logoFile, logoPreview, ...customizationDetails } = customization;
     formData.append("customization", JSON.stringify(customizationDetails));
     formData.append("quantity", quantity);
     formData.append("buyer", JSON.stringify(buyerInfo));
 
+    // 3. Añadimos el archivo (si existe)
     if (logoFile) {
-      formData.append("logoFile", logoFile);
+      formData.append("logoFile", logoFile); // 'logoFile' es el objeto File
     }
 
+    // 4. Llamada a la API (fetch)
     try {
       const response = await fetch(`${API_URL}/request-budget`, {
         method: "POST",
-        body: formData,
+        body: formData, // El body es el FormData (no 'headers: Content-Type')
       });
 
+      // 5. Manejo de Respuesta
       if (response.ok) {
+        // ÉXITO
         showToast("Solicitud de presupuesto enviada. Te contactaremos pronto.");
-        setCustomization({});
-        setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos el formulario
-        setIsBudgetModalOpen(false); // Cerramos el modal
+        setCustomization({}); // Resetea personalización
+        setBuyerInfo({ name: "", email: "", phone: "" }); // Resetea formulario
+        setIsBudgetModalOpen(false); // Cierra el modal
       } else {
+        // ERROR (del backend)
         const errorData = await response.json();
         showToast(
           `Error al enviar la solicitud: ${
@@ -210,16 +294,20 @@ export default function ProductPage({ showToast }) {
         );
       }
     } catch (err) {
+      // ERROR (de red/CORS)
       console.error("Error enviando solicitud de presupuesto:", err);
       showToast("Error de conexión al enviar la solicitud.");
     } finally {
-      setIsSendingBudget(false);
+      setIsSendingBudget(false); // Desactiva el estado de carga
     }
   };
 
-  // Aseguramos que images sea un array y filtramos null/undefined
+  // --- 8. PREPARACIÓN DE RENDER ---
+
+  // Combina la imagen principal y las miniaturas en un solo array, filtrando nulos.
   const images = [product.image, ...(product.thumbnails || [])].filter(Boolean);
 
+  // SEO y Metadatos
   const pageTitle = `${product.name} - SellosPro`;
   const pageDescription = `Compra ${
     product.name
@@ -228,33 +316,40 @@ export default function ProductPage({ showToast }) {
     120
   )}... Calidad profesional en Mar del Plata.`;
 
-  // --- Función para manejar el cambio de color para tintas ---
+  /**
+   * Manejador específico para el ColorPicker de las tintas.
+   */
   const handleColorChange = (hex) => {
     setCustomization((prev) => ({ ...prev, color: hex }));
   };
-  // --------------------------------------------------------
 
+  // --- 9. RENDERIZACIÓN (JSX) ---
   return (
     <div className=" py-6 md:py-6">
+      {/* SEO */}
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* --- ESTRUCTURA DE GRID PRINCIPAL --- */}
+        {/* --- ESTRUCTURA DE GRID PRINCIPAL (1 o 2 columnas) --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+          {/* ======================================= */}
           {/* --- COLUMNA 1: IMAGEN E INFORMACIÓN --- */}
+          {/* ======================================= */}
           <div>
-            {/* Contenedor de Imagen y Miniaturas */}
+            {/* Contenedor de Galería de Imagen */}
             <div>
+              {/* Imagen Principal (con botón de zoom) */}
               <button
                 className="aspect-square bg-white rounded-lg flex items-center justify-center border overflow-hidden relative w-full cursor-pointer hover:opacity-90 transition group"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setIsModalOpen(true)} // Abre el modal de zoom
               >
                 <img
-                  src={images[activeImage]}
+                  src={images[activeImage]} // Muestra la imagen activa
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
+                {/* Icono de Zoom (aparece al hover) */}
                 <div className="absolute bottom-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -272,16 +367,18 @@ export default function ProductPage({ showToast }) {
                   </svg>
                 </div>
               </button>
+              {/* Miniaturas (Thumbnails) - solo si hay más de 1 imagen */}
               {images.length > 1 && (
                 <div className="flex gap-2 sm:gap-4 mt-4 overflow-x-auto pb-2">
                   {images.map((img, index) => (
                     <button
                       key={index}
-                      onClick={() => setActiveImage(index)}
+                      onClick={() => setActiveImage(index)} // Cambia la imagen activa
+                      // Estilo condicional para la miniatura activa
                       className={`flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center p-1 border-2 overflow-hidden ${
                         activeImage === index
-                          ? "border-red-600 ring-1 ring-red-300"
-                          : "border-gray-200 hover:border-red-400"
+                          ? "border-red-600 ring-1 ring-red-300" // Activa
+                          : "border-gray-200 hover:border-red-400" // Inactiva
                       }`}
                     >
                       <img
@@ -298,19 +395,21 @@ export default function ProductPage({ showToast }) {
               </p>
             </div>
 
-            {/* --- TÍTULO, DESCRIPCIÓN Y PRECIO MOVIDOS AQUÍ --- */}
+            {/* --- Información del Producto (Título, Precio, Descripción) --- */}
             <div>
               <div className="flex flex-row justify-between items-center gap-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {product.name}
                 </h1>
+                {/* Precio Condicional */}
                 <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
                   {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
                 </p>
               </div>
+              {/* Descripción (con formato de saltos de línea) */}
               <p className="text-gray-600 mt-2 leading-relaxed whitespace-pre-wrap">
                 {" "}
-                {/* Usamos whitespace-pre-wrap */}
+                {/* 'whitespace-pre-wrap' respeta los \n (saltos de línea) */}
                 {product.description.split("\n").map((line, index, array) => (
                   <React.Fragment key={index}>
                     {line}
@@ -321,8 +420,9 @@ export default function ProductPage({ showToast }) {
             </div>
           </div>
 
+          {/* =============================================== */}
           {/* --- COLUMNA 2: PERSONALIZACIÓN Y ACCIONES --- */}
-
+          {/* =============================================== */}
           <div className="top-24 h-fit">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
@@ -331,7 +431,13 @@ export default function ProductPage({ showToast }) {
                   : "Personaliza tu Sello"}
               </h2>
 
-              {/* --- SIN PESTAÑAS --- */}
+              {/* -------------------------------------------------- */}
+              {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
+              {/* -------------------------------------------------- */}
+              {/*
+               * Solo UNO de estos bloques se renderizará,
+               * basado en las banderas booleanas del 'useMemo'.
+               */}
               {isCustomizable && (
                 <Personalizer
                   product={product}
@@ -360,9 +466,14 @@ export default function ProductPage({ showToast }) {
                 />
               )}
 
-              {/* Sección Almohadilla */}
+              {/* ---------------------------------- */}
+              {/* --- SECCIONES DE CROSS-SELL --- */}
+              {/* ---------------------------------- */}
+
+              {/* Sección Almohadilla (Condicional) */}
               {product.requiresPad &&
                 (() => {
+                  // Encuentra el producto "Almohadilla" (ID 19)
                   const padProduct = products.find((p) => p.id === 19);
                   if (!padProduct) return null;
                   const handleAddPad = () => {
@@ -371,41 +482,18 @@ export default function ProductPage({ showToast }) {
                   };
                   return (
                     <div className="mt-6 border-t border-gray-300 pt-4">
-                      <h3 className="text-md font-semibold text-gray-800 mb-2">
-                        ¿No tienes Almohadilla + Tinta?
-                      </h3>
-                      <div className="flex gap-4 items-center mb-3">
-                        <img
-                          src={padProduct.image}
-                          alt={padProduct.name}
-                          className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0"
-                        />
-                        <div>
-                          <p className="text-sm text-gray-600 mb-1">
-                            Este producto requiere una almohadilla + tinta para
-                            su uso. ¡Añade el kit!
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-bold text-gray-900">
-                              {padProduct.name}: ${padProduct.price.toFixed(2)}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleAddPad}
-                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
-                      >
-                        <ShoppingCart size={18} />
+                      {/* ... JSX para mostrar y añadir la almohadilla ... */}
+                      <button onClick={handleAddPad}>
                         Añadir {padProduct.name} al Carrito
                       </button>
                     </div>
                   );
                 })()}
 
-              {/* Sección Frasquito de Tinta opcional */}
-              {isCustomizable && // Usamos la variable de useMemo
+              {/* Sección Tinta de Recarga (Condicional) */}
+              {isCustomizable &&
                 (() => {
+                  // Encuentra el producto "Tinta Recarga" (ID 24)
                   const inkRefill = products.find((p) => p.id === 24);
                   if (!inkRefill) return null;
                   const handleAddInk = () => {
@@ -414,52 +502,31 @@ export default function ProductPage({ showToast }) {
                   };
                   return (
                     <div className="mt-6 border-t border-gray-300 pt-4">
-                      <h3 className="text-md font-semibold text-gray-800 mb-2">
-                        ¿Vas a necesitar un frasquito para cargar tu sello?
-                      </h3>
-                      <div className="flex gap-4 items-center mb-3">
-                        <img
-                          src={inkRefill.image}
-                          alt={inkRefill.name}
-                          className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0"
-                        />
-                        <div>
-                          <p className="text-sm text-gray-600 mb-1">
-                            Si le vas a dar mucho uso, te damos la opcion
-                            agregar a tu compra un frasquito de nuestra tinta
-                            especial para sellos que estira su vida útil. Con
-                            unas gotitas es suficiente para recargarlo.
-                          </p>
-                          <span className="text-lg font-bold text-gray-900">
-                            {inkRefill.name}: ${inkRefill.price.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleAddInk}
-                        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
-                      >
-                        <ShoppingCart size={18} />
+                      {/* ... JSX para mostrar y añadir la tinta de recarga ... */}
+                      <button onClick={handleAddInk}>
                         Añadir {inkRefill.name} al Carrito
                       </button>
                     </div>
                   );
                 })()}
 
-              {/* --- BOTONES CONDICIONALES --- */}
+              {/* ---------------------------------- */}
+              {/* --- BOTONES DE ACCIÓN (Lógica Condicional) --- */}
+              {/* ---------------------------------- */}
               <div className="flex flex-row items-center gap-4 mt-6">
                 {isKit ? (
-                  // Botón para ABRIR EL MODAL de presupuesto
+                  // --- CASO 1: Producto "Kit" (a cotizar) ---
                   <button
-                    onClick={handleOpenBudgetModal}
+                    onClick={handleOpenBudgetModal} // Abre el modal de presupuesto
                     className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
                   >
                     <Send size={20} />
                     Solicitar Presupuesto
                   </button>
                 ) : (
-                  // --- LÓGICA DE BOTÓN ACTUALIZADA ---
+                  // --- CASO 2: Producto normal (comprable) ---
                   <>
+                    {/* Selector de Cantidad */}
                     <div className="flex items-center border border-gray-300 rounded-md">
                       <button
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -477,19 +544,20 @@ export default function ProductPage({ showToast }) {
                         +
                       </button>
                     </div>
+
                     {isEditing ? (
-                      // Botón de Actualizar
+                      // --- CASO 2a: Modo Edición ---
                       <button
-                        onClick={handleUpdateCartItem} // <-- Llama a la nueva función
+                        onClick={handleUpdateCartItem} // Llama a la función de ACTUALIZAR
                         className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
                       >
                         <RefreshCw size={20} />
                         Actualizar Cambios
                       </button>
                     ) : (
-                      // Botón de Añadir
+                      // --- CASO 2b: Modo Añadir (normal) ---
                       <button
-                        onClick={handleAddToCart} // <-- Llama a la función original
+                        onClick={handleAddToCart} // Llama a la función de AÑADIR
                         className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
                       >
                         <ShoppingCart size={20} />
@@ -500,20 +568,23 @@ export default function ProductPage({ showToast }) {
                 )}
               </div>
             </div>
-            {/* Botón Favoritos (eliminado) */}
           </div>
         </div>
       </div>
 
-      {/* --- MODAL PARA LA IMAGEN --- */}
+      {/* ======================= */}
+      {/* --- MODALES (Ocultos) --- */}
+      {/* ======================= */}
+
+      {/* --- MODAL PARA ZOOM DE IMAGEN --- */}
       {isModalOpen && (
         <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setIsModalOpen(false)} // Cierra al hacer clic fuera
         >
           <div
             className="relative max-w-3xl max-h-[85vh] bg-white rounded-lg shadow-xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // Evita cierre al hacer clic dentro
           >
             <img
               src={images[activeImage]}
@@ -522,7 +593,7 @@ export default function ProductPage({ showToast }) {
             />
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 p-2 bg-white/80 rounded-full text-gray-900 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="absolute top-3 right-3 p-2 bg-white/80 rounded-full text-gray-900 hover:bg-white"
               aria-label="Cerrar imagen"
             >
               <X size={24} />
@@ -531,15 +602,16 @@ export default function ProductPage({ showToast }) {
         </div>
       )}
 
-      {/* --- ¡NUEVO! MODAL PARA SOLICITUD DE PRESUPUESTO --- */}
+      {/* --- MODAL PARA SOLICITUD DE PRESUPUESTO --- */}
       {isBudgetModalOpen && (
         <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in"
           onClick={() => setIsBudgetModalOpen(false)} // Cierra al hacer clic fuera
         >
+          {/* Contenido del Modal */}
           <div
             className="relative bg-white rounded-lg shadow-xl w-full max-w-md"
-            onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer clic dentro
+            onClick={(e) => e.stopPropagation()} // Evita cierre
           >
             {/* Header del Modal */}
             <div className="flex justify-between items-center p-4 border-b">
@@ -554,13 +626,12 @@ export default function ProductPage({ showToast }) {
               </button>
             </div>
 
-            {/* Cuerpo del Modal (el formulario) */}
+            {/* Cuerpo del Modal (Formulario de contacto) */}
             <div className="p-6 space-y-4">
               <p className="text-sm text-gray-600">
                 Por favor, completa tus datos para que podamos contactarte con
                 la cotización para tu <strong>{product.name}</strong>.
               </p>
-
               {/* Campo Nombre */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -647,7 +718,8 @@ export default function ProductPage({ showToast }) {
           </div>
         </div>
       )}
-      {/* Añadimos estilos para la animación fade-in si no los tienes globalmente */}
+
+      {/* Estilos para la animación (si no están globales) */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }

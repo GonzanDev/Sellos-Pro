@@ -1,25 +1,53 @@
+/**
+ * ==============================================================================
+ * 🧑‍🏫 COMPONENTE: Personalizador Escolar (PersonalizerSchool.jsx)
+ * ==============================================================================
+ *
+ * Descripción: Renderiza las opciones de personalización específicas para
+ * productos de la categoría "Escolar" (ej. Sello Textil, Sello Vertical).
+ *
+ * Es un "componente controlado", al igual que los otros personalizadores.
+ * Recibe `customization` y `setCustomization` de su componente padre.
+ *
+ * Funcionalidades Específicas:
+ * 1. Campos para "Nombre", "Dibujito" (con validación), y "Fuente" (dropdown).
+ * 2. Renderizado Condicional: Muestra checkboxes (Hoja, Materia, Año)
+ * SOLAMENTE si el producto.id es 2 (Sello Vertical).
+ * 3. Reutiliza el componente <ColorPicker>.
+ *
+ * @param {object} props
+ * @param {object} props.customization - El objeto de estado actual de personalización.
+ * @param {function} props.setCustomization - La función `setState` del padre.
+ * @param {object} [props.product={}] - El objeto del producto para reglas (colores, id).
+ */
 import React from "react";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "./ColorPicker"; // Subcomponente para la selección de color.
 
 export default function PersonalizerSchool({
   customization,
   setCustomization,
   product = {},
 }) {
+  /**
+   * Manejador genérico para actualizar el estado `customization` en el padre.
+   * @param {string} field - La clave del estado a actualizar (ej. 'Nombre', 'Dibujo').
+   * @param {*} value - El nuevo valor.
+   */
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Extrae los colores disponibles del producto, o un array vacío.
   const colors = product.colors || [];
 
-  // 🔠 Letras A-Z para seleccionar tipo de fuente
+  // 🔠 Genera un array de letras (A-Z) para el selector de fuentes.
   const letters = Array.from({ length: 26 }, (_, i) =>
     String.fromCharCode(65 + i)
   );
 
   return (
     <div className="space-y-4">
-      {/* Nombre */}
+      {/* --- Campo Nombre --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Nombre
@@ -33,7 +61,7 @@ export default function PersonalizerSchool({
         />
       </div>
 
-      {/* Dibujito */}
+      {/* --- Campo Dibujito (con validación) --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Dibujito
@@ -45,7 +73,10 @@ export default function PersonalizerSchool({
           value={customization.Dibujo || 0}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value >= 0 && value <= 158) handleChange("Dibujo", value);
+            // Validación: Solo actualiza el estado si el número está en el rango permitido.
+            if (value >= 0 && value <= 158) {
+              handleChange("Dibujo", value);
+            }
           }}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
           placeholder="Ej: 12"
@@ -56,7 +87,7 @@ export default function PersonalizerSchool({
         </p>
       </div>
 
-      {/* 🔤 Selector de tipo de letra (A–Z) */}
+      {/* --- 🔤 Selector de tipo de letra (Dropdown A-Z) --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Tipo de letra
@@ -67,6 +98,7 @@ export default function PersonalizerSchool({
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
           <option value="">Elegir tipo (A-Z)...</option>
+          {/* Itera sobre el array [A, B, C...] para crear las opciones */}
           {letters.map((letter) => (
             <option key={letter} value={letter}>
               {letter}
@@ -78,13 +110,15 @@ export default function PersonalizerSchool({
         </p>
       </div>
 
-      {/* Detalles: solo visibles si el producto es el Vertical (id = 2) */}
+      {/* --- 💡 Detalles Condicionales (para Sello Vertical ID 2) --- */}
+      {/* Este bloque de checkboxes SÓLO se renderiza si el producto.id es 2. */}
       {product.id === 2 && (
         <>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Detalles
           </label>
           <div className="flex flex-wrap gap-4">
+            {/* Checkbox para "Hoja N°" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -93,6 +127,7 @@ export default function PersonalizerSchool({
               />
               Hoja N°
             </label>
+            {/* Checkbox para "Materia" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -101,6 +136,7 @@ export default function PersonalizerSchool({
               />
               Materia
             </label>
+            {/* Checkbox para "Año" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -113,14 +149,15 @@ export default function PersonalizerSchool({
         </>
       )}
 
-      {/* Color */}
+      {/* --- 🎨 Selector de Color --- */}
+      {/* Reutiliza el componente ColorPicker */}
       <ColorPicker
         colors={colors}
         value={customization.color}
         onChange={(hex) => handleChange("color", hex)}
       />
 
-      {/* Comentarios */}
+      {/* --- 🗒 Comentarios Adicionales --- */}
       <div className="pt-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Comentarios adicionales
