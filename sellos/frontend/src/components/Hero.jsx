@@ -31,7 +31,7 @@ const slides = [
     subtitle: "Calidad y diseño a tu medida.",
     buttonText: "Ver Catálogo",
     link: "/catalog",
-    bgImage: "/images/Hero/Hero1r.jpg",
+    bgImage: "/images/Hero/Hero1.jpg",
     textColor: "text-white",
   },
   {
@@ -47,7 +47,7 @@ const slides = [
     subtitle: "¡Prepara la vuelta al cole con los mejores sellos!",
     buttonText: "Ver Ofertas",
     link: "/catalog?category=Escolar",
-    bgImage: "/images/Hero/Hero3.jpg",
+    bgImage: "/images/Hero/Hero2c.jpg",
     textColor: "text-white",
   },
 ];
