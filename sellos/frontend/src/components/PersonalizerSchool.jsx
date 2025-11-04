@@ -64,7 +64,7 @@ export default function PersonalizerSchool({
       {/* --- Campo Dibujito (con validación) --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Dibujito
+          Dibujito (Ver en imagen)
         </label>
         <input
           type="number"
