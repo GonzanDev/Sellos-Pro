@@ -35,8 +35,8 @@ const slides = [
     textColor: "text-white",
   },
   {
-    title: "Envíos a Todo el País",
-    subtitle: "Recibe tus sellos sin moverte de tu casa.",
+    title: "Retira en el local",
+    subtitle: "Veni a retirar tu pedido y consultanos lo que necesites.",
     buttonText: "Consultar",
     link: "/contacto",
     bgImage: "/images/Hero/Hero2r.jpg",
