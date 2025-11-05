@@ -291,7 +291,7 @@
     ]
   },
   {
-    "id": 17,
+    "id": 98,
     "category": ["Tintas"],
     "name": "Botella Tinta 500cc al Agua",
     "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
@@ -329,7 +329,7 @@
     "requiresPad": false
   },
   {
-    "id": 24,
+    "id": 99,
     "category": ["Tintas"],
     "name": "Tinta SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
@@ -409,7 +409,7 @@
     "image": "/images/almohadilla.png"
   },
   {
-    "id": 33,
+    "id": 97,
     "category": ["Almohadillas"],
     "name": "Almohadilla Chica N°4",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
