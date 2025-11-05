@@ -1,26 +1,4 @@
-/**
- * ==============================================================================
- * 🧑‍🏫 COMPONENTE: Personalizador Escolar (PersonalizerSchool.jsx)
- * ==============================================================================
- *
- * Descripción: Renderiza las opciones de personalización específicas para
- * productos de la categoría "Escolar" (ej. Sello Textil, Sello Vertical).
- *
- * Es un "componente controlado", al igual que los otros personalizadores.
- * Recibe `customization` y `setCustomization` de su componente padre.
- *
- * Funcionalidades Específicas:
- * 1. Campos para "Nombre", "Dibujito" (con validación), y "Fuente" (dropdown).
- * 2. Renderizado Condicional: Muestra checkboxes (Hoja, Materia, Año)
- * SOLAMENTE si el producto.id es 2 (Sello Vertical).
- * 3. Reutiliza el componente <ColorPicker>.
- *
- * @param {object} props
- * @param {object} props.customization - El objeto de estado actual de personalización.
- * @param {function} props.setCustomization - La función `setState` del padre.
- * @param {object} [props.product={}] - El objeto del producto para reglas (colores, id).
- */
-import React from "react";
+import React, { useEffect } from "react";
 import ColorPicker from "./ColorPicker"; // Subcomponente para la selección de color.
 
 export default function PersonalizerSchool({
@@ -28,22 +6,25 @@ export default function PersonalizerSchool({
   setCustomization,
   product = {},
 }) {
-  /**
-   * Manejador genérico para actualizar el estado `customization` en el padre.
-   * @param {string} field - La clave del estado a actualizar (ej. 'Nombre', 'Dibujo').
-   * @param {*} value - El nuevo valor.
-   */
+  // Manejador genérico para actualizar el estado `customization` en el padre.
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Extrae los colores disponibles del producto, o un array vacío.
+  // Colores disponibles del producto
   const colors = product.colors || [];
 
-  // 🔠 Genera un array de letras (A-Z) para el selector de fuentes.
+  // 🔠 Genera un array de letras (A-Z)
   const letters = Array.from({ length: 26 }, (_, i) =>
     String.fromCharCode(65 + i)
   );
+
+  // ✅ Si no hay fuente seleccionada, se setea "sin-preferencia" por defecto
+  useEffect(() => {
+    if (!customization.Fuente) {
+      setCustomization((prev) => ({ ...prev, Fuente: "sin-preferencia" }));
+    }
+  }, [customization.Fuente, setCustomization]);
 
   return (
     <div className="space-y-4">
@@ -61,7 +42,7 @@ export default function PersonalizerSchool({
         />
       </div>
 
-      {/* --- Campo Dibujito (con validación) --- */}
+      {/* --- Campo Dibujito --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Dibujito (Ver en imagen)
@@ -73,7 +54,6 @@ export default function PersonalizerSchool({
           value={customization.Dibujo || 0}
           onChange={(e) => {
             const value = Number(e.target.value);
-            // Validación: Solo actualiza el estado si el número está en el rango permitido.
             if (value >= 0 && value <= 158) {
               handleChange("Dibujo", value);
             }
@@ -87,18 +67,22 @@ export default function PersonalizerSchool({
         </p>
       </div>
 
-      {/* --- 🔤 Selector de tipo de letra (Dropdown A-Z) --- */}
+      {/* --- 🔤 Selector de tipo de letra --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Tipo de letra
         </label>
         <select
-          value={customization.Fuente || ""}
+          value={customization.Fuente || "sin-preferencia"}
           onChange={(e) => handleChange("Fuente", e.target.value)}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
         >
-          <option value="">Elegir tipo (A-Z)...</option>
-          {/* Itera sobre el array [A, B, C...] para crear las opciones */}
+          {/* Primera opción: Sin preferencia */}
+          <option value="sin-preferencia">
+            Sin preferencia — Nosotros te elegimos la mejor opción
+          </option>
+
+          {/* Otras fuentes A-Z */}
           {letters.map((letter) => (
             <option key={letter} value={letter}>
               {letter}
@@ -110,15 +94,13 @@ export default function PersonalizerSchool({
         </p>
       </div>
 
-      {/* --- 💡 Detalles Condicionales (para Sello Vertical ID 2) --- */}
-      {/* Este bloque de checkboxes SÓLO se renderiza si el producto.id es 2. */}
+      {/* --- Detalles Condicionales (solo para Sello Vertical ID 2) --- */}
       {product.id === 2 && (
         <>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Detalles
           </label>
           <div className="flex flex-wrap gap-4">
-            {/* Checkbox para "Hoja N°" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -127,7 +109,6 @@ export default function PersonalizerSchool({
               />
               Hoja N°
             </label>
-            {/* Checkbox para "Materia" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -136,7 +117,6 @@ export default function PersonalizerSchool({
               />
               Materia
             </label>
-            {/* Checkbox para "Año" */}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -150,14 +130,13 @@ export default function PersonalizerSchool({
       )}
 
       {/* --- 🎨 Selector de Color --- */}
-      {/* Reutiliza el componente ColorPicker */}
       <ColorPicker
         colors={colors}
         value={customization.color}
         onChange={(hex) => handleChange("color", hex)}
       />
 
-      {/* --- 🗒 Comentarios Adicionales --- */}
+      {/* --- 🗒 Comentarios adicionales --- */}
       <div className="pt-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Comentarios adicionales

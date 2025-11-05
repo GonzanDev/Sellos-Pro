@@ -96,42 +96,69 @@ export default function Personalizer({
         ))}
 
         {/* --- 🔤 Selector de tipo de letra (A–Z) --- */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tipo de letra (A–Z) (Ver en imagen)
-          </label>
-          <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
-            {/* Itera sobre el array de letras 'A' a 'Z' */}
-            {letters.map((letter) => (
-              <button
-                key={letter}
-                type="button"
-                // Llama al handler para actualizar el campo 'Fuente'.
-                onClick={() => handleChange("Fuente", letter)}
-                // Aplica estilos condicionales:
-                // Si la 'Fuente' en el estado es esta 'letter', aplica el estilo activo (rojo).
-                className={`flex items-center justify-center w-9 h-9 text-sm font-semibold rounded border transition 
-                  ${
-                    customization.Fuente === letter
-                      ? "bg-red-600 text-white border-red-600" // Estilo Activo
-                      : "bg-white border-gray-300 hover:bg-gray-100" // Estilo Inactivo
-                  }`}
-              >
-                {letter}
-              </button>
-            ))}
-          </div>
-          {/* Botón para limpiar la selección de fuente */}
-          <div className="mt-2">
-            <button
-              type="button"
-              onClick={() => handleChange("Fuente", "")} // Setea 'Fuente' a un string vacío.
-              className="text-xs text-gray-500 hover:text-gray-800"
-            >
-              Borrar selección
-            </button>
-          </div>
-        </div>
+       <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Tipo de letra (A–Z) (Ver en imagen)
+  </label>
+
+  {/* Grid de letras con “Sin preferencia” primero */}
+  <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
+
+{/* Botón: Sin preferencia (con aclaración incluida) */}
+<button
+  type="button"
+  onClick={() => handleChange("Fuente", "Sin preferencia")}
+  className={`flex flex-col items-center justify-center col-span-7 sm:col-span-9 text-xs font-medium px-3 py-2 rounded border transition text-center leading-tight
+    ${
+      customization.Fuente === "Sin preferencia"
+        ? "bg-red-600 text-white border-red-600"
+        : "bg-white border-gray-300 hover:bg-gray-100"
+    }`}
+>
+  <span className="font-semibold text-sm">Sin preferencia</span>
+  <span
+    className={`text-[11px] ${
+      customization.Fuente === "Sin preferencia"
+        ? "text-white"               // 🔴 Texto blanco cuando está seleccionado
+        : "text-gray-600 sm:text-gray-500" // ⚪ Gris más oscuro cuando no
+    }`}
+  >
+    Nosotros te elegimos la mejor opción
+  </span>
+</button>
+
+
+    {/* Letras de la A a la Z */}
+    {letters.map((letter) => (
+      <button
+        key={letter}
+        type="button"
+        onClick={() => handleChange("Fuente", letter)}
+        className={`flex items-center justify-center w-9 h-9 text-sm font-semibold rounded border transition 
+          ${
+            customization.Fuente === letter
+              ? "bg-red-600 text-white border-red-600"
+              : "bg-white border-gray-300 hover:bg-gray-100"
+          }`}
+      >
+        {letter}
+      </button>
+    ))}
+  </div>
+
+  {/* Botón para limpiar selección */}
+  <div className="mt-2">
+    <button
+      type="button"
+      onClick={() => handleChange("Fuente", "")}
+      className="text-xs text-gray-500 hover:text-gray-800"
+    >
+      Borrar selección
+    </button>
+  </div>
+</div>
+
+
 
         {/* --- 🎨 Selector de color --- */}
         {/*
