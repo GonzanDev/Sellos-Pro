@@ -335,7 +335,9 @@
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
     "price": 5000,
     "image": "/images/TintaFrasquito/Frasquito.jpg",
-    "requiresPad": false
+    "requiresPad": false,
+    "requiresDiluentMini": true
+
   },
   {
     "id": 17,
@@ -355,11 +357,12 @@
       { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
       { "name": "Marrón", "hex": "#4f3c2f", "stock": false },
       { "name": "Celeste", "hex": "#009ea3", "stock": true }
-    ]
+    ],
+    "requiresDiluent": true
   },
   {
     "id": 32,
-    "category": ["Tintas", "Otros"],
+    "category": ["Tintas"],
     "name": "Diluyente para SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
     "price": 4000,
@@ -369,7 +372,7 @@
 
   {
     "id": 33,
-    "category": ["Tintas", "Otros"],
+    "category": ["Tintas"],
     "name": "Diluyente para SECADO RAPIDO / Botella 500cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
     "price": 27500,

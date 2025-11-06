@@ -81,10 +81,13 @@ export default function ProductCard({ product, addToCart }) {
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
+          { price>0 && (
           <p className="mt-1 text-lg font-bold text-gray-900">
             {/* Formatea el precio a moneda local (Peso Argentino) */}$
             {price.toLocaleString("es-AR")}
           </p>
+          ) 
+          }
         </div>
 
         {/* --- Lógica Condicional de Botones --- */}
