@@ -81,13 +81,12 @@ export default function ProductCard({ product, addToCart }) {
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
-          { price>0 && (
-          <p className="mt-1 text-lg font-bold text-gray-900">
-            {/* Formatea el precio a moneda local (Peso Argentino) */}$
-            {price.toLocaleString("es-AR")}
-          </p>
-          ) 
-          }
+          {price > 0 && (
+            <p className="mt-1 text-lg font-bold text-gray-900">
+              {/* Formatea el precio a moneda local (Peso Argentino) */}$
+              {price.toLocaleString("es-AR")}
+            </p>
+          )}
         </div>
 
         {/* --- Lógica Condicional de Botones --- */}
@@ -105,12 +104,12 @@ export default function ProductCard({ product, addToCart }) {
           // CASO B: Es un producto estándar
           // Muestra un <button> real que ejecuta 'addToCart'.
           // Permite "Añadir al carrito" rápido.
-          <button
-            onClick={() => addToCart(product)}
+          <Link
+            to={`/product/${product.id}`}
             className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
           >
             Agregar
-          </button>
+          </Link>
         )}
       </div>
     </div>
