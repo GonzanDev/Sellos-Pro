@@ -19,13 +19,14 @@
  * @param {function} props.addToCart - La función del CartContext para añadir un ítem.
  */
 import React from "react";
-import { Link } from "react-router-dom"; // Para la navegación a la página de detalle.
+import { Link, Navigate } from "react-router-dom"; // Para la navegación a la página de detalle.
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({ product, addToCart }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
   // con .toLocaleString() si 'price' es undefined o null.
   const price = typeof product.price === "number" ? product.price : 0;
-
+  const navigate = useNavigate();
   // --- Lógica de Categoría (Corrección) ---
   // Esta lógica robusta determina si el producto es un "kit".
 
@@ -104,12 +105,13 @@ export default function ProductCard({ product, addToCart }) {
           // CASO B: Es un producto estándar
           // Muestra un <button> real que ejecuta 'addToCart'.
           // Permite "Añadir al carrito" rápido.
-          <Link
-            to={`/product/${product.id}`}
+          // ELIMINADO addToCart para obligar a ir a la página de detalle
+          <button
+            onClick={() => navigate(`/product/${product.id}`)}
             className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
           >
             Agregar
-          </Link>
+          </button>
         )}
       </div>
     </div>
