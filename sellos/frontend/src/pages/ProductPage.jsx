@@ -43,6 +43,7 @@ import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
 import ColorPicker from "../components/ColorPicker";
+import CrossSellItem from "../components/CrossSellItem";
 // ----------------------------------------------------
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
@@ -169,33 +170,74 @@ export default function ProductPage({ showToast }) {
     );
   }
 
+  // ==============================================================================
+  //  FUNCIÓN DE VALIDACIÓN
+  // ==============================================================================
+  const validateCustomization = () => {
+    if (isKit) {
+      return null;
+    }
+    if (isSchool) {
+      if (!customization.Nombre) return "El campo 'Nombre' es obligatorio.";
+      if (!customization.Dibujo) return "El campo 'Dibujo' es obligatorio.";
+      if (!customization.Fuente)
+        return "El campo 'Tipo de letra' es obligatorio.";
+      if (!customization.color) return "Debes seleccionar un color.";
+    }
+    if (isCustomizable) {
+      const lineKeys = Object.keys(customization).filter((key) =>
+        key.startsWith("line")
+      );
+      // 2. Verificamos si 'alguna' ('some') de esas líneas tiene un valor (no está vacía)
+      const hasAtLeastOneLine = lineKeys.some(
+        (key) => customization[key] && customization[key].trim() !== ""
+      );
+
+      if (!hasAtLeastOneLine) {
+        return "Debe completar al menos una línea de texto.";
+      }
+      //
+      if (!customization.Fuente)
+        return "El campo 'Tipo de letra' es obligatorio.";
+      if (!customization.color) return "Debes seleccionar un color.";
+    }
+    if (isInk) {
+      if (!customization.color) return "Debes seleccionar un color.";
+    }
+    if (isDateStamp) {
+      return null;
+    }
+    return null;
+  };
+
   // --- 7. MANEJADORES DE ACCIONES (Handlers) ---
 
   /**
    * Añade el producto (con su personalización y cantidad) al carrito.
    */
   const handleAddToCart = () => {
-    const productToAdd = {
-      ...product,
-      customization,
-      qty: quantity,
-    };
+    const validationError = validateCustomization();
+    if (validationError) {
+      showToast(validationError);
+      return;
+    }
+    const productToAdd = { ...product, customization, qty: quantity };
     addToCart(productToAdd);
     showToast(`${product.name} agregado al carrito`);
   };
-
   /**
    * "Modo Edición": Actualiza un ítem *existente* en el carrito.
    */
   const handleUpdateCartItem = () => {
-    const updatedProductData = {
-      ...product, // Mantenemos los datos base del producto
-      customization: customization,
-      qty: quantity,
-    };
+    const validationError = validateCustomization();
+    if (validationError) {
+      showToast(validationError);
+      return;
+    }
+    const updatedProductData = { ...product, customization, qty: quantity };
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
     showToast(`${product.name} actualizado en el carrito`);
-    navigate("/"); // Redirige al inicio (o podría ser -1 para "atrás")
+    navigate("/");
   };
 
   /**
@@ -330,7 +372,7 @@ export default function ProductPage({ showToast }) {
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 `}>
         {/* --- ESTRUCTURA DE GRID PRINCIPAL (1 o 2 columnas) --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* ======================================= */}
@@ -407,16 +449,16 @@ export default function ProductPage({ showToast }) {
                 </p>
               </div>
               {/* Descripción (con formato de saltos de línea) */}
-              <p className="text-gray-600 mt-2 leading-relaxed whitespace-pre-wrap">
-                {" "}
-                {/* 'whitespace-pre-wrap' respeta los \n (saltos de línea) */}
-                {product.description.split("\n").map((line, index, array) => (
-                  <React.Fragment key={index}>
-                    {line}
-                    {index < array.length - 1 && <br />}
-                  </React.Fragment>
-                ))}
-              </p>
+              {!(isInk || isDateStamp) && (
+                <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                  {product.description.split("\n").map((line, index, array) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < array.length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </p>
+              )}
             </div>
           </div>
 
@@ -426,9 +468,13 @@ export default function ProductPage({ showToast }) {
           <div className="top-24 h-fit">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-                {isKit
-                  ? "Completa los datos para cotizar"
-                  : "Personaliza tu Sello"}
+                {
+                  isKit
+                    ? "Completa los datos para cotizar"
+                    : isInk || isDateStamp // Si es tinta O fechador
+                    ? "Compra tu producto"
+                    : "Personaliza tu Sello" // El resto (automáticos, escolar)
+                }
               </h2>
 
               {/* -------------------------------------------------- */}
@@ -470,147 +516,34 @@ export default function ProductPage({ showToast }) {
               {/* --- SECCIONES DE CROSS-SELL --- */}
               {/* ---------------------------------- */}
 
-              {/* Sección Almohadilla (Condicional) */}
-              {product.requiresPad &&
-  (() => {
-    const padProduct = products.find((p) => p.id === 19);
-    if (!padProduct) return null;
+              {/* 1. Sección Almohadilla (Condicional) */}
+              <CrossSellItem
+                productIdToFind={19}
+                displayCondition={product.requiresPad}
+                title="¿No tienes Almohadilla + Tinta?"
+                description="Este producto requiere una almohadilla + tinta para su uso. ¡Añade el kit!"
+                showToast={showToast}
+              />
 
-    const handleAddPad = () => {
-      addToCart({ ...padProduct, qty: 1 });
-      showToast(`${padProduct.name} agregado al carrito`);
-    };
+              {/* 2. Sección Frasquito de Tinta (Condicional) */}
+              <CrossSellItem
+                productIdToFind={24}
+                displayCondition={isCustomizable} // Solo para automáticos
+                title="¿Necesitas un frasquito para tu sello?"
+                description="Recomendado para mantener tu sello automático en óptimas condiciones."
+                showToast={showToast}
+              />
 
-    return (
-      <div className="mt-6 border-t border-gray-300 pt-4">
-        <h3 className="text-md font-semibold text-gray-800 mb-2">
-          ¿No tienes Almohadilla + Tinta?
-        </h3>
-
-        <div className="flex gap-4 items-center mb-3">
-          <img
-            src={padProduct.image}
-            alt={padProduct.name}
-            className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0 border"
-          />
-          <div className="flex-1">
-            <p className="text-sm text-gray-600 mb-1">
-              Este producto requiere una almohadilla + tinta para su uso. ¡Añade el kit!
-            </p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-gray-900">
-                {padProduct.name}: ${padProduct.price.toFixed(2)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleAddPad}
-          className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
-        >
-          <ShoppingCart size={18} />
-          Añadir {padProduct.name} al Carrito
-        </button>
-      </div>
-    );
-  })()}
-
-              {isCustomizable &&
-  (() => {
-    const inkProduct = products.find((p) => p.id === 24);
-    if (!inkProduct) return null;
-
-    const handleAddInk = () => {
-      addToCart({ ...inkProduct, qty: 1 });
-      showToast(`${inkProduct.name} agregado al carrito`);
-    };
-
-    return (
-      <div className="mt-6 border-t border-gray-300 pt-4">
-        <h3 className="text-md font-semibold text-gray-800 mb-2">
-          ¿Necesitas un frasquito para tu sello?
-        </h3>
-
-        <div className="flex gap-4 items-center mb-3">
-          <img
-            src={inkProduct.image}
-            alt={inkProduct.name}
-            className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0 border"
-          />
-          <div className="flex-1">
-            <p className="text-sm text-gray-600 mb-1">
-              Recomendado para mantener tu sello automático en óptimas condiciones.
-            </p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-gray-900">
-                {inkProduct.name}: ${inkProduct.price.toFixed(2)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleAddInk}
-          className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
-        >
-          <ShoppingCart size={18} />
-          Añadir {inkProduct.name} al Carrito
-        </button>
-      </div>
-    );
-  })()}
-
-  {/* Sección Diluyente (Condicional) */}
-{(product.requiresDiluentMini || product.requiresDiluent) &&
-  (() => {
-    // Si el producto tiene requiresDiluentMini → id 32
-    // Si tiene requiresDiluent → id 33
-    const diluentProduct = products.find((p) =>
-      product.requiresDiluentMini ? p.id === 32 : p.id === 33
-    );
-    if (!diluentProduct) return null;
-
-    const handleAddDiluent = () => {
-      addToCart({ ...diluentProduct, qty: 1 });
-      showToast(`${diluentProduct.name} agregado al carrito`);
-    };
-
-    return (
-      <div className="mt-6 border-t border-gray-300 pt-4">
-        <h3 className="text-md font-semibold text-gray-800 mb-2">
-          ¿Tienes diluyente para limpiar tu sello?
-        </h3>
-
-        <div className="flex gap-4 items-center mb-3">
-          <img
-            src={diluentProduct.image}
-            alt={diluentProduct.name}
-            className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0 border"
-          />
-          <div className="flex-1">
-            <p className="text-sm text-gray-600 mb-1">
-              Recomendado para limpiar los sellos con tinta de secado rápido.
-            </p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-gray-900">
-                {diluentProduct.name}: ${diluentProduct.price.toFixed(2)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleAddDiluent}
-          className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
-        >
-          <ShoppingCart size={18} />
-          Añadir {diluentProduct.name} al Carrito
-        </button>
-      </div>
-    );
-  })()}
-
+              {/* 3. Sección Diluyente (Condicional) */}
+              <CrossSellItem
+                productIdToFind={product.requiresDiluentMini ? 32 : 33}
+                displayCondition={
+                  product.requiresDiluentMini || product.requiresDiluent
+                }
+                title="¿Tienes diluyente para limpiar tu sello?"
+                description="Recomendado para limpiar los sellos con tinta de secado rápido."
+                showToast={showToast}
+              />
 
               {/* ---------------------------------- */}
               {/* --- BOTONES DE ACCIÓN (Lógica Condicional) --- */}
@@ -670,6 +603,23 @@ export default function ProductPage({ showToast }) {
                 )}
               </div>
             </div>
+            {(isInk || isDateStamp) && (
+              <div className="mt-6 ">
+                {" "}
+                {/* Añadimos margen superior */}
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
+                  Descripción
+                </h3>
+                <p className="text-gray-600 mt-2 leading-relaxed whitespace-pre-wrap">
+                  {product.description.split("\n").map((line, index, array) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < array.length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -685,13 +635,13 @@ export default function ProductPage({ showToast }) {
           onClick={() => setIsModalOpen(false)} // Cierra al hacer clic fuera
         >
           <div
-            className="relative max-w-3xl max-h-[85vh] bg-white rounded-lg shadow-xl overflow-hidden"
+            className="relative max-w-3xl max-h-[85vh] rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()} // Evita cierre al hacer clic dentro
           >
             <img
               src={images[activeImage]}
               alt={product.name}
-              className="block max-h-[85vh] w-auto object-contain"
+              className="w-auto object-cover"
             />
             <button
               onClick={() => setIsModalOpen(false)}

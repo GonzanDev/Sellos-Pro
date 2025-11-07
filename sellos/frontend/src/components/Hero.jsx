@@ -27,7 +27,7 @@ import { Link } from "react-router-dom"; // Para los botones de Call-to-Action (
  */
 const slides = [
   {
-    title: "WEB EN CONSTRUCCIÓN",
+    title: "Sellos Personalizados",
     subtitle: "Calidad y diseño a tu medida.",
     buttonText: "Ver Catálogo",
     link: "/catalog",
