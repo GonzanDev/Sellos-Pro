@@ -39,7 +39,7 @@ export default function FaqPage() {
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-12">
           {/* Imagen de cabecera de la sección */}
           <img
-            src="/images/FAQ/Tienda.jpg"
+            src="/images/FAQ/Tienda.webp"
             alt="Equipo de SellosPro"
             className="w-full h-64 object-cover"
           />
