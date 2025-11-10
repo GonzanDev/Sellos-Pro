@@ -179,7 +179,6 @@ export default function ProductPage({ showToast }) {
     }
     if (isSchool) {
       if (!customization.Nombre) return "El campo 'Nombre' es obligatorio.";
-      if (!customization.Dibujo) return "El campo 'Dibujo' es obligatorio.";
       if (!customization.Fuente)
         return "El campo 'Tipo de letra' es obligatorio.";
       if (!customization.color) return "Debes seleccionar un color.";
