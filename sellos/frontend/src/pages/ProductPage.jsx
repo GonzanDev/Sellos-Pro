@@ -640,7 +640,7 @@ export default function ProductPage({ showToast }) {
             <img
               src={images[activeImage]}
               alt={product.name}
-              className="w-auto object-cover"
+              className="object-fill bg-white max-h-[85vh]"
             />
             <button
               onClick={() => setIsModalOpen(false)}
