@@ -173,7 +173,7 @@
     "id": 20,
     "category": ["Kits"],
     "name": "Kit Sello Logo",
-    "description": "Incluye sello automático + almohadilla + tinta.",
+    "description": "Sello Logo Goma grabado en laser, con suplemento, con base de madera tratada y cortada a medida y un mango especial + Almohadilla de fieltro + Tinta al agua.",
     "price": "0",
     "image": "/images/KitLogo/3.jpg",
     "thumbnails": [
@@ -185,10 +185,10 @@
   },
   {
     "id": 21,
-    "category": ["Kits"],
-    "name": "PROMO Textil",
-    "description": "Incluye sello automático + almohadilla + tinta textil.",
-    "price": 0,
+    "category": ["Escolar", "Otros"],
+    "name": "PROMO Tinta Textil 4x1cm",
+    "description": "Base de madera + Goma laser + Almohadilla Fieltro + Tinta Textil + Diseño personalizado para estampar en tela de algodon.", 
+    "price": 25000,
     "image": "/images/kit-logo.png"
   },
   {
