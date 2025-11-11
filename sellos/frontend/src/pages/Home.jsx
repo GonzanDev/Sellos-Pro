@@ -29,7 +29,7 @@ import { useCart } from "../contexts/CartContext"; // Hook para el carrito
 import { getProductsByIds } from "../../../backend/utils/utils"; // (Nota: Importando desde la carpeta 'backend')
 
 // IDs de los productos a mostrar en la sección "Los Más Vendidos"
-const selectedIds = [1, 3, 5, 20];
+const selectedIds = [1, 100, 102, 20];
 
 /**
  * @param {object} props
