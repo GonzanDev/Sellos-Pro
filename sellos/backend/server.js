@@ -411,7 +411,7 @@ async function sendBudgetRequestEmail({
     </head>
     <body>
       <div class="container">
-        <div class="header" style="background-color: #0d6efd;">
+        <div class="header" style="background-color: #059e05;">
           <h1>Solicitud de Presupuesto</h1>
         </div>
         <div class="content">
