@@ -42,6 +42,7 @@ import {
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
+import PersonalizerEmpanadas from "../components/PersonalizerEmpanadas"; 
 import ColorPicker from "../components/ColorPicker";
 import CrossSellItem from "../components/CrossSellItem";
 // ----------------------------------------------------
@@ -66,7 +67,7 @@ export default function ProductPage({ showToast }) {
   // --- 3. LÓGICA DE CATEGORÍA (Optimizada con useMemo) ---
   // `useMemo` recalcula estas banderas solo si el `product` cambia.
   // Este es el "cerebro" que decide qué UI mostrar.
-  const { isKit, isSchool, isCustomizable, isInk, isDateStamp } =
+  const { isKit, isSchool, isCustomizable, isInk, isDateStamp, isKitEmpanadas } =
     useMemo(() => {
       // Normaliza las categorías a un array de minúsculas
       const categories = (
@@ -79,12 +80,14 @@ export default function ProductPage({ showToast }) {
 
       // Define las banderas booleanas
       const isKit = categories.includes("kits");
+      const isKitEmpanadas = categories.includes("kitempanadas"); // <--- 🆕 AÑADIR ESTA LÍNEA
       const isSchool = categories.includes("escolar");
       const isInk = categories.includes("tintas");
       const isDateStamp = categories.includes("fechadores");
+      const isNumberStamp = categories.includes("numeradores");
       // "Personalizable" es un automático estándar (que no es tinta ni fechador)
       const isCustomizable =
-        categories.includes("automáticos") && !isInk && !isDateStamp;
+        categories.includes("automáticos") && !isInk && !isDateStamp && !isNumberStamp;
 
       return {
         isKit,
@@ -92,6 +95,7 @@ export default function ProductPage({ showToast }) {
         isCustomizable,
         isInk,
         isDateStamp,
+        isKitEmpanadas
       };
     }, [product]); // Dependencia: solo el objeto 'product'
 
@@ -257,7 +261,7 @@ export default function ProductPage({ showToast }) {
    */
   const handleOpenBudgetModal = () => {
     // Validación: No abrir el modal si es un Kit y falta el logo.
-    if (isKit && !customization.logoFile) {
+    if (isKit && !isKitEmpanadas && !customization.logoFile) {
       showToast("Por favor, sube un logo antes de cotizar.");
       return;
     }
@@ -475,41 +479,50 @@ export default function ProductPage({ showToast }) {
                     : "Personaliza tu Sello" // El resto (automáticos, escolar)
                 }
               </h2>
-
-              {/* -------------------------------------------------- */}
-              {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
-              {/* -------------------------------------------------- */}
-              {/*
-               * Solo UNO de estos bloques se renderizará,
-               * basado en las banderas booleanas del 'useMemo'.
-               */}
-              {isCustomizable && (
-                <Personalizer
-                  product={product}
-                  customization={customization}
-                  setCustomization={setCustomization}
-                />
-              )}
-              {isInk && (
-                <ColorPicker
-                  colors={product.colors || []}
-                  value={customization.color}
-                  onChange={handleColorChange}
-                />
-              )}
-              {isKit && (
-                <PersonalizerLogo
-                  customization={customization}
-                  setCustomization={setCustomization}
-                />
-              )}
-              {isSchool && (
-                <PersonalizerSchool
-                  product={product}
-                  customization={customization}
-                  setCustomization={setCustomization}
-                />
-              )}
+{/* -------------------------------------------------- */}
+       {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
+       {/* -------------------------------------------------- */}
+       {/*
+       * Solo UNO de estos bloques se renderizará,
+       * basado en las banderas booleanas del 'useMemo'.
+       */}
+       {isCustomizable && (
+        <Personalizer
+         product={product}
+         customization={customization}
+         setCustomization={setCustomization}
+        />
+       )}
+       {isInk && (
+        <ColorPicker
+         colors={product.colors || []}
+         value={customization.color}
+         onChange={handleColorChange}
+        />
+       )}
+       
+       {/* 🆕 LÓGICA DE KITS: Da prioridad a 'Kit Empanadas' */}
+       {isKit ? (
+        isKitEmpanadas ? (
+         <PersonalizerEmpanadas // Carga este si es Kit Empanadas
+          customization={customization}
+          setCustomization={setCustomization}
+         />
+        ) : (
+         <PersonalizerLogo // Carga este si es cualquier otro Kit (con logo)
+          customization={customization}
+          setCustomization={setCustomization}
+         />
+        )
+       ) : null} {/* Fin de la lógica condicional de Kits */}
+       
+       {isSchool && (
+        <PersonalizerSchool
+         product={product}
+         customization={customization}
+         setCustomization={setCustomization}
+        />
+       )}
 
               {/* ---------------------------------- */}
               {/* --- SECCIONES DE CROSS-SELL --- */}

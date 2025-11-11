@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": ["Escolar", "Automáticos"],
+    "category": ["Escolar"],
     "name": "Promo Escolar",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \n Si son mas nombres o apellidos recomendamos no poner dibujo. \n Si se elige letra \"cursiva\" recomendamos no poner dibujo. \n Si se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
     "price": 20000,
@@ -25,7 +25,7 @@
   },
   {
     "id": 2,
-    "category": ["Escolar", "Automáticos"],
+    "category": ["Escolar"],
     "name": "Promo Escolar VERTICAL",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \n Si son mas nombres o apellidos recomendamos no poner dibujo..",
     "price": 20000,
@@ -185,7 +185,7 @@
   },
   {
     "id": 222,
-    "category": ["Kits"],
+    "category": ["Kits", "KitEmpanadas"],
     "name": "Kit Empanadas",
     "description": "Sellos Personalizados con maderas tratadas para gastronomía + almohadilla fieltro + tinta comestible (consulta con tu lista de sabores)",
     "price": "0",
@@ -401,7 +401,7 @@
     "name": "Botella Tinta 1L al Agua",
     "description": "Tinta al agua ESPECIAL 1L para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 52000,
-    "image": "/images/TintaFrasquito/Frasquitovich.jpg",
+    "image": "/images/TintaBotella/Botella1L.jpg",
     "requiresPad": false
   },
   {
@@ -410,7 +410,7 @@
     "name": "Bidon Tinta 5L al Agua (CONSULTAR)",
     "description": "Tinta al agua ESPECIAL 5L para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 0,
-    "image": "/images/TintaFrasquito/Frasquitovich.jpg",
+    "image": "/images/TintaBotella/Bidon.jpg",
     "requiresPad": false
   },
   {
@@ -459,7 +459,7 @@
     "name": "Diluyente para SECADO RAPIDO / Botella 500cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
     "price": 25000,
-    "image": "/images/TintaFrasquito/BoteDilu.jpg",
+    "image": "/images/Diluyente/BotellaDilu.jpg",
     "requiresPad": false
   },
   {

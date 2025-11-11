@@ -673,7 +673,7 @@ router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
     // console.log("  Datos (texto):", req.body); // Descomentar para debug
 
     // Validación de entrada.
-    if (!product || !customization || !buyer || !logoFile) {
+    if (!product || !customization || !buyer) {
       console.warn("Faltan datos en la solicitud de presupuesto.");
       return res
         .status(400)
