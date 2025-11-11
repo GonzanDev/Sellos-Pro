@@ -219,7 +219,7 @@
   {
     "id": 10,
     "category": ["Fechadores"],
-    "name": "Fechador 4mm",
+    "name": "Fechador 4 mm",
     "description": "Sello fechador manual de 4 mm de alto.",
     "price": 12000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
@@ -235,6 +235,52 @@
     "requiresPad": true
   },
   {
+    "id": 50,
+    "category": ["Fechadores"],
+    "name": "Fechador 7 mm",
+    "description": "Fechador manual de 7 mm, ideal para documentos grandes.",
+    "price": 25000,
+    "image": "/images/Fechadores/Fechador7mm.jpg",
+    "requiresPad": true
+  },
+  {
+    "id": 51,
+    "category": ["Fechadores"],
+    "name": "Fechador 12 mm",
+    "description": "Fechador manual de 12 mm, ideal para documentos grandes.",
+    "price": 35000,
+    "image": "/images/Fechadores/Fechador12mm.jpg",
+    "requiresPad": true
+  },
+    {
+    "id": 52,
+    "category": ["Fechadores"],
+    "name": "Fechador BIG 2,5 cm alto (consultar)",
+    "description": "Fechador manual grande de 2,5 cm.",
+    "price": 0,
+    "image": "/images/Fechadores/Fechador25mm.jpg",
+    "requiresPad": true
+  },
+  {
+    "id": 22,
+    "category": ["Automáticos", "Fechadores"],
+    "name": "Fechador automatico",
+    "description": "Sello fechador automatico importado. Primera calidad.",
+    "price": 19000,
+    "image": "/images/FechadorAutom/Fechador.jpg",
+    "thumbnails": ["/images/FechadorAutom/Fechador2.jpg"]
+  },
+  {
+    "id": 52,
+    "category": ["Fechadores"],
+    "name": "Doble Fecha Automatico",
+    "description": "Fechador doble automatico, mitad tinta rojo y mitad negro. Se puede agregar texto encima.",
+    "price": 45000,
+    "image": "/images/Fechadores/DobleF.jpg",
+    "thumbnails": ["/images/Fechadores/DobleF2.jpg"],
+    "requiresPad": true
+  },
+  {
     "id": 12,
     "category": ["Numeradores"],
     "name": "Numerador 4 dígitos",
@@ -246,19 +292,47 @@
   {
     "id": 13,
     "category": ["Numeradores"],
-    "name": "Numerador 8 dígitos",
-    "description": "Numerador manual de 8 dígitos, resistente y confiable.",
+    "name": "Numerador 8 bandas (0508)",
+    "description": "Numerador manual de 8 dígitos (5mm de alto), resistente y confiable.",
     "price": 10000,
     "image": "/images/Numeradores/Numerador8B.jpg",
     "requiresPad": true
   },
   {
+    "id": 70,
+    "category": ["Numeradores"],
+    "name": "Numerador 10 bandas (0510)",
+    "description": "Numerador manual de 10 dígitos (5mm de alto), ideal para documentos.",
+    "price": 12000,
+    "image": "/images/Numeradores/Numerador10B.jpg",
+    "requiresPad": true
+  },
+  {
     "id": 14,
     "category": ["Numeradores"],
-    "name": "Numerador 12 dígitos",
-    "description": "Numerador manual de 12 dígitos, ideal para documentos.",
-    "price": 12000,
+    "name": "Numerador 12 bandas (0512)",
+    "description": "Numerador manual de 12 dígitos (5mm de alto), ideal para documentos.",
+    "price": 14000,
     "image": "/images/Numeradores/Numerador12B.jpg",
+    "requiresPad": true
+  },
+    {
+    "id": 56,
+    "category": ["Numeradores"],
+    "name": "Numerador BIG 2,5 cm alto (consultar)",
+    "description": "Numerador grande manual de 2,5 cm de alto.",
+    "price": 0,
+    "image": "/images/Numeradores/Numerador25mm.jpg",
+    "requiresPad": true
+  },
+  {
+    "id": 56,
+    "category": ["Automáticos", "Numeradores"],
+    "name": "Numerador 6 bandas Automático",
+    "description": "Numerador automatico de 6 bandas.",
+    "price": 16000,
+    "image": "/images/Numeradores/Numerador6BA.jpg",
+    "thumbnails": ["/images/Numeradores/Numerador6BA2.jpg"],
     "requiresPad": true
   },
   {
@@ -406,85 +480,69 @@
   {
     "id": 15,
     "category": ["Almohadillas"],
-    "name": "Almohadilla Chica",
+    "name": "Almohadilla Chica N°1",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 7000,
-    "image": "/images/almohadilla.png"
-  },
-  {
-    "id": 97,
-    "category": ["Almohadillas"],
-    "name": "Almohadilla Chica N°4",
-    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 7000,
-    "image": "/images/almohadilla.png"
+    "image": "/images/Almohadillas/AlmN1.jpg"
   },
   {
     "id": 34,
     "category": ["Almohadillas"],
-    "name": "Almohadilla Mediana N°4",
+    "name": "Almohadilla Mediana N°2",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 7000,
-    "image": "/images/almohadilla.png"
-  },
-  {
-    "id": 35,
-    "category": ["Almohadillas"],
-    "name": "Almohadilla Grande SIN TINTA",
-    "description": "Almohadilla para cargar, compatible con varios modelos.",
-    "price": 8000,
-    "image": "/images/almohadilla.png"
+    "image": "/images/Almohadillas/AlmN2.jpg"
   },
   {
     "id": 36,
     "category": ["Almohadillas"],
-    "name": "Almohadilla neo 3 Joyko",
+    "name": "Almohadilla N°3 Joyko",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 10500,
-    "image": "/images/almohadilla.png"
+    "image": "/images/Almohadillas/AlmN3.jpg",
+    "thumbnails": ["/images/Almohadillas/AlmN3-2.jpg"]
+  },
+    {
+    "id": 38,
+    "category": ["Almohadillas"],
+    "name": "Almohadilla N°4 ópalo tapa transparente",
+    "description": "Almohadilla de fieltro tapa transparente 10x15cm, compatible con varios modelos.",
+    "price": 10500,
+    "image": "/images/Almohadillas/AlmN4.jpg"
   },
   {
     "id": 37,
     "category": ["Almohadillas"],
-    "name": "Almohadilla neo 5 Jumbo",
+    "name": "Almohadilla N°5 Jumbo",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
     "price": 10500,
-    "image": "/images/almohadilla.png"
-  },
-
-  {
-    "id": 38,
-    "category": ["Almohadillas"],
-    "name": "Almohadilla neo 4 ópalo tapa transparente",
-    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 10500,
-    "image": "/images/almohadilla.png"
-  },
-
-  {
-    "id": 39,
-    "category": ["Almohadillas"],
-    "name": "Chapa reforzada medio A4",
-    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 27000,
-    "image": "/images/almohadilla.png"
+    "image": "/images/Almohadillas/AlmN5.jpg"
   },
   {
     "id": 40,
     "category": ["Almohadillas"],
-    "name": "Chapa reforzada A4",
-    "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
+    "name": "Almohadilla Chapa 3 (Medio A4)",
+    "description": "Almohadilla Doble Fieltro Reforzada de chapa de 21x14 cm.",
     "price": 42000,
-    "image": "/images/almohadilla.png"
+    "image": "/images/Almohadillas/Chapa3.jpg"
+  },
+    {
+    "id": 41,
+    "category": ["Almohadillas"],
+    "name": "Almohadilla Chapa 5 (A4)",
+    "description": "Almohadilla Doble Fieltro Reforzada de 30x20 cm.",
+    "price": 42000,
+    "image": "/images/Almohadillas/Chapa3.jpg"
   },
   {
-    "id": 22,
-    "category": ["Automáticos", "Fechadores"],
-    "name": "Fechador automatico",
-    "description": "Sello fechador automatico importado. Primera calidad.",
-    "price": 19000,
-    "image": "/images/FechadorAutom/Fechador.jpg",
-    "thumbnails": ["/images/FechadorAutom/Fechador2.jpg"]
+    "id": 42,
+    "category": ["Almohadillas", "Otros"],
+    "name": "Mini Almohadilla Dactilar Portátil ",
+    "description": "Almohadilla para huellas dactilares súper práctica.",
+    "price": 0,
+    "image": "/images/Almohadillas/Dactilar.jpg",
+    "thumbnails": ["/images/Almohadillas/Dactilar2.jpg"]
+
   },
   {
     "id": 23,
