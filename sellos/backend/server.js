@@ -658,50 +658,54 @@ router.post("/webhook", express.json(), async (req, res) => {
  * @form-data {File}   logoFile - El archivo del logo adjunto (campo "logoFile").
  */
 router.post("/request-budget", upload.single("logoFile"), async (req, res) => {
-  console.log("📨 Solicitud de presupuesto recibida.");
+  console.log("📨 Solicitud de presupuesto recibida.");
 
-  try {
-    // El archivo (logo) se encuentra en req.file gracias a multer.
-    const logoFile = req.file;
-    // Los demás campos de texto (que vienen del form-data) están en req.body.
-    const { product, customization, quantity, buyer } = req.body;
+  try {
+    // El archivo (logo) se encuentra en req.file gracias a multer.
+    const logoFile = req.file; // Puede ser undefined si no se sube un archivo.
+    
+    // Los demás campos de texto (que vienen del form-data) están en req.body.
+    const { product, customization, quantity, buyer } = req.body;
 
-    console.log(
-      "  Archivo:",
-      logoFile ? logoFile.originalname : "No hay archivo"
-    );
-    // console.log("  Datos (texto):", req.body); // Descomentar para debug
+    console.log(
+      "  Archivo:",
+      logoFile ? logoFile.originalname : "No hay archivo"
+    );
 
-    // Validación de entrada.
-    if (!product || !customization || !buyer) {
-      console.warn("Faltan datos en la solicitud de presupuesto.");
-      return res
-        .status(400)
-        .json({ error: "Faltan datos o el archivo del logo." });
-    }
+    // Validación de entrada (mantenemos la misma, el archivo ya no es obligatorio aquí).
+    if (!product || !customization || !buyer) {
+      console.warn("Faltan datos en la solicitud de presupuesto.");
+      return res
+        .status(400)
+        .json({ error: "Faltan datos en el formulario." });
+    }
 
-    // IMPORTANTE: Como los datos vienen de un 'multipart/form-data',
-    // los objetos (product, buyer, etc.) se envían desde el frontend como
-    // strings JSON. Necesitamos parsearlos de vuelta a objetos JavaScript.
-    const productData = JSON.parse(product);
-    const customizationData = JSON.parse(customization);
-    const buyerData = JSON.parse(buyer);
+    // 1. Parseo de datos (IMPRESCINDIBLE)
+    const productData = JSON.parse(product);
+    const customizationData = JSON.parse(customization);
+    const buyerData = JSON.parse(buyer);
 
-    // Llamamos a la función de email, pasando el buffer del archivo.
-    await sendBudgetRequestEmail({
-      product: productData,
-      customization: customizationData,
-      quantity: Number(quantity),
-      buyer: buyerData,
-      logoBuffer: logoFile.buffer, // El buffer del archivo (contenido) desde la memoria.
-      logoFileName: logoFile.originalname, // El nombre original del archivo.
-    });
+    // 2. Definición condicional de los datos del archivo
+    const fileData = {
+        logoBuffer: logoFile ? logoFile.buffer : null, // Es null si no hay archivo
+        logoFileName: logoFile ? logoFile.originalname : null, // Es null si no hay archivo
+    };
 
-    res.status(200).json({ success: true, message: "Solicitud recibida." });
-  } catch (error) {
-    console.error("❌ Error al procesar solicitud de presupuesto:", error);
-    res.status(500).json({ error: "No se pudo procesar la solicitud." });
-  }
+    // 3. Llamamos a la función de email, pasando los datos del archivo solo si existen.
+    await sendBudgetRequestEmail({
+      product: productData,
+      customization: customizationData,
+      quantity: Number(quantity),
+      buyer: buyerData,
+      ...fileData, // Usamos el objeto condicional
+    });
+
+    res.status(200).json({ success: true, message: "Solicitud recibida." });
+  } catch (error) {
+    console.error("❌ Error al procesar solicitud de presupuesto:", error);
+    // Puedes mejorar este mensaje para el frontend
+    res.status(500).json({ error: "No se pudo procesar la solicitud." });
+  }
 });
 
 /**
