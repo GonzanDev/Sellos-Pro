@@ -93,7 +93,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
     "description": "Sello Handy Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
-    "price": 27000,
+    "price": 28500,
     "image": "/images/Handy/Handy.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -118,7 +118,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Mouse Stamp",
     "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
-    "price": 27000,
+    "price": 28500,
     "image": "/images/Mouse/Mouse.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Mouse/Mouse2.jpg"],
     "colors": [
@@ -135,7 +135,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°3 (47x18mm)",
     "description": "Sello automático de un tamaño mayor al estándar N°3.",
-    "price": 27000,
+    "price": 28500,
     "image": "/images/843/843.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [{ "name": "Negro", "hex": "#000000", "stock": true }],
@@ -183,6 +183,18 @@
       "/images/KitLogo/5.jpg"
     ]
   },
+  
+  {
+    "id": 222,
+    "category": ["Kits"],
+    "name": "Kit Empanadas",
+    "description": "Sellos Personalizados con maderas tratadas para gastronomía + almohadilla fieltro + tinta comestible (consulta con tu lista de sabores)",
+    "price": "0",
+    "image": "/images/KitEmpanadas/Empa1.jpg",
+    "thumbnails": [ "/images/KitEmpanadas/Empa2.jpg"
+    ]
+  },
+
   {
     "id": 21,
     "category": ["Escolar", "Otros"],
@@ -204,7 +216,7 @@
     "category": ["Tintas", "Almohadillas"],
     "name": "KIT Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 12000,
+    "price": 15000,
     "image": "/images/Almohadilla+Tinta/Alm+TintSR.jpg"
   },
   {
@@ -221,7 +233,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 4 mm",
     "description": "Sello fechador manual de 4 mm de alto.",
-    "price": 12000,
+    "price": 11000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
   },
@@ -230,7 +242,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 5 mm",
     "description": "Fechador manual de 5 mm, ideal para documentos.",
-    "price": 15000,
+    "price": 12000,
     "image": "/images/Fechadores/Fechador3mm.jpg",
     "requiresPad": true
   },
@@ -239,7 +251,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 7 mm",
     "description": "Fechador manual de 7 mm, ideal para documentos grandes.",
-    "price": 25000,
+    "price": 31000,
     "image": "/images/Fechadores/Fechador7mm.jpg",
     "requiresPad": true
   },
@@ -248,7 +260,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 12 mm",
     "description": "Fechador manual de 12 mm, ideal para documentos grandes.",
-    "price": 35000,
+    "price": 49000,
     "image": "/images/Fechadores/Fechador12mm.jpg",
     "requiresPad": true
   },
@@ -271,11 +283,11 @@
     "thumbnails": ["/images/FechadorAutom/Fechador2.jpg"]
   },
   {
-    "id": 52,
+    "id": 66,
     "category": ["Fechadores"],
     "name": "Doble Fecha Automatico",
     "description": "Fechador doble automatico, mitad tinta rojo y mitad negro. Se puede agregar texto encima.",
-    "price": 45000,
+    "price": 35000,
     "image": "/images/Fechadores/DobleF.jpg",
     "thumbnails": ["/images/Fechadores/DobleF2.jpg"],
     "requiresPad": true
@@ -283,10 +295,11 @@
   {
     "id": 12,
     "category": ["Numeradores"],
-    "name": "Numerador 4 dígitos",
-    "description": "Numerador manual de 4 dígitos, práctico y fácil de usar.",
-    "price": 8000,
-    "image": "/images/numerador-4.png",
+    "name": "Numerador 8 bandas 1 cm (N18)",
+    "description": "Numerador manual de 8 dígitos con 1 cm de alto, práctico y fácil de usar.",
+    "price": 31000,
+    "image": "/images/Numeradores/Numerador8B1CM2.jpg",
+    "thumbnails": ["/images/Numeradores/Numerador8B1CM.jpg"],
     "requiresPad": true
   },
   {
@@ -294,7 +307,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 8 bandas (0508)",
     "description": "Numerador manual de 8 dígitos (5mm de alto), resistente y confiable.",
-    "price": 10000,
+    "price": 15000,
     "image": "/images/Numeradores/Numerador8B.jpg",
     "requiresPad": true
   },
@@ -303,7 +316,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 10 bandas (0510)",
     "description": "Numerador manual de 10 dígitos (5mm de alto), ideal para documentos.",
-    "price": 12000,
+    "price": 32000,
     "image": "/images/Numeradores/Numerador10B.jpg",
     "requiresPad": true
   },
@@ -312,7 +325,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 12 bandas (0512)",
     "description": "Numerador manual de 12 dígitos (5mm de alto), ideal para documentos.",
-    "price": 14000,
+    "price": 39000,
     "image": "/images/Numeradores/Numerador12B.jpg",
     "requiresPad": true
   },
@@ -326,11 +339,11 @@
     "requiresPad": true
   },
   {
-    "id": 56,
+    "id": 57,
     "category": ["Automáticos", "Numeradores"],
     "name": "Numerador 6 bandas Automático",
     "description": "Numerador automatico de 6 bandas.",
-    "price": 16000,
+    "price": 35000,
     "image": "/images/Numeradores/Numerador6BA.jpg",
     "thumbnails": ["/images/Numeradores/Numerador6BA2.jpg"],
     "requiresPad": true
@@ -369,7 +382,7 @@
     "category": ["Tintas"],
     "name": "Botella Tinta 500cc al Agua",
     "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 27000,
+    "price": 30000,
     "image": "/images/TintaBotella/Botella.jpg",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -389,16 +402,16 @@
     "category": ["Tintas"],
     "name": "Botella Tinta 1L al Agua",
     "description": "Tinta al agua ESPECIAL 1L para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 50000,
+    "price": 52000,
     "image": "/images/TintaFrasquito/Frasquitovich.jpg",
     "requiresPad": false
   },
   {
     "id": 31,
     "category": ["Tintas"],
-    "name": "Bidon Tinta 5L al Agua",
+    "name": "Bidon Tinta 5L al Agua (CONSULTAR)",
     "description": "Tinta al agua ESPECIAL 5L para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 216000,
+    "price": 0,
     "image": "/images/TintaFrasquito/Frasquitovich.jpg",
     "requiresPad": false
   },
@@ -407,7 +420,7 @@
     "category": ["Tintas"],
     "name": "Tinta SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 5000,
+    "price": 7500,
     "image": "/images/TintaFrasquito/SecadoRapido.jpg",
     "requiresPad": false,
     "requiresDiluentMini": true
@@ -418,7 +431,7 @@
     "category": ["Tintas"],
     "name": "Botella Tinta SECADO RAPIDO 500cc",
     "description": "Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 50000,
+    "price": 53000,
     "image": "/images/TintaBotella/BotellaSR.jpg",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -449,7 +462,7 @@
     "category": ["Tintas"],
     "name": "Diluyente para SECADO RAPIDO / Botella 500cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
-    "price": 27500,
+    "price": 25000,
     "image": "/images/TintaFrasquito/BoteDilu.jpg",
     "requiresPad": false
   },
@@ -458,7 +471,7 @@
     "category": ["Tintas"],
     "name": " Tinta Textil ideal para tela",
     "description": "Tinta al agua, para sello de goma. Especial para marcar sobre telas con mayor porcentaje de Algodón. Se recomienda no lavar las telas hasta 72 horas después del sellado. De no ser posible, planchar la superficie sellada, logrando que catalice la tinta y se adhiera a las fibras de la tela.  Recomendamos limpiar los sellos con agua una vez utilizados.",
-    "price": 15000,
+    "price": 8500,
     "image": "/images/TintaFrasquito/Tela.jpg"
   },
   {
@@ -474,7 +487,7 @@
     "category": ["Tintas"],
     "name": "Tinta Pastel BLANCA al Agua",
     "description": "Para sellos de goma. La tinta Pastel es una tinta para sellar distintos tipos de papeles, cartón, papel kraft, cartulinas, madera sin pintar y distintos tipos de documentos.  Agitar bien antes de usar para mezclar el pigmento con el liquido, al ser AL AGUA prolonga su vida útil como la de todos los materiales.  Recomendamos limpiar los sellos con agua una vez utilizados.",
-    "price": 12000,
+    "price": 8500,
     "image": "/images/TintaFrasquito/Pastel.jpg"
   },
   {
@@ -482,7 +495,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chica N°1",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 7000,
+    "price": 6000,
     "image": "/images/Almohadillas/AlmN1.jpg"
   },
   {
@@ -507,7 +520,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°4 ópalo tapa transparente",
     "description": "Almohadilla de fieltro tapa transparente 10x15cm, compatible con varios modelos.",
-    "price": 10500,
+    "price": 17000,
     "image": "/images/Almohadillas/AlmN4.jpg"
   },
   {
@@ -515,7 +528,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°5 Jumbo",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 10500,
+    "price": 18000,
     "image": "/images/Almohadillas/AlmN5.jpg"
   },
   {
@@ -523,7 +536,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chapa 3 (Medio A4)",
     "description": "Almohadilla Doble Fieltro Reforzada de chapa de 21x14 cm.",
-    "price": 42000,
+    "price": 29000,
     "image": "/images/Almohadillas/Chapa3.jpg"
   },
     {
@@ -531,7 +544,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chapa 5 (A4)",
     "description": "Almohadilla Doble Fieltro Reforzada de 30x20 cm.",
-    "price": 42000,
+    "price": 45000,
     "image": "/images/Almohadillas/Chapa3.jpg"
   },
   {
@@ -539,7 +552,7 @@
     "category": ["Almohadillas", "Otros"],
     "name": "Mini Almohadilla Dactilar Portátil ",
     "description": "Almohadilla para huellas dactilares súper práctica.",
-    "price": 0,
+    "price": 9000,
     "image": "/images/Almohadillas/Dactilar.jpg",
     "thumbnails": ["/images/Almohadillas/Dactilar2.jpg"]
 
@@ -547,18 +560,18 @@
   {
     "id": 23,
     "category": ["Fechadores", "Otros"],
-    "name": "Fechador ELAB/VTO + Fecha",
+    "name": "Fechador ELAB/VTO + Fecha (CONSULTAR)",
     "description": "Fechador especial que incluye ELAB/VTO junto a la fecha.",
-    "price": 19000,
-    "image": "/images/fechador-8mm.png",
+    "price": 0,
+    "image": "/images/Fechadores/Elab+Venc.jpg",
     "requiresPad": true
   },
   {
     "id": 18,
     "category": ["Otros"],
-    "name": "Sello Abecedario",
+    "name": "Sello Abecedario (CONSULTAR)",
     "description": "Sello con todo el abecedario, ideal para uso didáctico o artesanal.",
-    "price": 10000,
-    "image": "/images/sello-abecedario.png"
+    "price": 0,
+    "image": "/images/Otros/Abecedario.jpg"
   }
 ]
