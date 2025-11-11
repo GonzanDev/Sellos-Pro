@@ -5,7 +5,7 @@
     "name": "Promo Escolar",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \n Si son mas nombres o apellidos recomendamos no poner dibujo. \n Si se elige letra \"cursiva\" recomendamos no poner dibujo. \n Si se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
     "price": 20000,
-    "image": "/images/Escolar/Escolares1.jpg",
+    "image": "/images/Escolar/Esco.jpg",
     "thumbnails": [
       "/images/Escolar/Dibujos.jpg",
       "/images/Escolar/LetrasPic.jpg",
@@ -29,7 +29,7 @@
     "name": "Promo Escolar VERTICAL",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \n Si son mas nombres o apellidos recomendamos no poner dibujo..",
     "price": 20000,
-    "image": "/images/Pastel/Pastel.jpg",
+    "image": "/images/Escolar/Vertical.jpg",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
       "/images/Escolar/Dibujos.jpg",
@@ -133,7 +133,7 @@
   {
     "id": 6,
     "category": ["Automáticos"],
-    "name": "Automático N°3",
+    "name": "Automático N°3 (47x18mm)",
     "description": "Sello automático de un tamaño mayor al estándar N°3.",
     "price": 27000,
     "image": "/images/843/843.jpg",
@@ -144,10 +144,10 @@
   {
     "id": 7,
     "category": ["Automáticos"],
-    "name": "Automático N°4",
+    "name": "Automático N°4 (58x22mm)",
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
     "price": 31000,
-    "image": "/images/automatico-n4.png",
+    "image": "/images/844/844.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -158,10 +158,10 @@
   {
     "id": 29,
     "category": ["Automáticos"],
-    "name": "Automático N°5",
+    "name": "Automático N°5 (70x25mm)",
     "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
     "price": 33000,
-    "image": "/images/automatico-n4.png",
+    "image": "/images/845/845.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -189,12 +189,12 @@
     "name": "PROMO Tinta Textil 4x1cm",
     "description": "Base de madera + Goma laser + Almohadilla Fieltro + Tinta Textil + Diseño personalizado para estampar en tela de algodon.", 
     "price": 25000,
-    "image": "/images/kit-logo.png"
+    "image": "/images/Almohadilla+Tinta/PromoTextil.jpg"
   },
   {
     "id": 19,
     "category": ["Tintas", "Almohadillas"],
-    "name": "Tinta Especial al Agua + Almohadilla de Fieltro",
+    "name": "KIT Tinta al Agua + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 10000,
     "image": "/images/Almohadilla+Tinta/Alm+Tint.jpg"
@@ -202,7 +202,7 @@
   {
     "id": 25,
     "category": ["Tintas", "Almohadillas"],
-    "name": "Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
+    "name": "KIT Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
     "price": 12000,
     "image": "/images/Almohadilla+Tinta/Alm+TintSR.jpg"
@@ -334,7 +334,7 @@
     "name": "Tinta SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
     "price": 5000,
-    "image": "/images/TintaFrasquito/Frasquito.jpg",
+    "image": "/images/TintaFrasquito/SecadoRapido.jpg",
     "requiresPad": false,
     "requiresDiluentMini": true
 
@@ -366,7 +366,7 @@
     "name": "Diluyente para SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
     "price": 4000,
-    "image": "/images/TintaFrasquito/FrasquitoDilu.jpg",
+    "image": "/images/Diluyente/Diluyente.jpg",
     "requiresPad": false
   },
 
