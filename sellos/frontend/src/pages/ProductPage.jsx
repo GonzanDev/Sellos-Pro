@@ -42,7 +42,7 @@ import {
 import Personalizer from "../components/Personalizer";
 import PersonalizerLogo from "../components/PersonalizerLogo";
 import PersonalizerSchool from "../components/PersonalizerSchool";
-import PersonalizerEmpanadas from "../components/PersonalizerEmpanadas"; 
+import PersonalizerEmpanadas from "../components/PersonalizerEmpanadas";
 import ColorPicker from "../components/ColorPicker";
 import CrossSellItem from "../components/CrossSellItem";
 // ----------------------------------------------------
@@ -67,37 +67,46 @@ export default function ProductPage({ showToast }) {
   // --- 3. LÓGICA DE CATEGORÍA (Optimizada con useMemo) ---
   // `useMemo` recalcula estas banderas solo si el `product` cambia.
   // Este es el "cerebro" que decide qué UI mostrar.
-  const { isKit, isSchool, isCustomizable, isInk, isDateStamp, isKitEmpanadas } =
-    useMemo(() => {
-      // Normaliza las categorías a un array de minúsculas
-      const categories = (
-        Array.isArray(product?.category)
-          ? product.category
-          : typeof product?.category === "string"
-          ? [product.category]
-          : []
-      ).map((c) => c.toLowerCase());
+  const {
+    isKit,
+    isSchool,
+    isCustomizable,
+    isInk,
+    isDateStamp,
+    isKitEmpanadas,
+  } = useMemo(() => {
+    // Normaliza las categorías a un array de minúsculas
+    const categories = (
+      Array.isArray(product?.category)
+        ? product.category
+        : typeof product?.category === "string"
+        ? [product.category]
+        : []
+    ).map((c) => c.toLowerCase());
 
-      // Define las banderas booleanas
-      const isKit = categories.includes("kits");
-      const isKitEmpanadas = categories.includes("kitempanadas"); // <--- 🆕 AÑADIR ESTA LÍNEA
-      const isSchool = categories.includes("escolar");
-      const isInk = categories.includes("tintas");
-      const isDateStamp = categories.includes("fechadores");
-      const isNumberStamp = categories.includes("numeradores");
-      // "Personalizable" es un automático estándar (que no es tinta ni fechador)
-      const isCustomizable =
-        categories.includes("automáticos") && !isInk && !isDateStamp && !isNumberStamp;
+    // Define las banderas booleanas
+    const isKit = categories.includes("kits");
+    const isKitEmpanadas = categories.includes("kitempanadas"); // <--- 🆕 AÑADIR ESTA LÍNEA
+    const isSchool = categories.includes("escolar");
+    const isInk = categories.includes("tintas");
+    const isDateStamp = categories.includes("fechadores");
+    const isNumberStamp = categories.includes("numeradores");
+    // "Personalizable" es un automático estándar (que no es tinta ni fechador)
+    const isCustomizable =
+      categories.includes("automáticos") &&
+      !isInk &&
+      !isDateStamp &&
+      !isNumberStamp;
 
-      return {
-        isKit,
-        isSchool,
-        isCustomizable,
-        isInk,
-        isDateStamp,
-        isKitEmpanadas
-      };
-    }, [product]); // Dependencia: solo el objeto 'product'
+    return {
+      isKit,
+      isSchool,
+      isCustomizable,
+      isInk,
+      isDateStamp,
+      isKitEmpanadas,
+    };
+  }, [product]); // Dependencia: solo el objeto 'product'
 
   // --- 4. LÓGICA DE "MODO EDICIÓN" ---
   // `location.state` es null a menos que naveguemos desde el carrito.
@@ -479,55 +488,52 @@ export default function ProductPage({ showToast }) {
                     : "Personaliza tu Sello" // El resto (automáticos, escolar)
                 }
               </h2>
-{/* -------------------------------------------------- */}
-       {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
-       {/* -------------------------------------------------- */}
-       {/*
-       * Solo UNO de estos bloques se renderizará,
-       * basado en las banderas booleanas del 'useMemo'.
-       */}
-       {isCustomizable && (
-        <Personalizer
-         product={product}
-         customization={customization}
-         setCustomization={setCustomization}
-        />
-       )}
-       {isInk && (
-        <ColorPicker
-         colors={product.colors || []}
-         value={customization.color}
-         onChange={handleColorChange}
-        />
-       )}
-       
-       {/* 🆕 LÓGICA DE KITS: Da prioridad a 'Kit Empanadas' */}
-       {isKit ? (
-        isKitEmpanadas ? (
-         <PersonalizerEmpanadas // Carga este si es Kit Empanadas
-          customization={customization}
-          setCustomization={setCustomization}
-         />
-        ) : (
-         <PersonalizerLogo // Carga este si es cualquier otro Kit (con logo)
-          customization={customization}
-          setCustomization={setCustomization}
-         />
-        )
-       ) : null} {/* Fin de la lógica condicional de Kits */}
-       
-       {isSchool && (
-        <PersonalizerSchool
-         product={product}
-         customization={customization}
-         setCustomization={setCustomization}
-        />
-       )}
-
+              {/* -------------------------------------------------- */}
+              {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
+              {/* -------------------------------------------------- */}
+              {/*
+               * Solo UNO de estos bloques se renderizará,
+               * basado en las banderas booleanas del 'useMemo'.
+               */}
+              {isCustomizable && (
+                <Personalizer
+                  product={product}
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
+              )}
+              {isInk && (
+                <ColorPicker
+                  colors={product.colors || []}
+                  value={customization.color}
+                  onChange={handleColorChange}
+                />
+              )}
+              {/* 🆕 LÓGICA DE KITS: Da prioridad a 'Kit Empanadas' */}
+              {isKit ? (
+                isKitEmpanadas ? (
+                  <PersonalizerEmpanadas // Carga este si es Kit Empanadas
+                    customization={customization}
+                    setCustomization={setCustomization}
+                  />
+                ) : (
+                  <PersonalizerLogo // Carga este si es cualquier otro Kit (con logo)
+                    customization={customization}
+                    setCustomization={setCustomization}
+                  />
+                )
+              ) : null}{" "}
+              {/* Fin de la lógica condicional de Kits */}
+              {isSchool && (
+                <PersonalizerSchool
+                  product={product}
+                  customization={customization}
+                  setCustomization={setCustomization}
+                />
+              )}
               {/* ---------------------------------- */}
               {/* --- SECCIONES DE CROSS-SELL --- */}
               {/* ---------------------------------- */}
-
               {/* 1. Sección Almohadilla (Condicional) */}
               <CrossSellItem
                 productIdToFind={19}
@@ -536,7 +542,13 @@ export default function ProductPage({ showToast }) {
                 description="Este producto requiere una almohadilla + tinta para su uso. ¡Añade el kit!"
                 showToast={showToast}
               />
-
+              <CrossSellItem
+                productIdToFind={25}
+                displayCondition={product.requiresPad}
+                title="¿O Necesitas Almohadilla + Tinta Indeleble (Secado Rápido)?"
+                description="Ideal si vas a sellar sobre superficies no absorbentes (plástico, metal, papel brillante). ¡Añade el kit!"
+                showToast={showToast}
+              />
               {/* 2. Sección Frasquito de Tinta (Condicional) */}
               <CrossSellItem
                 productIdToFind={24}
@@ -545,7 +557,6 @@ export default function ProductPage({ showToast }) {
                 description="Recomendado para mantener tu sello automático en óptimas condiciones."
                 showToast={showToast}
               />
-
               {/* 3. Sección Diluyente (Condicional) */}
               <CrossSellItem
                 productIdToFind={product.requiresDiluentMini ? 32 : 33}
@@ -556,7 +567,6 @@ export default function ProductPage({ showToast }) {
                 description="Recomendado para limpiar los sellos con tinta de secado rápido."
                 showToast={showToast}
               />
-
               {/* ---------------------------------- */}
               {/* --- BOTONES DE ACCIÓN (Lógica Condicional) --- */}
               {/* ---------------------------------- */}

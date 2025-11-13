@@ -3,7 +3,7 @@
     "id": 1,
     "category": ["Escolar"],
     "name": "Promo Escolar",
-    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \n Si son mas nombres o apellidos recomendamos no poner dibujo. \n Si se elige letra \"cursiva\" recomendamos no poner dibujo. \n Si se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
+    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \nSi son mas nombres o apellidos recomendamos no poner dibujo. \nSi se elige letra \"cursiva\" recomendamos no poner dibujo. \nSi se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
     "price": 20000,
     "image": "/images/Escolar/Esco.jpg",
     "thumbnails": [
@@ -27,7 +27,7 @@
     "id": 2,
     "category": ["Escolar"],
     "name": "Promo Escolar VERTICAL",
-    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \n Se recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \n Si son mas nombres o apellidos recomendamos no poner dibujo..",
+    "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \nSi son mas nombres o apellidos recomendamos no poner dibujo..",
     "price": 20000,
     "image": "/images/Escolar/Vertical.jpg",
     "thumbnails": [
@@ -47,7 +47,7 @@
     "id": 100,
     "category": ["Automáticos"],
     "name": "PROMO Automático N°2",
-    "description": "SUPER PROMO Automático Importado + Goma grabada en laser (texto). \n Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. \n La letra \"cursiva\" se utiliza solo en la 1er línea.",
+    "description": "SUPER PROMO Automático Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
     "price": 20000,
     "image": "/images/842 Estandar/Estandar.jpg",
     "thumbnails": [
@@ -73,7 +73,7 @@
     "id": 101,
     "category": ["Automáticos"],
     "name": "Automatico N°2 linea PASTEL",
-    "description": "Sello automático de la marca Shiny, linea 222 de alta duración color pastel.",
+    "description": "Sello automático importado de la marca Shiny, linea 222 de alta duración color pastel. \nTamaño Estandar 38x14mm.",
     "price": 20000,
     "image": "/images/Pastel/Pastel1.jpg",
     "thumbnails": [
@@ -92,7 +92,7 @@
     "id": 102,
     "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
-    "description": "Sello Handy Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
+    "description": "Sello Handy Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
     "price": 28500,
     "image": "/images/Handy/Handy.jpg",
     "thumbnails": [
@@ -117,7 +117,7 @@
     "id": 103,
     "category": ["Automáticos", "Portátiles"],
     "name": "Mouse Stamp",
-    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). Si el sello tiene mucho texto recomendamos abreviar nombres o palabras. \n Si se elige la letra \"cursiva\" recomendamos no poner mucho texto. La letra \"cursiva\" se utiliza solo en la 1er línea.",
+    "description": "Sello MOUSE Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
     "price": 28500,
     "image": "/images/Mouse/Mouse.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Mouse/Mouse2.jpg"],
@@ -134,7 +134,7 @@
     "id": 104,
     "category": ["Automáticos"],
     "name": "Automático N°3 (47x18mm)",
-    "description": "Sello automático de un tamaño mayor al estándar N°3.",
+    "description": "Sello automático importado + goma grabada en laser de tamaño (47x18mm) mayor al estándar N°2.",
     "price": 28500,
     "image": "/images/843/843.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
@@ -145,7 +145,7 @@
     "id": 105,
     "category": ["Automáticos"],
     "name": "Automático N°4 (58x22mm)",
-    "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
+    "description": "Sello automático importado grande, ideal para texto y numeros largos. \nTamaño 58x22mm.",
     "price": 31000,
     "image": "/images/844/844.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
@@ -159,7 +159,7 @@
     "id": 106,
     "category": ["Automáticos"],
     "name": "Automático N°5 (70x25mm)",
-    "description": "Sello automático más grande, ideal para logos empresariales junto a texto y numeros largos.",
+    "description": "Sello automático importado más grande, ideal para texto y numeros largos. \nTamaño 70x25mm.",
     "price": 33000,
     "image": "/images/845/845.jpg",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
@@ -288,7 +288,7 @@
     "price": 35000,
     "image": "/images/Fechadores/DobleF.jpg",
     "thumbnails": ["/images/Fechadores/DobleF2.jpg"],
-    "requiresPad": true
+    "requiresPad": false
   },
   {
     "id": 300,
@@ -344,7 +344,7 @@
     "price": 35000,
     "image": "/images/Numeradores/Numerador6BA.jpg",
     "thumbnails": ["/images/Numeradores/Numerador6BA2.jpg"],
-    "requiresPad": true
+    "requiresPad": false
   },
   {
     "id": 24,
