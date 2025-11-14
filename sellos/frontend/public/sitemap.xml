@@ -1,48 +1,48 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<urlset xmlns="[enlace sospechoso eliminado]">
 <url>
-	<loc>https://www.sellospro.com.ar/</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.sellospro.com.ar/</loc>
+<priority>1.00</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/catalog</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/catalog</loc>
+<priority>0.80</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/nosotros</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/nosotros</loc>
+<priority>0.80</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/contacto</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/contacto</loc>
+<priority>0.80</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/faq</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/url?sa=E&source=gmail&q=https://www.sellospro.com.ar/product/1</loc>
+<priority>0.90</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/contact</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/2</loc>
+<priority>0.90</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/checkout</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/5</loc>
+<priority>0.90</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/success</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/7</loc>
+<priority>0.90</priority>
 </url>
 <url>
-	<loc>https://www.sellospro.com.ar/failure</loc>
-	<lastmod>2025-11-12T19:24:42+01:00</lastmod>
-	<priority>1.0</priority>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/10</loc>
+<priority>0.90</priority>
+</url>
+<url>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/19</loc>
+<priority>0.90</priority>
+</url>
+<url>
+<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/24</loc>
+<priority>0.90</priority>
 </url>
 </urlset>
