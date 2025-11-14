@@ -5,120 +5,118 @@
 <!-- Página Principal (Máxima prioridad, se revisa a diario) -->
 
 <url>
-<loc>https://www.sellospro.com.ar/</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>daily</changefreq>
-<priority>1.00</priority>
+  <loc>https://www.sellospro.com.ar/</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>1.00</priority>
 </url>
 
 <!-- Páginas Estáticas (Alta prioridad, se revisan mensualmente) -->
 
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/catalog</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.90</priority>
+  <loc>https://www.sellospro.com.ar/catalog</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>0.90</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/nosotros</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.70</priority>
+  <loc>https://www.sellospro.com.ar/nosotros</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.70</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/contacto</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.70</priority>
+  <loc>https://www.sellospro.com.ar/contacto</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.70</priority>
 </url>
 
 <!-- Páginas de Productos (Prioridad media, se revisan semanalmente) -->
 
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/1</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/1</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/2</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/2</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/3</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/3</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/4</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/4</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/5</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/5</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/6</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/6</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/7</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/7</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/8</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/8</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/9</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/9</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/10</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/10</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/19</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/19</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/24</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/24</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/32</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/32</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.google.com/search?q=https://www.sellospro.com.ar/product/33</loc>
-<lastmod>2025-11-14</lastmod>
-<changefreq>weekly</changefreq>
-<priority>0.80</priority>
+  <loc>https://www.sellospro.com.ar/product/33</loc>
+  <lastmod>2025-11-14</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
 </url>
-
-
 
 </urlset>
