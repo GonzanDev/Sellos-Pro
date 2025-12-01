@@ -281,7 +281,7 @@
     "category": ["Automáticos", "Fechadores"],
     "name": "Fechador automatico",
     "description": "Sello fechador automatico importado. Primera calidad.",
-    "price": 19000,
+    "price": 20000,
     "image": "/images/FechadorAutom/Fechador.webp",
     "thumbnails": ["/images/FechadorAutom/Fechador2.jpg"]
   },
@@ -300,7 +300,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 8 bandas 1 cm (N18)",
     "description": "Numerador manual de 8 dígitos con 1 cm de alto, práctico y fácil de usar.",
-    "price": 31000,
+    "price": 33000,
     "image": "/images/Numeradores/Numerador8B1CM2.webp",
     "thumbnails": ["/images/Numeradores/Numerador8B1CM.jpg"],
     "requiresPad": true
@@ -423,7 +423,7 @@
     "category": ["Tintas"],
     "name": "Tinta SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 7500,
+    "price": 8500,
     "image": "/images/TintaFrasquito/SecadoRapido.webp",
     "requiresPad": false,
     "requiresDiluentMini": true
@@ -433,7 +433,7 @@
     "category": ["Tintas"],
     "name": "Botella Tinta SECADO RAPIDO 500cc",
     "description": "Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 53000,
+    "price": 59000,
     "image": "/images/TintaBotella/BotellaSR.webp",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -454,7 +454,7 @@
     "category": ["Tintas"],
     "name": "Diluyente para SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
-    "price": 4000,
+    "price": 5500,
     "image": "/images/Diluyente/Diluyente.webp",
     "requiresPad": false
   },
@@ -463,7 +463,7 @@
     "category": ["Tintas"],
     "name": "Diluyente para SECADO RAPIDO / Botella 500cc",
     "description": "Diluyente para tinta de secado rápido. Ideal para mantener la fluidez de la tinta, recuperar productos espesados y limpiar sellos o tampones tras su uso. Disuelve residuos secos sin dañar las superficies.",
-    "price": 25000,
+    "price": 30000,
     "image": "/images/Diluyente/BotellaDilu.webp",
     "requiresPad": false
   },
@@ -504,7 +504,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Mediana N°2",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 7000,
+    "price": 8000,
     "image": "/images/Almohadillas/AlmN2.webp"
   },
   {
@@ -512,7 +512,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°3 Joyko",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 10500,
+    "price": 12000,
     "image": "/images/Almohadillas/AlmN3.webp",
     "thumbnails": ["/images/Almohadillas/AlmN3-2.jpg"]
   },
@@ -521,7 +521,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°4 ópalo tapa transparente",
     "description": "Almohadilla de fieltro tapa transparente 10x15cm, compatible con varios modelos.",
-    "price": 17000,
+    "price": 18000,
     "image": "/images/Almohadillas/AlmN4.webp"
   },
   {
@@ -529,7 +529,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°5 Jumbo",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 18000,
+    "price": 19000,
     "image": "/images/Almohadillas/AlmN5.webp"
   },
   {
@@ -537,7 +537,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chapa 3 (Medio A4)",
     "description": "Almohadilla Doble Fieltro Reforzada de chapa de 21x14 cm.",
-    "price": 29000,
+    "price": 30000,
     "image": "/images/Almohadillas/Chapa3.webp"
   },
   {
