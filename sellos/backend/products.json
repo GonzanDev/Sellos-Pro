@@ -4,7 +4,8 @@
     "category": ["Escolar"],
     "name": "Promo Escolar",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \nSi son mas nombres o apellidos recomendamos no poner dibujo. \nSi se elige letra \"cursiva\" recomendamos no poner dibujo. \nSi se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
-    "price": 20000,
+    "price": 22000,
+    "originalPrice": 25000,
     "image": "/images/Escolar/Esco.webp",
     "thumbnails": [
       "/images/Escolar/Dibujos.jpg",
@@ -28,7 +29,8 @@
     "category": ["Escolar"],
     "name": "Promo Escolar VERTICAL",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \nSi son mas nombres o apellidos recomendamos no poner dibujo..",
-    "price": 20000,
+    "price": 22000,
+    "originalPrice": 25000,
     "image": "/images/Escolar/Vertical.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -48,7 +50,8 @@
     "category": ["Automáticos"],
     "name": "PROMO Automático N°2",
     "description": "SUPER PROMO Automático Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 20000,
+    "price": 22000,
+    "originalPrice": 25000,
     "image": "/images/842 Estandar/Estandar.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -74,7 +77,8 @@
     "category": ["Automáticos"],
     "name": "Automatico N°2 linea PASTEL",
     "description": "Sello automático importado de la marca Shiny, linea 222 de alta duración color pastel. \nTamaño Estandar 38x14mm.",
-    "price": 20000,
+    "price": 22000,
+    "originalPrice": 25000,
     "image": "/images/Pastel/Pastel1.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",

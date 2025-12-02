@@ -26,6 +26,11 @@ export default function ProductCard({ product, addToCart }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
   // con .toLocaleString() si 'price' es undefined o null.
   const price = typeof product.price === "number" ? product.price : 0;
+
+  const originalPrice = typeof product.originalPrice === "number" 
+    ? product.originalPrice 
+    : 0;
+    
   const navigate = useNavigate();
   // --- Lógica de Categoría (Corrección) ---
   // Esta lógica robusta determina si el producto es un "kit".
@@ -82,11 +87,27 @@ export default function ProductCard({ product, addToCart }) {
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
+          {/* --- BLOQUE DE PRECIOS ACTUALIZADO --- */}
           {price > 0 && (
-            <p className="mt-1 text-lg font-bold text-gray-900">
-              {/* Formatea el precio a moneda local (Peso Argentino) */}$
-              {price.toLocaleString("es-AR")}
-            </p>
+            <div className="mt-1 flex items-center gap-3 flex-wrap">
+              {/* 🆕 1. PRECIO ORIGINAL TACHADO (si existe) */}
+              {originalPrice > price && (
+                <p className="text-sm text-gray-500 line-through">
+                  ${originalPrice.toLocaleString("es-AR")} 
+                </p>
+              )}
+              
+              {/* 2. PRECIO REAL (destacado) */}
+              <p className={`text-lg font-bold ${originalPrice > price ? 'text-red-600' : 'text-gray-900'}`}>
+                ${price.toLocaleString("es-AR")}
+              </p>
+              
+            {/* 🆕 3. ETIQUETA 'PROMO' (si hay descuento) */}
+              {originalPrice > price && (
+              <span className="text-sm font-bold text-red-600 ml-1 hidden md:inline">                      PROMO
+                  </span> 
+              )}
+            </div>
           )}
         </div>
 

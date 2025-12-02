@@ -27,8 +27,8 @@ import { Link } from "react-router-dom"; // Para los botones de Call-to-Action (
  */
 const slides = [
   {
-    title: "Sellos Personalizados",
-    subtitle: "Calidad y diseño a tu medida.",
+    title: "DESCUENTOS POR LANZAMIENTO",
+    subtitle: "¡Promociones en automaticos por el lanzamiento de nuestra pagina web!",
     buttonText: "Ver Catálogo",
     link: "/catalog",
     bgImage: "/images/Hero/Hero1.webp",
@@ -187,43 +187,48 @@ export default function Hero() {
       onTouchEnd={handleTouchEnd}
     >
       {/* --- 1. Renderizado de Slides --- */}
-      {/* Itera sobre `slides` para renderizar *todos* los slides,
-          uno encima de otro. */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          // Lógica de visibilidad (Transición de Opacidad):
-          // El slide actual (index === currentSlide) tiene opacidad 1 y z-10.
-          // Los demás tienen opacidad 0 y z-0 (están ocultos detrás).
-          className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-center p-6 transition-opacity duration-1000 ${
-            slide.textColor
-          } ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-          // Estilos en línea para las imágenes de fondo dinámicas.
-          style={{
-            transition: "opacity 1s ease-in-out",
-            backgroundImage: `url(${slide.bgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {/* Contenido del Slide (Texto y Botón) */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-            {slide.title}
-          </h1>
-          <p className="mt-3 sm:mt-4 text-lg sm:text-xl max-w-xl">
-            {slide.subtitle}
-          </p>
-          {/* Botón Call-to-Action (CTA) */}
-          <Link
-            to={slide.link}
-            className="mt-6 sm:mt-8 inline-block px-6 py-3 sm:px-8 sm:py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition text-sm sm:text-base"
-          >
-            {slide.buttonText}
-          </Link>
-        </div>
-      ))}
+    {/* Itera sobre `slides` para renderizar *todos* los slides... */}
+      {slides.map((slide, index) => (
+        <div
+          key={index}
+          // Lógica de visibilidad (Transición de Opacidad)
+          className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-center p-6 transition-opacity duration-1000 ${
+            slide.textColor
+          } ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+          // Estilos en línea para las imágenes de fondo dinámicas.
+          style={{
+            transition: "opacity 1s ease-in-out",
+            backgroundImage: `url(${slide.bgImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          {/* 🆕 CAPA DE SUPERPOSICIÓN (OVERLAY) */}
+          {/* Clase: Ocupa todo el espacio, color negro (bg-black), 
+             transparencia del 50% (opacity-50), se coloca detrás del texto (z-20) 
+             pero encima de la imagen. */}
+          <div className="absolute inset-0 bg-black opacity-50 z-20"></div>
 
+          {/* Contenido del Slide (Texto y Botón) */}
+          {/* ⚠️ AHORA EL TEXTO DEBE ESTAR EN UNA CAPA SUPERIOR (z-30) */}
+          <div className="relative z-30 flex flex-col items-center justify-center text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+              {slide.title}
+            </h1>
+            <p className="mt-3 sm:mt-4 text-lg sm:text-xl max-w-xl">
+              {slide.subtitle}
+            </p>
+            {/* Botón Call-to-Action (CTA) */}
+            <Link
+              to={slide.link}
+              className="mt-6 sm:mt-8 inline-block px-6 py-3 sm:px-8 sm:py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition text-sm sm:text-base"
+            >
+              {slide.buttonText}
+            </Link>
+          </div>
+        </div>
+      ))}
       {/* --- 2. Puntos de Navegación (Dots) --- */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {/* Itera de nuevo, esta vez solo para crear los botones (puntos). */}
