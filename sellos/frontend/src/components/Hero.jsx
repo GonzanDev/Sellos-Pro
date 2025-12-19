@@ -27,6 +27,14 @@ import { Link } from "react-router-dom"; // Para los botones de Call-to-Action (
  */
 const slides = [
   {
+    title: "⚠️ ATENCION ⚠️",
+    subtitle: "Cerrado a partir del 22/12. Retomamos pedidos a partir del 31/12",
+    buttonText: "Consultar",
+    link: "/contacto",
+    bgImage: "/images/Hero/Hero2r.webp",
+    textColor: "text-white",
+  },
+  {
     title: "DESCUENTOS POR LANZAMIENTO",
     subtitle: "¡Promociones en automaticos por el lanzamiento de nuestra pagina web!",
     buttonText: "Ver Catálogo",

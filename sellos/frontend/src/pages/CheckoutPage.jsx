@@ -278,12 +278,17 @@ export default function CheckoutPage() {
                     onChange={(e) => setDeliveryMethod(e.target.value)}
                     className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
                   />
-                  <div className="ml-3 text-sm">
-                    <p className="font-medium">Retiro en el local</p>
-                    <p className="text-xs text-gray-500">
-                      Bermejo 477, Mar del Plata
-                    </p>
-                  </div>
+<div className="ml-3 text-sm">
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+    <p className="font-semibold text-gray-900">Retiro en el local</p>
+    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 w-fit">
+      ⚠️ RETOMAMOS EL 31/12
+    </span>
+  </div>
+  <p className="text-xs text-gray-500 mt-0.5">
+    Bermejo 477, Mar del Plata
+  </p>
+</div>
                 </label>
                 {/* Opción 2: Envío (Deshabilitada) */}
                 <label className="flex items-center p-3 border border-gray-200 rounded-md cursor-not-allowed bg-gray-100 opacity-60">

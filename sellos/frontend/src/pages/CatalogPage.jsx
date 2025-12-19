@@ -134,7 +134,15 @@ export default function CatalogPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left">
             Catálogo
           </h1>
-
+{/* --- Cartel de Atención (Visible en todos los dispositivos) --- */}
+    <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-lg sm:rounded-l-none sm:rounded-r-lg shadow-sm">
+      <div className="flex items-center">
+        <span className="text-amber-500 mr-3 text-xl">⚠️</span>
+        <p className="text-amber-800 text-sm sm:text-base font-medium">
+          <span className="font-bold uppercase tracking-wide">Atención:</span> Los pedidos recibidos desde el <span className="underline font-bold">19/12</span> serán procesados a partir del <span className="underline font-bold">31/12</span>.
+        </p>
+      </div>
+    </div>
           <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
             <div className="flex flex-wrap gap-3">
               {[
@@ -193,6 +201,16 @@ export default function CatalogPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
             Catálogo
           </h1>
+
+          {/* --- Cartel de Atención (Visible en todos los dispositivos) --- */}
+    <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-lg sm:rounded-l-none sm:rounded-r-lg shadow-sm">
+      <div className="flex items-center">
+        <span className="text-amber-500 mr-3 text-xl">⚠️</span>
+        <p className="text-amber-800 text-sm sm:text-base font-medium">
+          <span className="font-bold uppercase tracking-wide">Atención:</span> Los pedidos recibidos desde el <span className="underline font-bold">19/12</span> serán procesados a partir del <span className="underline font-bold">31/12</span>.
+        </p>
+      </div>
+    </div>
 
           <div className="flex justify-between items-center gap-3">
             {/* Selector de categorías (móvil) */}
