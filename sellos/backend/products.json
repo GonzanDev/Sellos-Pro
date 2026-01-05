@@ -97,7 +97,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
     "description": "Sello Handy Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 28500,
+    "price": 30000,
     "image": "/images/Handy/Handy.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -122,7 +122,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Mouse Stamp",
     "description": "Sello MOUSE Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 28500,
+    "price": 30000,
     "image": "/images/Mouse/Mouse.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Mouse/Mouse2.jpg"],
     "colors": [
@@ -139,7 +139,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°3 (47x18mm)",
     "description": "Sello automático importado + goma grabada en laser de tamaño (47x18mm) mayor al estándar N°2.",
-    "price": 28500,
+    "price": 30000,
     "image": "/images/843/843.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
@@ -157,7 +157,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°4 (58x22mm)",
     "description": "Sello automático importado grande, ideal para texto y numeros largos. \nTamaño 58x22mm.",
-    "price": 31000,
+    "price": 33000,
     "image": "/images/844/844.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
@@ -171,7 +171,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°5 (70x25mm)",
     "description": "Sello automático importado más grande, ideal para texto y numeros largos. \nTamaño 70x25mm.",
-    "price": 33000,
+    "price": 36000,
     "image": "/images/845/845.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
