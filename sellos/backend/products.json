@@ -20,7 +20,7 @@
       { "name": "Fucsia", "hex": "#E40078", "stock": true },
       { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
       { "name": "Violeta", "hex": "#74217a", "stock": true },
-      { "name": "Azul", "hex": "#0000FF", "stock": false },
+      { "name": "Azul", "hex": "#0000FF", "stock": true },
       { "name": "Negro", "hex": "#000000", "stock": false }
     ]
   },
@@ -60,7 +60,7 @@
       "/images/842 Estandar/EstandarTransparentes.jpg"
     ],
     "colors": [
-      { "name": "Negro", "hex": "#0D0907", "stock": false },
+      { "name": "Negro", "hex": "#0D0907", "stock": true },
       { "name": "Amarillo", "hex": "#ECF40B", "stock": true },
       { "name": "Verde", "hex": "#57FF00", "stock": true },
       { "name": "Rojo", "hex": "#FF0000", "stock": true },
@@ -205,10 +205,18 @@
   {
     "id": 21,
     "category": ["Escolar", "Otros"],
-    "name": "PROMO Tinta Textil 4x1cm",
+    "name": "Textil MANUAL 4x1cm (RECOMENDADO)",
     "description": "Base de madera + Goma laser + Almohadilla Fieltro + Tinta Textil + Diseño personalizado para estampar en tela de algodon.",
     "price": 25000,
     "image": "/images/Almohadilla+Tinta/PromoTextil.webp"
+  },
+    {
+    "id": 22,
+    "category": ["Escolar", "Otros"],
+    "name": "Textil AUTOMATICO Nombre y Apellido",
+    "description": "Sello Automático TINTA TEXTIL + goma grabada en laser personalizada con NOMBRE Y APELLIDO.\n La tinta es NEGRA TEXTIL, especial para prendas de ALGODON, podés usar también en PAPEL pero es ideal para prendas de algodón.  En este caso se recomienda solo NOMBRE Y APELLIDO (para que se vea bien en la prenda, sin dibujo)",
+    "price": 30000,
+    "image": "/images/Otros/TextilManual.webp"
   },
   {
     "id": 19,
