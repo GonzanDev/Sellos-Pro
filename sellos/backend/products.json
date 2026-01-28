@@ -8,7 +8,7 @@
     "originalPrice": 25000,
     "image": "/images/Escolar/Esco.webp",
     "thumbnails": [
-      "/images/Escolar/Dibujos.jpg",
+      "/images/Escolar/Dibujos.webp",
       "/images/Escolar/LetrasPic.jpg",
       "/images/Escolar/Muestras.jpg",
       "/images/Escolar/Escolares2.jpg",
@@ -34,7 +34,7 @@
     "image": "/images/Escolar/Vertical.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
-      "/images/Escolar/Dibujos.jpg",
+      "/images/Escolar/Dibujos.webp",
       "/images/Pastel/MuestrasVertical.jpg"
     ],
     "colors": [
@@ -214,7 +214,7 @@
     "id": 22,
     "category": ["Escolar", "Otros"],
     "name": "Textil AUTOMATICO Nombre y Apellido",
-    "description": "Sello Automático TINTA TEXTIL + goma grabada en laser personalizada con NOMBRE Y APELLIDO.\n La tinta es NEGRA TEXTIL, especial para prendas de ALGODON, podés usar también en PAPEL pero es ideal para prendas de algodón.  En este caso se recomienda solo NOMBRE Y APELLIDO (para que se vea bien en la prenda, sin dibujo)",
+    "description": "Sello Automático TINTA TEXTIL + goma grabada en laser personalizada con NOMBRE Y APELLIDO.\nLa tinta es NEGRA TEXTIL, especial para prendas de ALGODON, podés usar también en PAPEL pero es ideal para prendas de algodón.  En este caso se recomienda solo NOMBRE Y APELLIDO (para que se vea bien en la prenda, sin dibujo)",
     "price": 30000,
     "image": "/images/Otros/TextilManual.webp"
   },
