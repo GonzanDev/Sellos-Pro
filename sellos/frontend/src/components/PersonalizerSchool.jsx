@@ -49,12 +49,12 @@ export default function PersonalizerSchool({
         </label>
         <input
           type="number"
-          min="200"
-          max="389"
-          value={customization.Dibujo || 200}
+          min="0"
+          max="158"
+          value={customization.Dibujo || 0}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value >= 200 && value <= 389) {
+            if (value >= 0 && value <= 158) {
               handleChange("Dibujo", value);
             }
           }}
@@ -62,7 +62,7 @@ export default function PersonalizerSchool({
           placeholder="Ej: 12"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Ingresá un número entre 200 y 389. El valor <strong>200</strong> significa
+          Ingresá un número entre 0 y 158. El valor <strong>0</strong> significa
           sin dibujito.
         </p>
       </div>
