@@ -8,7 +8,7 @@
     "originalPrice": 25000,
     "image": "/images/Escolar/Esco.webp",
     "thumbnails": [
-      "/images/Escolar/Dibujos.jpg",
+      "/images/Escolar/Dibujitos2026.webp",
       "/images/Escolar/LetrasPic.jpg",
       "/images/Escolar/Muestras.jpg",
       "/images/Escolar/Escolares2.jpg",
@@ -33,9 +33,11 @@
     "originalPrice": 25000,
     "image": "/images/Escolar/Vertical.webp",
     "thumbnails": [
-      "/images/Escolar/LetrasPic.jpg",
-      "/images/Escolar/Dibujos.jpg",
-      "/images/Pastel/MuestrasVertical.jpg"
+      "/images/Escolar/LetrasPic.webp",
+      "/images/Escolar/Dibujitos2026.webp",
+      "/images/Pastel/MuestrasVertical.webp",
+      "/images/Pastel/Pastel.webp"
+
     ],
     "colors": [
       { "name": "Azul Pastel", "hex": "#add8e6", "stock": true },

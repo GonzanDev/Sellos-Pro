@@ -62,7 +62,7 @@ export default function Home({ showToast }) {
   // --- 2. MANEJO DE ESTADOS DE CARGA Y ERROR ---
   // Muestra un estado de "Cargando..." mientras se obtienen los productos.
   if (loading) {
-    return <div className="text-center py-20">Cargando...</div>;
+    return <div className="text-center py-20">Cargando... vuelva en 1 minuto que la pagina ya deberia estar lista</div>;
   }
   // Muestra un estado de "Error..." si el hook `useProducts` falló.
   if (error) {

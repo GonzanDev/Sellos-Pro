@@ -41,32 +41,48 @@ export default function PersonalizerSchool({
           placeholder="Nombre del alumno"
         />
       </div>
-
-      {/* --- Campo Dibujito --- */}
+{/* --- Campo Dibujito --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Dibujito (Ver en imagen)
         </label>
         <input
           type="number"
-          min="0"
-          max="158"
-          value={customization.Dibujo || 0}
+          min="200"
+          max="389"
+          // Usamos cadena vacía como fallback para que el input se pueda limpiar
+          value={customization.Dibujo || ""} 
           onChange={(e) => {
-            const value = Number(e.target.value);
-            if (value >= 0 && value <= 158) {
+            const valStr = e.target.value;
+            
+            // 1. Si el campo está vacío, permitimos el cambio para que pueda borrar
+            if (valStr === "") {
+              handleChange("Dibujo", "");
+              return;
+            }
+
+            const value = Number(valStr);
+
+            // 2. Permitimos que escriba cualquier número mientras no supere el máximo
+            // Esto permite que el usuario escriba "2", luego "25", luego "250"
+            if (value <= 389) {
               handleChange("Dibujo", value);
             }
           }}
+          // Opcional: Validar el mínimo solo cuando el usuario desenfoca el input (onBlur)
+          onBlur={(e) => {
+            const value = Number(e.target.value);
+            if (value < 200 && value !== 0) {
+              handleChange("Dibujo", 200); // O mostrar un error
+            }
+          }}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
-          placeholder="Ej: 12"
+          placeholder="Ej: 205"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Ingresá un número entre 0 y 158. El valor <strong>0</strong> significa
-          sin dibujito.
+          Ingresá un número entre <strong>200</strong> y <strong>389</strong>. El valor <strong>200</strong> significa sin dibujito.
         </p>
       </div>
-
       {/* --- 🔤 Selector de tipo de letra --- */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
