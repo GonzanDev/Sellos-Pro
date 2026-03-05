@@ -770,3 +770,10 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`✅ Backend corriendo en el puerto ${PORT}`);
 });
+
+
+// Ruta simple para mantener el servidor despierto
+app.get('/ping', (req, res) => {
+  console.log("Ping recibido a las: " + new Date().toLocaleString());
+  res.status(200).send('¡Estoy despierto!');
+});
