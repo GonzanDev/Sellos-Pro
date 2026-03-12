@@ -33,7 +33,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* === Columna 1: Logo y descripción === */}
         <div>
-          <h2 className="text-2xl font-bold text-red-600">Sellospro</h2>
+          <h2 className="text-2xl font-bold text-red-600">Sellospro®</h2>
           <p className="mt-3 text-sm text-gray-500">
             Lunes a Viernes de 10 a 15hs.
             <br />

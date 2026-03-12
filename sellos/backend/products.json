@@ -20,8 +20,9 @@
       { "name": "Fucsia", "hex": "#E40078", "stock": true },
       { "name": "Blanco", "hex": "#FFFFFF", "stock": true },
       { "name": "Violeta", "hex": "#74217a", "stock": true },
-      { "name": "Azul", "hex": "#0000FF", "stock": true },
-      { "name": "Negro", "hex": "#000000", "stock": false }
+      { "name": "Azul", "hex": "#0000FF", "stock": false },
+      { "name": "Negro", "hex": "#000000", "stock": false },
+      { "name": "Amarillo", "hex": "#FFFF00", "stock": true }
     ]
   },
   {
