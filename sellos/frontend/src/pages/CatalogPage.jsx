@@ -139,7 +139,7 @@ export default function CatalogPage() {
     <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-lg sm:rounded-l-none sm:rounded-r-lg shadow-sm">
       <div className="flex items-center">
         <span className="text-amber-500 mr-3 text-xl">⚠️</span>
-        <p className="text-amber-800 text-sm sm:text-base font-medium">/
+        <p className="text-amber-800 text-sm sm:text-base font-medium">
           <span className="font-bold uppercase tracking-wide">Atención:</span> Los pedidos recibidos desde el <span className="underline font-bold">1/6</span> serán procesados a partir del <span className="underline font-bold">8/6</span>.
         </p>
       </div>

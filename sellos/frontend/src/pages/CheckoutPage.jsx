@@ -282,7 +282,7 @@ export default function CheckoutPage() {
   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
     <p className="font-semibold text-gray-900">Retiro en el local</p>
     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 w-fit">
-      ⚠️ RETOMAMOS EL 8/6 ⚠️
+      ⚠️ A PARTIR DE 8/6 ⚠️
     </span>
   </div>
   <p className="text-xs text-gray-500 mt-0.5">
