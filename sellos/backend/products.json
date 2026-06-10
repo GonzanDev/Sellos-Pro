@@ -227,19 +227,7 @@
     "name": "KIT Tinta al Agua + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
     "price": 10000,
-    "image": "/images/Almohadilla+Tinta/Alm+Tint.webp",
-        "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": true },
-      { "name": "Azul", "hex": "#0000FF", "stock": true },
-      { "name": "Rojo", "hex": "#FF0000", "stock": true },
-      { "name": "Verde", "hex": "#00FF00", "stock": true },
-      { "name": "Violeta", "hex": "#44035c", "stock": true },
-      { "name": "Magenta", "hex": "#ff00d4", "stock": true },
-      { "name": "Naranja", "hex": "#FFA500", "stock": true },
-      { "name": "Amarillo", "hex": "#FFFF00", "stock": false },
-      { "name": "Marrón", "hex": "#4f3c2f", "stock": true },
-      { "name": "Celeste", "hex": "#00eaff", "stock": true }
-    ]
+    "image": "/images/Almohadilla+Tinta/Alm+Tint.webp"
   },
   {
     "id": 25,
