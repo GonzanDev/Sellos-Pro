@@ -26,14 +26,6 @@ import { Link } from "react-router-dom"; // Para los botones de Call-to-Action (
  * Fuente de contenido hardcodeada para el carrusel.
  */
 const slides = [
-    {
-    title: "⚠️ ATENCION ⚠️",
-    subtitle: "Cerrado a partir del 1/6. Retomamos pedidos a partir del 8/6.",
-    buttonText: "Consultar",
-    link: "/contacto",
-    bgImage: "/images/Hero/Hero2r.webp",
-    textColor: "text-white",
-  },
   {
     title: "DESCUENTOS POR LANZAMIENTO",
     subtitle: "¡Promociones en automaticos por el lanzamiento de nuestra pagina web!",

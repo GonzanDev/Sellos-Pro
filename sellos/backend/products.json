@@ -185,8 +185,8 @@
   {
     "id": 20,
     "category": ["Kits"],
-    "name": "Kit Sello Logo ⚠️ Respondemos desde 10/6 ⚠️ \n",
-    "description": "⚠️ NUEVOS PEDIDOS SE RESPONDEN A PARTIR DEL 10/6 ⚠️ \nSello Logo Goma grabado en laser, con suplemento, con base de madera tratada y cortada a medida y un mango especial + Almohadilla de fieltro + Tinta al agua.",
+    "name": "Kit Sello Logo",
+    "description": "Sello Logo Goma grabado en laser, con suplemento, con base de madera tratada y cortada a medida y un mango especial + Almohadilla de fieltro + Tinta al agua.",
     "price": "0",
     "image": "/images/KitLogo/3.webp",
     "thumbnails": [
@@ -200,7 +200,7 @@
     "id": 222,
     "category": ["Kits", "KitEmpanadas"],
     "name": "Kit Empanadas",
-    "description": "⚠️ NUEVOS PEDIDOS SE RESPONDEN A PARTIR DEL 10/6 ⚠️ \nSellos Personalizados con maderas tratadas para gastronomía + almohadilla fieltro + tinta comestible (consulta con tu lista de sabores)",
+    "description": "Sellos Personalizados con maderas tratadas para gastronomía + almohadilla fieltro + tinta comestible (consulta con tu lista de sabores)",
     "price": "0",
     "image": "/images/KitEmpanadas/Empa1.webp",
     "thumbnails": ["/images/KitEmpanadas/Empa2.jpg"]
