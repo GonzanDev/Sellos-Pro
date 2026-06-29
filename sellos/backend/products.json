@@ -4,8 +4,8 @@
     "category": ["Escolar"],
     "name": "Promo Escolar",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, ideal para el márgen de la hoja. \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo para que se aproveche al máximo el espacio y quede claro el sellado. \nSi son mas nombres o apellidos recomendamos no poner dibujo. \nSi se elige letra \"cursiva\" recomendamos no poner dibujo. \nSi se desea agregar Hoja Nº, Año, Materia, recomendamos la Promo Automatico Escolar Vertical..",
-    "price": 22000,
-    "originalPrice": 25000,
+    "price": 23500,
+    "originalPrice": 26000,
     "image": "/images/Escolar/Esco.webp",
     "thumbnails": [
       "/images/Escolar/Dibujitos2026.webp",
@@ -30,8 +30,8 @@
     "category": ["Escolar"],
     "name": "Promo Escolar VERTICAL",
     "description": "Super Promo Escolar - Automático Importado + goma grabada en Láser, para poner en el márgen de la hoja de manera \"vertical\". \nSe recomienda el siguiente texto: 1 Nombre + 1 Apellido + 1 Dibujo + Hoja Nº. \nSi son mas nombres o apellidos recomendamos no poner dibujo..",
-    "price": 22000,
-    "originalPrice": 25000,
+    "price": 23500,
+    "originalPrice": 26000,
     "image": "/images/Escolar/Vertical.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.webp",
@@ -53,8 +53,8 @@
     "category": ["Automáticos"],
     "name": "PROMO Automático N°2",
     "description": "SUPER PROMO Automático Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 22000,
-    "originalPrice": 25000,
+    "price": 23500,
+    "originalPrice": 26000,
     "image": "/images/842 Estandar/Estandar.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -80,8 +80,8 @@
     "category": ["Automáticos"],
     "name": "Automatico N°2 linea PASTEL",
     "description": "Sello automático importado de la marca Shiny, linea 222 de alta duración color pastel. \nTamaño Estandar 38x14mm.",
-    "price": 22000,
-    "originalPrice": 25000,
+    "price": 23500,
+    "originalPrice": 26000,
     "image": "/images/Pastel/Pastel1.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -100,7 +100,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Handy Stamp Pocket",
     "description": "Sello Handy Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 30000,
+    "price": 31000,
     "image": "/images/Handy/Handy.webp",
     "thumbnails": [
       "/images/Escolar/LetrasPic.jpg",
@@ -125,7 +125,7 @@
     "category": ["Automáticos", "Portátiles"],
     "name": "Mouse Stamp",
     "description": "Sello MOUSE Importado + Goma grabada en laser (texto). \nSi el sello tiene mucho texto recomendamos abreviar nombres o palabras. \nSi se elige la letra \"cursiva\" recomendamos no poner mucho texto. \nLa letra \"cursiva\" se utiliza solo en la 1er línea. \nTamaño Estandar 38x14mm.",
-    "price": 30000,
+    "price": 31000,
     "image": "/images/Mouse/Mouse.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg", "/images/Mouse/Mouse2.jpg"],
     "colors": [
@@ -142,7 +142,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°3 (47x18mm)",
     "description": "Sello automático importado + goma grabada en laser de tamaño (47x18mm) mayor al estándar N°2.",
-    "price": 30000,
+    "price": 31000,
     "image": "/images/843/843.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
@@ -160,7 +160,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°4 (58x22mm)",
     "description": "Sello automático importado grande, ideal para texto y numeros largos. \nTamaño 58x22mm.",
-    "price": 33000,
+    "price": 34000,
     "image": "/images/844/844.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
@@ -174,7 +174,7 @@
     "category": ["Automáticos"],
     "name": "Automático N°5 (70x25mm)",
     "description": "Sello automático importado más grande, ideal para texto y numeros largos. \nTamaño 70x25mm.",
-    "price": 36000,
+    "price": 37500,
     "image": "/images/845/845.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
@@ -210,7 +210,7 @@
     "category": ["Escolar", "Otros"],
     "name": "Textil MANUAL 4x1cm (RECOMENDADO)",
     "description": "Base de madera + Goma laser + Almohadilla Fieltro + Tinta Textil + Diseño personalizado para estampar en tela de algodon.",
-    "price": 25000,
+    "price": 31000,
     "image": "/images/Almohadilla+Tinta/PromoTextil.webp"
   },
     {
@@ -218,7 +218,7 @@
     "category": ["Escolar", "Otros"],
     "name": "Textil AUTOMATICO Nombre y Apellido",
     "description": "Sello Automático TINTA TEXTIL + goma grabada en laser personalizada con NOMBRE Y APELLIDO.\n La tinta es NEGRA TEXTIL, especial para prendas de ALGODON, podés usar también en PAPEL pero es ideal para prendas de algodón.  En este caso se recomienda solo NOMBRE Y APELLIDO (para que se vea bien en la prenda, sin dibujo)",
-    "price": 30000,
+    "price": 36500,
     "image": "/images/Otros/TextilManual.webp"
   },
   {
@@ -226,7 +226,7 @@
     "category": ["Tintas", "Almohadillas"],
     "name": "KIT Tinta al Agua + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta al agua ESPECIAL para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 10000,
+    "price": 12000,
     "image": "/images/Almohadilla+Tinta/Alm+Tint.webp"
   },
   {
@@ -234,7 +234,7 @@
     "category": ["Tintas", "Almohadillas"],
     "name": "KIT Tinta Indeleble Secado Rápido + Almohadilla de Fieltro",
     "description": "Almohadilla de Fieltro de excelente calidad + Tinta indeleble, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 15000,
+    "price": 16500,
     "image": "/images/Almohadilla+Tinta/Alm+TintSR.webp"
   },
   {
@@ -269,7 +269,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 7 mm",
     "description": "Fechador manual de 7 mm, ideal para documentos grandes.",
-    "price": 31000,
+    "price": 39500,
     "image": "/images/Fechadores/Fechador7mm.webp",
     "requiresPad": true
   },
@@ -278,7 +278,7 @@
     "category": ["Fechadores"],
     "name": "Fechador 12 mm",
     "description": "Fechador manual de 12 mm, ideal para documentos grandes.",
-    "price": 49000,
+    "price": 59500,
     "image": "/images/Fechadores/Fechador12mm.webp",
     "requiresPad": true
   },
@@ -305,7 +305,7 @@
     "category": ["Fechadores", "Automáticos"],
     "name": "Doble Fecha Automatico",
     "description": "Fechador doble automatico, mitad tinta rojo y mitad negro. Se puede agregar texto encima.",
-    "price": 35000,
+    "price": 39500,
     "image": "/images/Fechadores/DobleF.webp",
     "thumbnails": ["/images/Fechadores/DobleF2.jpg"],
     "requiresPad": false
@@ -334,7 +334,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 10 bandas (0510)",
     "description": "Numerador manual de 10 dígitos (5mm de alto), ideal para documentos.",
-    "price": 32000,
+    "price": 39000,
     "image": "/images/Numeradores/Numerador10B.webp",
     "requiresPad": true
   },
@@ -343,7 +343,7 @@
     "category": ["Numeradores"],
     "name": "Numerador 12 bandas (0512)",
     "description": "Numerador manual de 12 dígitos (5mm de alto), ideal para documentos.",
-    "price": 39000,
+    "price": 59500,
     "image": "/images/Numeradores/Numerador12B.webp",
     "requiresPad": true
   },
@@ -400,7 +400,7 @@
     "category": ["Tintas"],
     "name": "Botella Tinta 500cc al Agua",
     "description": "Tinta al agua ESPECIAL 500cc para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 30000,
+    "price": 33000,
     "image": "/images/TintaBotella/Botella.webp",
     "colors": [
       { "name": "Negro", "hex": "#000000", "stock": true },
@@ -420,7 +420,7 @@
     "category": ["Tintas"],
     "name": "Botella Tinta 1L al Agua",
     "description": "Tinta al agua ESPECIAL 1L para sellos de goma. Por su bajo porcentaje de solvente cuida al máximo los sellos automáticos, las gomas grabadas en láser y las almohadillas, lo que hace que sea un complemento IDEAL para nuestros sellos. Sirve para marcar papeles, documentos, cartón y cartulina. Ideal para recargar almohadillas tradicionales, de goma microporosa y sellos automáticos. Proporciona una nítida y brillante impresión.",
-    "price": 52000,
+    "price": 57500,
     "image": "/images/TintaBotella/Botella1L.webp",
     "requiresPad": false
   },
@@ -438,7 +438,7 @@
     "category": ["Tintas"],
     "name": "Tinta SECADO RAPIDO / Frasco Chico 30cc",
     "description": "Tinta indeleble 30cc, para sellos de goma. Apta para sellar papeles metalizados, brillantes, ilustración, plásticos varios, cerámicas, metales pintados, maderas pintadas o barnizadas y todo tipo de superficies no porosas. Es de secado rápido!  Se recomienda limpiar los sellos con el diluyente H33 o en su defecto apenas terminado el trabajo con un paño con alcohol, hasta quitar todo residuo de tinta del sello.",
-    "price": 8500,
+    "price": 9000,
     "image": "/images/TintaFrasquito/SecadoRapido.webp",
     "requiresPad": false,
     "requiresDiluentMini": true
@@ -487,7 +487,7 @@
     "category": ["Tintas"],
     "name": " Tinta Textil ideal para tela",
     "description": "Tinta al agua, para sello de goma. Especial para marcar sobre telas con mayor porcentaje de Algodón. Se recomienda no lavar las telas hasta 72 horas después del sellado. De no ser posible, planchar la superficie sellada, logrando que catalice la tinta y se adhiera a las fibras de la tela.  Recomendamos limpiar los sellos con agua una vez utilizados.",
-    "price": 8500,
+    "price": 9000,
     "image": "/images/TintaFrasquito/Tela.webp"
   },
   {
@@ -503,7 +503,7 @@
     "category": ["Tintas"],
     "name": "Tinta Pastel BLANCA al Agua",
     "description": "Para sellos de goma. La tinta Pastel es una tinta para sellar distintos tipos de papeles, cartón, papel kraft, cartulinas, madera sin pintar y distintos tipos de documentos.  Agitar bien antes de usar para mezclar el pigmento con el liquido, al ser AL AGUA prolonga su vida útil como la de todos los materiales.  Recomendamos limpiar los sellos con agua una vez utilizados.",
-    "price": 8500,
+    "price": 9000,
     "image": "/images/TintaFrasquito/Pastel.webp"
   },
   {
