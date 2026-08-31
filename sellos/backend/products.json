@@ -164,7 +164,7 @@
     "image": "/images/844/844.webp",
     "thumbnails": ["/images/Escolar/LetrasPic.jpg"],
     "colors": [
-      { "name": "Negro", "hex": "#000000", "stock": false },
+      { "name": "Negro", "hex": "#000000", "stock": true },
       { "name": "Azul", "hex": "#0000FF", "stock": false }
     ],
     "maxLines": 6
