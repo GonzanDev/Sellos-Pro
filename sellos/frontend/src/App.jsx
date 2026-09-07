@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 
@@ -70,7 +71,7 @@ function AppContent() {
       <main className="flex-1">
         <Routes>
           {/* Las páginas ahora son más limpias y no necesitan tantas props */}
-          <Route path="/" element={<Home showToast={showToast} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route
             path="/product/:id"

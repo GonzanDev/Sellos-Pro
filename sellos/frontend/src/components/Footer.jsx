@@ -30,10 +30,10 @@ export default function Footer() {
       {/* Contenedor principal centrado (max-w-7xl mx-auto)
         Grid layout: 1 columna en móvil (grid-cols-1), 4 en pantallas 'md' y superiores.
       */}
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* === Columna 1: Logo y descripción === */}
         <div>
-          <h2 className="text-2xl font-bold text-red-600">Sellospro®</h2>
+          <h2 className="text-2xl font-bold text-[#e30613]">Sellospro®</h2>
           <p className="mt-3 text-sm text-gray-500">
             Lunes a Viernes de 10 a 15hs.
             <br />
@@ -50,22 +50,22 @@ export default function Footer() {
             <li>
               {/* Usa el componente <Link> de React Router para navegación interna.
                   Esto evita que la página se recargue completamente. */}
-              <Link to="/" className="hover:text-red-600 transition">
+              <Link to="/" className="hover:text-[#e30613] transition">
                 Inicio
               </Link>
             </li>
             <li>
-              <Link to="/catalog" className="hover:text-red-600 transition">
+              <Link to="/catalog" className="hover:text-[#e30613] transition">
                 Catálogo
               </Link>
             </li>
             <li>
-              <Link to="/faq" className="hover:text-red-600 transition">
+              <Link to="/nosotros" className="hover:text-[#e30613] transition">
                 Nosotros
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="hover:text-red-600 transition">
+              <Link to="/contacto" className="hover:text-[#e30613] transition">
                 Contacto
               </Link>
             </li>
@@ -83,7 +83,7 @@ export default function Footer() {
               href="https://www.instagram.com/sellospro"
               target="_blank" // Abre el enlace en una nueva pestaña.
               rel="noopener noreferrer" // Práctica de seguridad para enlaces 'target="_blank"'.
-              className="text-gray-500 hover:text-red-600 transition"
+              className="text-gray-500 hover:text-[#e30613] transition"
             >
               <Instagram size={24} />
             </a>
@@ -91,7 +91,7 @@ export default function Footer() {
               href="https://www.facebook.com/sellospro"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-red-600 transition"
+              className="text-gray-500 hover:text-[#e30613] transition"
             >
               <Facebook size={24} />
             </a>
@@ -104,7 +104,7 @@ export default function Footer() {
             href="https://wa.me/5492235551071"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-gray-500 hover:text-red-600 transition"
+            className="flex items-center gap-2 text-gray-500 hover:text-[#e30613] transition"
           >
             <MessageCircle size={18} />
             <span>WhatsApp</span>

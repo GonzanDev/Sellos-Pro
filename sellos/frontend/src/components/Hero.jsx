@@ -4,39 +4,41 @@
  * ==============================================================================
  *
  * Descripción: Renderiza el componente "Hero" principal de la página de inicio.
- * Se trata de un carrusel (slider) de pantalla completa que muestra
- * diapositivas promocionales.
+ * Es un carrusel (slider) de diapositivas promocionales.
  *
  * Funcionalidades Clave:
  * 1. Muestra 'slides' (diapositivas) hardcodeados con imagen de fondo, título y CTA.
- * 2. Carrusel Automático: Cambia de slide automáticamente cada 5 segundos.
- * 3. Control Manual (Dots): Permite al usuario saltar a un slide específico.
- * 4. Control Táctil (Swipe): Permite deslizar (swipe) entre slides en
- * dispositivos móviles.
- * 5. El temporizador automático se reinicia después de cualquier interacción
- * manual (clic en punto o swipe).
+ * 2. Carrusel Automático: Avanza automáticamente cada 5 segundos...
+ *    - ...salvo que el usuario lo pause, o que su sistema pida "menos movimiento"
+ *      (`prefers-reduced-motion`), en cuyo caso NO hay auto-avance.
+ * 3. Control Manual (Dots): Permite saltar a un slide específico.
+ * 4. Control Táctil (Swipe): Permite deslizar entre slides en móviles.
+ * 5. Botón Pausar/Reanudar el auto-avance.
+ * 6. Accesibilidad: un único <h1> estable para la página, títulos de slide como
+ *    <h2>, slides inactivos ocultos al lector de pantalla y fuera del tab order.
  */
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"; // Para los botones de Call-to-Action (CTA).
+import { Pause, Play, ChevronLeft, ChevronRight } from "lucide-react"; // Íconos de controles.
 
 /**
  * ------------------------------------------------------------------------------
  * DATOS: Contenido de las Diapositivas
  * ------------------------------------------------------------------------------
- * Fuente de contenido hardcodeada para el carrusel.
  */
 const slides = [
   {
     title: "DESCUENTOS POR LANZAMIENTO",
-    subtitle: "¡Promociones en automaticos por el lanzamiento de nuestra pagina web!",
+    subtitle:
+      "¡Promociones en automáticos por el lanzamiento de nuestra página web!",
     buttonText: "Ver Catálogo",
     link: "/catalog",
     bgImage: "/images/Hero/Hero1.webp",
     textColor: "text-white",
   },
   {
-    title: "Retira en el local",
-    subtitle: "Veni a retirar tu pedido y consultanos lo que necesites.",
+    title: "Retirá en el local",
+    subtitle: "Vení a retirar tu pedido y consultanos lo que necesites.",
     buttonText: "Consultar",
     link: "/contacto",
     bgImage: "/images/Hero/Hero2r.webp",
@@ -44,7 +46,7 @@ const slides = [
   },
   {
     title: "Kits Escolares con Descuento",
-    subtitle: "¡Prepara la vuelta al cole con los mejores sellos!",
+    subtitle: "¡Prepará la vuelta al cole con los mejores sellos!",
     buttonText: "Ver Ofertas",
     link: "/catalog?category=Escolar",
     bgImage: "/images/Hero/Hero2c.webp",
@@ -52,204 +54,224 @@ const slides = [
   },
 ];
 
+const AUTOPLAY_MS = 5000;
+
 export default function Hero() {
-  /**
-   * --------------------------------------------------------------------------
-   * ESTADO
-   * --------------------------------------------------------------------------
-   */
-  // Almacena el índice (0, 1, 2...) del slide que está visible actualmente.
+  // --- ESTADO ---
+  // Índice del slide visible actualmente.
   const [currentSlide, setCurrentSlide] = useState(0);
+  // ¿El usuario pausó el auto-avance?
+  const [isPaused, setIsPaused] = useState(false);
+  // ¿El sistema pide reducir el movimiento? (accesibilidad)
+  const [reducedMotion, setReducedMotion] = useState(false);
 
-  /**
-   * --------------------------------------------------------------------------
-   * REFERENCIAS (useRef)
-   * --------------------------------------------------------------------------
-   * Usamos `useRef` para mantener valores que persisten entre renders
-   * pero que NO causan un nuevo render al cambiar (a diferencia de `useState`).
-   */
-  // Almacena el ID del temporizador (setTimeout) del carrusel automático.
-  // Es crucial para poder *limpiarlo* (cancelarlo) cuando sea necesario.
-  const timerRef = useRef(null);
-
-  // Almacenan las coordenadas X de inicio y fin de un gesto táctil (swipe).
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-  // Referencia al elemento DOM de la sección principal.
+  // --- REFERENCIAS ---
+  const timerRef = useRef(null); // ID del temporizador de auto-avance.
+  const touchStartX = useRef(0); // Coordenada X inicial del swipe.
+  const touchEndX = useRef(0); // Coordenada X final del swipe.
   const containerRef = useRef(null);
 
-  /**
-   * --------------------------------------------------------------------------
-   * LÓGICA DEL CARRUSEL AUTOMÁTICO
-   * --------------------------------------------------------------------------
-   */
+  // El auto-avance solo corre si NO está pausado y NO se pidió reducir movimiento.
+  const autoplayActive = !isPaused && !reducedMotion;
 
-  /**
-   * Avanza al siguiente slide.
-   * Si está en el último, vuelve al primero (índice 0).
-   */
+  // --- DETECCIÓN DE `prefers-reduced-motion` ---
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  // --- LÓGICA DEL CARRUSEL AUTOMÁTICO ---
   const goToNextSlide = () => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
   };
 
-  /**
-   * Inicia (o reinicia) el temporizador del carrusel automático.
-   * - Primero, limpia cualquier temporizador anterior (para evitar duplicados).
-   * - Luego, crea un nuevo temporizador que llamará a `goToNextSlide` en 5 seg.
-   */
-  const startTimer = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(goToNextSlide, 5000); // 5000ms = 5 segundos
+  const goToPrevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
   /**
-   * --------------------------------------------------------------------------
-   * EFECTO (Auto-play y Limpieza)
-   * --------------------------------------------------------------------------
+   * Inicia (o reinicia) el temporizador del carrusel automático.
+   * No hace nada si el auto-avance no está activo.
    */
-  useEffect(() => {
-    // Inicia el temporizador cuando el componente se monta
-    // y cada vez que el `currentSlide` cambia (por un swipe o clic).
-    startTimer();
+  const startTimer = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (!autoplayActive) return;
+    timerRef.current = setTimeout(goToNextSlide, AUTOPLAY_MS);
+  };
 
-    // Función de LIMPIEZA:
-    // Se ejecuta cuando el componente se desmonta (sale de la página).
-    // Esto es VITAL para prevenir 'memory leaks' y que el temporizador
-    // intente actualizar un componente que ya no existe.
+  // --- EFECTO: Auto-play y Limpieza ---
+  useEffect(() => {
+    startTimer();
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [currentSlide]); // Dependencia: se re-ejecuta si `currentSlide` cambia.
+    // Se re-evalúa al cambiar de slide o el estado de auto-avance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSlide, autoplayActive]);
 
-  /**
-   * --------------------------------------------------------------------------
-   * LÓGICA TÁCTIL (Swipe)
-   * --------------------------------------------------------------------------
-   */
-
-  /**
-   * Captura la coordenada X *inicial* cuando el usuario toca la pantalla.
-   * @param {React.TouchEvent} e
-   */
+  // --- LÓGICA TÁCTIL (Swipe) ---
   const handleTouchStart = (e) => {
     touchStartX.current = e.targetTouches[0].clientX;
   };
 
-  /**
-   * Actualiza la coordenada X *final* mientras el dedo se mueve.
-   * @param {React.TouchEvent} e
-   */
   const handleTouchMove = (e) => {
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
-  /**
-   * Se dispara cuando el usuario levanta el dedo.
-   * Calcula si el gesto fue un "swipe" y en qué dirección.
-   */
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
 
-    // Calcula la distancia horizontal del swipe.
     const deltaX = touchStartX.current - touchEndX.current;
 
-    // Umbral: El swipe debe ser de al menos 50px para ser considerado.
-    // Esto evita que un simple "toque" (tap) sea interpretado como swipe.
+    // Umbral de 50px para distinguir un swipe de un simple toque.
     if (Math.abs(deltaX) > 50) {
       if (deltaX > 0) {
-        // Swipe hacia la izquierda (deltaX positivo) -> Siguiente slide
-        setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+        goToNextSlide();
       } else {
-        // Swipe hacia la derecha (deltaX negativo) -> Slide anterior
-        setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+        goToPrevSlide();
       }
-      // IMPORTANTE: Reinicia el temporizador automático después del swipe manual.
-      startTimer();
+      startTimer(); // Reinicia el temporizador tras la interacción manual.
     }
 
-    // Resetea las coordenadas para el próximo toque.
     touchStartX.current = 0;
     touchEndX.current = 0;
   };
 
-  /**
-   * --------------------------------------------------------------------------
-   * RENDERIZACIÓN
-   * --------------------------------------------------------------------------
-   */
+  // --- RENDERIZACIÓN ---
   return (
     <section
-      ref={containerRef} // Asigna la ref al contenedor
+      ref={containerRef}
+      aria-roledescription="carrusel"
+      aria-label="Promociones destacadas"
       className="relative w-full h-[60vh] sm:h-[70vh] md:h-96 lg:h-110 overflow-hidden"
-      // Asigna los event listeners táctiles al contenedor principal.
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* --- 1. Renderizado de Slides --- */}
-    {/* Itera sobre `slides` para renderizar *todos* los slides... */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          // Lógica de visibilidad (Transición de Opacidad)
-          className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-center p-6 transition-opacity duration-1000 ${
-            slide.textColor
-          } ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-          // Estilos en línea para las imágenes de fondo dinámicas.
-          style={{
-            transition: "opacity 1s ease-in-out",
-            backgroundImage: `url(${slide.bgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {/* 🆕 CAPA DE SUPERPOSICIÓN (OVERLAY) */}
-          {/* Clase: Ocupa todo el espacio, color negro (bg-black), 
-             transparencia del 50% (opacity-50), se coloca detrás del texto (z-20) 
-             pero encima de la imagen. */}
-          <div className="absolute inset-0 bg-black opacity-50 z-20"></div>
+      {/* Título estable de la página para SEO y lectores de pantalla.
+          Los títulos rotativos de cada slide son <h2>, no <h1>. */}
+      <h1 className="sr-only">
+        Sellospro — Sellos personalizados fabricados en Mar del Plata desde 1980
+      </h1>
 
-          {/* Contenido del Slide (Texto y Botón) */}
-          {/* ⚠️ AHORA EL TEXTO DEBE ESTAR EN UNA CAPA SUPERIOR (z-30) */}
-          <div className="relative z-30 flex flex-col items-center justify-center text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-              {slide.title}
-            </h1>
-            <p className="mt-3 sm:mt-4 text-lg sm:text-xl max-w-xl">
-              {slide.subtitle}
-            </p>
-            {/* Botón Call-to-Action (CTA) */}
-            <Link
-              to={slide.link}
-              className="mt-6 sm:mt-8 inline-block px-6 py-3 sm:px-8 sm:py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition text-sm sm:text-base"
-            >
-              {slide.buttonText}
-            </Link>
-          </div>
-        </div>
-      ))}
-      {/* --- 2. Puntos de Navegación (Dots) --- */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-        {/* Itera de nuevo, esta vez solo para crear los botones (puntos). */}
-        {slides.map((_, index) => (
-          <button
+      {/* --- 1. Slides --- */}
+      {slides.map((slide, index) => {
+        const isActive = index === currentSlide;
+        return (
+          <div
             key={index}
-            onClick={() => {
-              // Al hacer clic, salta al slide 'index'.
-              setCurrentSlide(index);
-              // Y reinicia el temporizador automático.
-              startTimer();
-            }}
-            aria-label={`Ir a slide ${index + 1}`}
-            // Lógica de estilo para el punto activo.
-            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-colors ${
-              index === currentSlide
-                ? "bg-white" // Punto activo
-                : "bg-white/50 hover:bg-white/75" // Puntos inactivos
+            role="group"
+            aria-roledescription="diapositiva"
+            aria-label={`${index + 1} de ${slides.length}`}
+            aria-hidden={!isActive}
+            className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-center p-6 transition-opacity ${
+              reducedMotion ? "duration-0" : "duration-1000 ease-in-out"
+            } ${slide.textColor} ${
+              isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
             }`}
-          />
-        ))}
+            style={{
+              backgroundImage: `url(${slide.bgImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          >
+            {/* Capa de superposición para asegurar contraste del texto. */}
+            <div className="absolute inset-0 bg-black/50 z-20"></div>
+
+            {/* Contenido del slide (por encima del overlay). */}
+            <div className="relative z-30 flex flex-col items-center justify-center text-center">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+                {slide.title}
+              </h2>
+              <p className="mt-3 sm:mt-4 text-lg sm:text-xl max-w-xl">
+                {slide.subtitle}
+              </p>
+              <Link
+                to={slide.link}
+                // Slides inactivos quedan fuera del orden de tabulación.
+                tabIndex={isActive ? 0 : -1}
+                className="mt-6 sm:mt-8 inline-block px-6 py-3 sm:px-8 sm:py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition text-sm sm:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e30613]"
+              >
+                {slide.buttonText}
+              </Link>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* --- 2. Flechas anterior/siguiente (desktop; en táctil basta el swipe) --- */}
+      <button
+        type="button"
+        onClick={() => {
+          goToPrevSlide();
+          startTimer();
+        }}
+        aria-label="Diapositiva anterior"
+        className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-30 items-center justify-center w-10 h-10 rounded-full text-white bg-black/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white transition-colors"
+      >
+        <ChevronLeft size={22} aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          goToNextSlide();
+          startTimer();
+        }}
+        aria-label="Diapositiva siguiente"
+        className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-30 items-center justify-center w-10 h-10 rounded-full text-white bg-black/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white transition-colors"
+      >
+        <ChevronRight size={22} aria-hidden="true" />
+      </button>
+
+      {/* --- 3. Controles inferiores: puntos + pausar/reanudar --- */}
+      <div className="absolute bottom-2 left-0 right-0 z-30 flex items-center justify-center gap-2 px-4">
+        {/* Puntos de navegación (área táctil de 40px, punto visible pequeño). */}
+        {slides.map((_, index) => {
+          const isActive = index === currentSlide;
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={() => {
+                setCurrentSlide(index);
+                startTimer();
+              }}
+              aria-label={`Ir al slide ${index + 1}`}
+              aria-current={isActive ? "true" : undefined}
+              className="flex items-center justify-center w-10 h-10 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            >
+              <span
+                className={`block rounded-full transition-all ${
+                  isActive
+                    ? "w-3 h-3 bg-white"
+                    : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            </button>
+          );
+        })}
+
+        {/* Botón Pausar/Reanudar (solo relevante si hay auto-avance posible). */}
+        {!reducedMotion && (
+          <button
+            type="button"
+            onClick={() => setIsPaused((p) => !p)}
+            aria-label={
+              isPaused ? "Reanudar el carrusel" : "Pausar el carrusel"
+            }
+            className="absolute right-3 bottom-1 flex items-center justify-center w-10 h-10 rounded-full text-white bg-black/40 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white transition-colors"
+          >
+            {isPaused ? (
+              <Play size={18} aria-hidden="true" />
+            ) : (
+              <Pause size={18} aria-hidden="true" />
+            )}
+          </button>
+        )}
       </div>
     </section>
   );

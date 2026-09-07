@@ -15,7 +15,7 @@
  * Cualquier componente que necesite la lista de productos puede usar este hook
  * para obtener los datos y el estado de la petición de forma limpia.
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // Define la URL base de la API.
 // 1. Intenta leer la variable de entorno 'VITE_API_URL' (definida en el build/producción).
@@ -45,18 +45,19 @@ export function useProducts() {
 
   /**
    * --------------------------------------------------------------------------
-   * EFECTO: Carga de Datos (fetch)
+   * FUNCIÓN: fetchProducts (memoizada)
    * --------------------------------------------------------------------------
-   * Este useEffect se ejecuta *una sola vez* cuando el componente
-   * que usa este hook se monta (gracias al array de dependencias vacío `[]`).
+   * Encapsula la petición para poder reutilizarla tanto en el montaje inicial
+   * como en un "Reintentar" desde la UI, sin recargar toda la SPA.
    */
-  useEffect(() => {
+  const fetchProducts = useCallback(() => {
     // --- LÍNEA DE DIAGNÓSTICO ---
     // (Útil para verificar qué URL se está usando en el entorno de producción).
     console.log("Intentando conectar con la API en:", API_URL);
 
-    // Asegura que el estado de carga esté activo al (re)iniciar la petición.
+    // Reinicia el ciclo: carga activa, error limpio.
     setLoading(true);
+    setError(null);
 
     // 1. Inicia la petición (fetch) a la API para obtener los productos.
     fetch(`${API_URL}/products`)
@@ -86,12 +87,19 @@ export function useProducts() {
       .finally(() => {
         setLoading(false); // Indica que la petición ha terminado.
       });
-  }, []); // El array vacío `[]` asegura que esto se ejecute solo una vez.
+  }, []);
+
+  /**
+   * --------------------------------------------------------------------------
+   * EFECTO: Carga de Datos (una sola vez, al montar)
+   * --------------------------------------------------------------------------
+   */
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]); // `fetchProducts` es estable (useCallback []).
 
   // --- VALOR DE RETORNO ---
-  // Devuelve el estado actual (los 3 valores) para que
-  // el componente que lo usa pueda reaccionar y renderizar
-  // un spinner (si loading=true), un mensaje (si error=true),
-  // o la lista de productos (si products tiene datos).
-  return { products, loading, error };
+  // Devuelve el estado actual y `refetch` para reintentar la petición
+  // (usado por los estados de error de la UI).
+  return { products, loading, error, refetch: fetchProducts };
 }

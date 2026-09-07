@@ -7,17 +7,15 @@
  */
 
 // --- Importamos 'useEffect' y 'useSearchParams' ---
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom"; // Hook para leer/escribir en la URL
 import ProductCard from "../components/ProductCard"; // Componente para cada tarjeta.
-import { useCart } from "../contexts/CartContext.jsx"; // Para la función addToCart.
 import { useProducts } from "../hooks/useProducts.js"; // Hook para obtener los datos.
 import { ChevronDown } from "lucide-react"; // Icono para los select.
 
 export default function CatalogPage() {
   // 1. Obtiene los datos de la API
   const { products, loading, error } = useProducts();
-  const { addToCart } = useCart();
 
   // 2. Lógica para leer y escribir en la URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -128,7 +126,7 @@ export default function CatalogPage() {
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* ---------------------------------- */}
-        {/* 🔹 Filtros (Vista para Escritorio)  */}
+        {/* 🔹 Filtros (Vista para Escritorio)  */}
         {/* ---------------------------------- */}
         <div className="hidden sm:block">
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left">
@@ -187,7 +185,7 @@ export default function CatalogPage() {
         </div>
 
         {/* ---------------------------------- */}
-        {/* 🔹 Filtros (Vista para Móvil)       */}
+        {/* 🔹 Filtros (Vista para Móvil)       */}
         {/* ---------------------------------- */}
         <div className="block sm:hidden mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
@@ -239,7 +237,7 @@ export default function CatalogPage() {
         </div>
 
         {/* ---------------------------------- */}
-        {/* 🔹 Grid de Productos (Resultados)  */}
+        {/* 🔹 Grid de Productos (Resultados)  */}
         {/* ---------------------------------- */}
         {sortedAndFilteredProducts.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6 lg:gap-8">
@@ -247,7 +245,6 @@ export default function CatalogPage() {
               <ProductCard
                 key={product.id}
                 product={product}
-                addToCart={addToCart}
               />
             ))}
           </div>

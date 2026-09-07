@@ -16,13 +16,11 @@
  *
  * @param {object} props
  * @param {object} props.product - El objeto de producto con (id, name, price, image, category).
- * @param {function} props.addToCart - La función del CartContext para añadir un ítem.
  */
 import React from "react";
-import { Link, Navigate } from "react-router-dom"; // Para la navegación a la página de detalle.
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Para la navegación a la página de detalle.
 
-export default function ProductCard({ product, addToCart }) {
+export default function ProductCard({ product }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
   // con .toLocaleString() si 'price' es undefined o null.
   const price = typeof product.price === "number" ? product.price : 0;
@@ -83,7 +81,7 @@ export default function ProductCard({ product, addToCart }) {
       <div className="p-4 text-left border-t border-gray-100 flex-1 flex flex-col justify-between">
         {/* Sección de Texto (Nombre y Precio) */}
         <div>
-          <h3 className="font-semibold text-base text-gray-800 truncate group-hover:text-red-600 transition-colors">
+          <h3 className="font-semibold text-base text-gray-800 truncate group-hover:text-[#e30613] transition-colors">
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
@@ -98,14 +96,15 @@ export default function ProductCard({ product, addToCart }) {
               )}
               
               {/* 2. PRECIO REAL (destacado) */}
-              <p className={`text-lg font-bold ${originalPrice > price ? 'text-red-600' : 'text-gray-900'}`}>
+              <p className={`text-lg font-bold ${originalPrice > price ? 'text-[#e30613]' : 'text-gray-900'}`}>
                 ${price.toLocaleString("es-AR")}
               </p>
               
             {/* 🆕 3. ETIQUETA 'PROMO' (si hay descuento) */}
               {originalPrice > price && (
-              <span className="text-sm font-bold text-red-600 ml-1 hidden md:inline">                      PROMO
-                  </span> 
+              <span className="text-sm font-bold text-[#e30613] ml-1 hidden md:inline">
+                PROMO
+              </span>
               )}
             </div>
           )}
@@ -118,20 +117,19 @@ export default function ProductCard({ product, addToCart }) {
           // El usuario DEBE ir a la página de detalle para personalizar.
           <Link
             to={`/product/${product.id}`}
-            className="mt-4 w-full block text-center py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300 text-sm"
+            className="mt-4 w-full block text-center py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800"
           >
             Personalizar y Cotizar
           </Link>
         ) : (
-          // CASO B: Es un producto estándar
-          // Muestra un <button> real que ejecuta 'addToCart'.
-          // Permite "Añadir al carrito" rápido.
-          // ELIMINADO addToCart para obligar a ir a la página de detalle
+          // CASO B: Es un producto estándar.
+          // El botón lleva a la página de detalle para personalizar y comprar
+          // (no agrega al carrito directamente), por eso la etiqueta es "Ver producto".
           <button
             onClick={() => navigate(`/product/${product.id}`)}
-            className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
+            className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800"
           >
-            Agregar
+            Ver producto
           </button>
         )}
       </div>

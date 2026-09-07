@@ -103,7 +103,7 @@ export default function Header({ openCart, cartCount }) {
    */
   const navLinkClass = ({ isActive }) =>
     `font-medium transition ${
-      isActive ? "text-red-600" : "text-gray-800 hover:text-red-600"
+      isActive ? "text-[#e30613]" : "text-gray-800 hover:text-[#e30613]"
     }`;
 
   /**
@@ -111,7 +111,7 @@ export default function Header({ openCart, cartCount }) {
    */
   const mobileNavLinkClass = ({ isActive }) =>
     `text-lg font-medium text-left ${
-      isActive ? "text-red-600" : "text-gray-800"
+      isActive ? "text-[#e30613]" : "text-gray-800"
     }`;
 
   // --- RENDERIZACIÓN ---
@@ -123,7 +123,7 @@ export default function Header({ openCart, cartCount }) {
         {/* Barra principal (Logo, Nav, Iconos) */}
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-red-600">
+          <Link to="/" className="text-2xl font-bold text-[#e30613]">
             Sellospro
           </Link>
 
@@ -188,7 +188,7 @@ export default function Header({ openCart, cartCount }) {
                             <p className="font-medium text-sm text-gray-800">
                               {product.name}
                             </p>
-                            <p className="text-sm text-red-600">
+                            <p className="text-sm text-[#e30613]">
                               ${product.price.toFixed(2)}
                             </p>
                           </div>
@@ -208,7 +208,7 @@ export default function Header({ openCart, cartCount }) {
               <ShoppingCart size={22} />
               {/* Badge de contador (solo visible si cartCount > 0) */}
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#e30613] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}

@@ -13,13 +13,11 @@
  * @param {object} props
  * @param {Array<object>} props.products - El array de objetos de producto que se
  * van a mostrar en el grid.
- * @param {function} props.addToCart - La función (probablemente del CartContext)
- * que se pasará a cada `ProductCard` para el botón de "Añadir al carrito" rápido.
  */
 import React from "react";
 import ProductCard from "./ProductCard"; // Importa el componente hijo que renderiza cada tarjeta.
 
-export default function CatalogPreview({ products, addToCart }) {
+export default function CatalogPreview({ products }) {
   return (
     // Contenedor del Grid (usando Tailwind CSS)
     // - Muestra 2 columnas en pantallas pequeñas (móviles).
@@ -35,7 +33,6 @@ export default function CatalogPreview({ products, addToCart }) {
         <ProductCard
           key={p.id} // La 'key' de React, fundamental para el rendimiento en listas.
           product={p} // Pasa el objeto de producto completo al componente hijo.
-          addToCart={addToCart} // Pasa la función de "añadir al carrito" al componente hijo.
         />
       ))}
     </div>
