@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-07T00:00:00Z",
+  "title": "Design System: Sellospro",
+  "extensions": {
+    "colorMeta": {
+      "brand-red": { "role": "primary", "displayName": "Brand Red", "canonical": "#e30613", "tonalRamp": ["#2b0304", "#560608", "#82090d", "#ad0c11", "#e30613", "#f3383f", "#f77177", "#fbb0b3"] },
+      "accent-red": { "role": "primary", "displayName": "Signal Red", "canonical": "#dc2626", "tonalRamp": ["#2a0808", "#541010", "#7f1818", "#a91f1f", "#dc2626", "#e85252", "#f07f7f", "#f7adad"] },
+      "accent-red-deep": { "role": "primary", "displayName": "Signal Red Deep", "canonical": "#b91c1c", "tonalRamp": ["#240606", "#480b0b", "#6c1111", "#901616", "#b91c1c", "#d24545", "#e07777", "#eeaaaa"] },
+      "focus-ring": { "role": "primary", "displayName": "Focus Red", "canonical": "#ef4444", "tonalRamp": ["#2f0c0c", "#5d1818", "#8b2424", "#b93030", "#ef4444", "#f36d6d", "#f79595", "#fbbdbd"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#1f2937", "tonalRamp": ["#0a0d11", "#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db"] },
+      "ink-strong": { "role": "neutral", "displayName": "Ink Strong", "canonical": "#111827", "tonalRamp": ["#05070a", "#0a0d11", "#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af"] },
+      "text-muted": { "role": "neutral", "displayName": "Text Muted", "canonical": "#4b5563", "tonalRamp": ["#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb"] },
+      "text-subtle": { "role": "neutral", "displayName": "Text Subtle", "canonical": "#6b7280", "tonalRamp": ["#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6"] },
+      "text-faint": { "role": "neutral", "displayName": "Text Faint", "canonical": "#9ca3af", "tonalRamp": ["#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb"] },
+      "border": { "role": "neutral", "displayName": "Border", "canonical": "#d1d5db", "tonalRamp": ["#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff"] },
+      "border-subtle": { "role": "neutral", "displayName": "Border Subtle", "canonical": "#e5e7eb", "tonalRamp": ["#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff", "#ffffff"] },
+      "surface": { "role": "neutral", "displayName": "Surface", "canonical": "#ffffff", "tonalRamp": ["#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff", "#ffffff", "#ffffff"] },
+      "surface-muted": { "role": "neutral", "displayName": "Surface Muted", "canonical": "#f3f4f6", "tonalRamp": ["#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff", "#ffffff"] },
+      "app-bg": { "role": "neutral", "displayName": "App Background", "canonical": "#f9fafb", "tonalRamp": ["#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff", "#ffffff", "#ffffff"] },
+      "success": { "role": "tertiary", "displayName": "Success Green", "canonical": "#22c55e", "tonalRamp": ["#07160c", "#0d2c17", "#144223", "#1a582e", "#22c55e", "#4dd37e", "#7fdfa1", "#b0ecc6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero slide headlines over darkened photography only." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles and product names." },
+      "title": { "displayName": "Title", "purpose": "Card names, subsection headings, emphasized prices." },
+      "body": { "displayName": "Body", "purpose": "Default copy; text-sm is the workhorse size." },
+      "label": { "displayName": "Label", "purpose": "Field labels, helper text, badges, stock tags." },
+      "mono": { "displayName": "Mono", "purpose": "Order codes and machine reference numbers only." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 2px 0 rgba(0,0,0,0.05)", "purpose": "Cards, sticky header, and dropdowns at rest (shadow-sm)." },
+      { "name": "raised", "value": "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)", "purpose": "Product cards on hover, search-preview and menu overlays (shadow-lg)." },
+      { "name": "overlay", "value": "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)", "purpose": "Mobile navigation drawer and modal-like layers above the dim scrim (shadow-xl)." },
+      { "name": "section-focus", "value": "0 8px 30px rgba(227,6,19,0.08)", "purpose": "Transient red-tinted glow during the section-focus entrance animation." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "ease-out", "purpose": "Default easing for fades, hovers, and state transitions." },
+      { "name": "ease-focus", "value": "cubic-bezier(0.2, 0.9, 0.2, 1)", "purpose": "Section-focus entrance animation (700ms)." },
+      { "name": "fade-in", "value": "fadeIn 0.3s ease-out", "purpose": "Element enter: 10px rise + opacity." },
+      { "name": "slide-in-left", "value": "slideInLeft 0.4s ease-out forwards", "purpose": "Toast / off-canvas element entering from the left." },
+      { "name": "hero-crossfade", "value": "opacity 1s ease-in-out", "purpose": "Hero carousel slide transition; auto-advance every 5s." },
+      { "name": "card-hover", "value": "transform 0.3s, box-shadow 0.3s", "purpose": "Card lift + image zoom on hover." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "container-max", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (Red)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main commit action: checkout, submit, add-to-cart on the product page.",
+      "html": "<button class=\"ds-btn-primary\">Finalizar compra</button>",
+      "css": ".ds-btn-primary { background: #e30613; color: #fff; padding: 12px 24px; border: none; border-radius: 8px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s; } .ds-btn-primary:hover { background: #b91c1c; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #ef4444; outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(0); } .ds-btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }"
+    },
+    {
+      "name": "Dark Neutral Button (Agregar)",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "Product-card action that hovers from ink to brand red — the system's signature dark-to-red transition.",
+      "html": "<button class=\"ds-btn-dark\">Agregar</button>",
+      "css": ".ds-btn-dark { background: #1f2937; color: #fff; padding: 8px 16px; width: 100%; border: none; border-radius: 8px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.3s; } .ds-btn-dark:hover { background: #e30613; } .ds-btn-dark:focus-visible { outline: 2px solid #ef4444; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button (Cotizar)",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The quote-first path action (Personalizar y Cotizar); neutral so it reads as distinct from the red commit action.",
+      "html": "<button class=\"ds-btn-secondary\">Personalizar y Cotizar</button>",
+      "css": ".ds-btn-secondary { background: #e5e7eb; color: #1f2937; padding: 8px 16px; width: 100%; border: none; border-radius: 8px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.3s; } .ds-btn-secondary:hover { background: #d1d5db; } .ds-btn-secondary:focus-visible { outline: 2px solid #ef4444; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Default form field used across personalizers, checkout, and contact.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Línea 1\" />",
+      "css": ".ds-input { width: 100%; background: #fff; color: #1f2937; border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; outline: none; transition: box-shadow 0.15s, border-color 0.15s; } .ds-input::placeholder { color: #9ca3af; } .ds-input:focus { border-color: #ef4444; box-shadow: 0 0 0 1px #ef4444; }"
+    },
+    {
+      "name": "Search Field (Pill)",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Header live-search input; full pill with leading magnifier icon.",
+      "html": "<div class=\"ds-search\"><svg class=\"ds-search-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg><input type=\"text\" placeholder=\"Buscar sellos...\" /></div>",
+      "css": ".ds-search { position: relative; display: inline-block; } .ds-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af; } .ds-search input { width: 192px; background: #fff; color: #1f2937; border: 1px solid #d1d5db; border-radius: 9999px; padding: 8px 16px 8px 40px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; outline: none; transition: box-shadow 0.15s; } .ds-search input::placeholder { color: #9ca3af; } .ds-search input:focus { box-shadow: 0 0 0 1px currentColor; }"
+    },
+    {
+      "name": "Selection Chip (Font letter)",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Square selectable chip used for the A–Z font picker; solid red when selected.",
+      "html": "<div class=\"ds-chip-row\"><button class=\"ds-chip ds-chip--selected\">A</button><button class=\"ds-chip\">B</button><button class=\"ds-chip\">C</button></div>",
+      "css": ".ds-chip-row { display: flex; gap: 8px; } .ds-chip { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #fff; color: #1f2937; border: 1px solid #d1d5db; border-radius: 4px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s; } .ds-chip:hover { background: #f3f4f6; } .ds-chip--selected { background: #e30613; color: #fff; border-color: #e30613; }"
+    },
+    {
+      "name": "Color Swatch",
+      "kind": "custom",
+      "refersTo": "chip-selected",
+      "description": "Circular ink-color selector; ink-strong ring when selected, dimmed when out of stock.",
+      "html": "<div class=\"ds-swatch-row\"><button class=\"ds-swatch ds-swatch--selected\" style=\"background:#111827\" title=\"Negro\"></button><button class=\"ds-swatch\" style=\"background:#e30613\" title=\"Rojo\"></button><button class=\"ds-swatch ds-swatch--oos\" style=\"background:#1d4ed8\" title=\"Azul\" disabled></button></div>",
+      "css": ".ds-swatch-row { display: flex; gap: 12px; align-items: center; } .ds-swatch { width: 40px; height: 40px; border-radius: 9999px; border: 2px solid transparent; cursor: pointer; transition: border-color 0.2s; } .ds-swatch--selected { border-color: #111827; } .ds-swatch--selected:hover { border-color: #6b7280; } .ds-swatch--oos { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Catalog product tile: square image, name, price, action button; lifts on hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-img\"><img src=\"https://www.sellospro.com.ar/LogoSellos.jpg\" alt=\"\" /></div><div class=\"ds-card-body\"><h3 class=\"ds-card-title\">Sello Automático Personalizado</h3><div class=\"ds-card-price\"><span class=\"ds-price-old\">$18.000</span><span class=\"ds-price\">$14.900</span><span class=\"ds-promo\">PROMO</span></div><button class=\"ds-btn-dark\">Agregar</button></div></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; width: 240px; } .ds-card:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); transform: translateY(-4px); } .ds-card-img { aspect-ratio: 1/1; background: #fff; overflow: hidden; } .ds-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; } .ds-card:hover .ds-card-img img { transform: scale(1.05); } .ds-card-body { padding: 16px; border-top: 1px solid #f3f4f6; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-card-title { margin: 0; font-size: 1rem; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; } .ds-card:hover .ds-card-title { color: #e30613; } .ds-card-price { display: flex; align-items: center; gap: 12px; margin: 4px 0 16px; } .ds-price-old { font-size: 0.875rem; color: #6b7280; text-decoration: line-through; } .ds-price { font-size: 1.125rem; font-weight: 700; color: #e30613; } .ds-promo { font-size: 0.875rem; font-weight: 700; color: #e30613; } .ds-btn-dark { background: #1f2937; color: #fff; padding: 8px 16px; width: 100%; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.3s; } .ds-btn-dark:hover { background: #e30613; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Desktop header nav link; ink by default, brand red on hover and when active.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Inicio</a><a class=\"ds-nav-link\" href=\"#\">Catálogo</a><a class=\"ds-nav-link\" href=\"#\">Nosotros</a><a class=\"ds-nav-link\" href=\"#\">Contacto</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 32px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-nav-link { color: #1f2937; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: color 0.2s; } .ds-nav-link:hover { color: #e30613; } .ds-nav-link--active { color: #e30613; }"
+    },
+    {
+      "name": "Cart Badge",
+      "kind": "custom",
+      "refersTo": "nav-link-active",
+      "description": "Cart icon button with a circular red count badge when items are present.",
+      "html": "<button class=\"ds-cart\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"21\" r=\"1\"></circle><circle cx=\"19\" cy=\"21\" r=\"1\"></circle><path d=\"M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12\"></path></svg><span class=\"ds-cart-badge\">3</span></button>",
+      "css": ".ds-cart { position: relative; padding: 8px; border: none; background: transparent; color: #1f2937; border-radius: 9999px; cursor: pointer; transition: background 0.2s; } .ds-cart:hover { background: #f3f4f6; } .ds-cart-badge { position: absolute; top: -4px; right: -4px; background: #e30613; color: #fff; font-size: 0.75rem; width: 20px; height: 20px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trusted Workshop Counter",
+    "overview": "Sellospro is the online counter of a real Mar del Plata stamp workshop in business since 1980. The interface should feel like that counter made digital: clean, honest, and unhurried, where a shopkeeper who knows their trade lays your options out on white paper and points — with one confident red mark — to exactly what matters. Nothing is decorated for its own sake. The product (a precisely made custom stamp) is the star; the UI is the calm, legible surface that hands it over without friction. The system is built on paper-white surfaces floating on a barely-there off-white page, a full neutral-gray ramp for text and structure, and a single brand red (#e30613) reserved for action and emphasis. There is no second accent, no gradient scaffolding, no ornament. The intended character is warm and approachable: friendly rounded forms, soft contrast, and generous white space, never a cold or aggressively salesy storefront. Red earns attention precisely because it is rare.",
+    "keyCharacteristics": [
+      "Paper-white surfaces on an off-white page; light mode only.",
+      "One brand red, used sparingly for action, price, active, and selected states.",
+      "Full neutral-gray ramp carries all text, borders, and structure.",
+      "System font stack — no web fonts; speed and legibility over typographic flourish.",
+      "Soft, restrained elevation; gentle hover lift on interactive cards.",
+      "Spanish (es-AR) throughout; mobile-first, thumb-friendly."
+    ],
+    "rules": [
+      { "name": "The One Red Rule", "body": "Red is the only chromatic voice. If a screen has more than a small fraction of red surface area, something non-essential has been painted red — pull it back to neutral. Red means act, price, active, or selected, nothing else.", "section": "colors" },
+      { "name": "The Canonical Red Rule", "body": "#e30613 is the one true brand red. New work uses #e30613; existing red-600/red-700 usage is drift to migrate onto it, not a second red to preserve.", "section": "colors" },
+      { "name": "The Weight-Not-Face Rule", "body": "Hierarchy is expressed through weight (400 → 500 → 600 → 700) and size, never through a decorative or contrasting typeface. There is one family; it does everything.", "section": "typography" },
+      { "name": "The Border-First, Shadow-Second Rule", "body": "Separation is a 1px neutral border by default; shadow is added to signal elevation or interactivity, not to decorate a static box.", "section": "elevation" },
+      { "name": "The Lift-On-Hover Rule", "body": "Interactive cards rise on hover (shadow-sm → shadow-lg plus a -4px translate) and their image zooms subtly (scale-1.05). Non-interactive surfaces stay flat.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep surfaces white (#ffffff) on the #f9fafb canvas; reach for neutral grays before any color.",
+      "Do use #e30613 as the single, canonical brand red for all new work, and migrate existing red-600/red-700 usage toward it.",
+      "Do reserve red for action, price, active, and selected states — keep its screen share small so it stays a signal.",
+      "Do separate surfaces with a 1px neutral border first, adding soft shadow only for elevation or hover.",
+      "Do lift interactive cards gently on hover (shadow-lg + -4px translate, scale-1.05 image) and keep everything else flat.",
+      "Do lean on weight and size within the one system font for hierarchy; keep copy in Spanish (es-AR).",
+      "Do keep touch targets thumb-friendly (~36–40px) and forms on the 4px / 16px vertical rhythm."
+    ],
+    "donts": [
+      "Don't introduce a second accent color, gradients-as-decoration, or a web/display font — the system is deliberately near-monochrome and system-typeset.",
+      "Don't paint large areas red or use red for non-actionable emphasis; a red-heavy screen is a defect.",
+      "Don't ship a dark theme or dark surfaces for content — the product is committed to light mode.",
+      "Don't over-round into pill-shaped buttons for standard actions (pills are reserved for the search field, badges, dots, and the Hero CTA).",
+      "Don't stack heavy shadows on resting surfaces or add ornament to cards; restraint is the brand.",
+      "Don't collapse the two purchase paths — keep the red commit button for instant-buy and the neutral secondary button for the quote-first (Cotizar) flow visually distinct."
+    ]
+  }
+}
