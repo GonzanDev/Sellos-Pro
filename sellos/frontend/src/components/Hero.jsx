@@ -180,14 +180,14 @@ export default function Hero() {
             }}
           >
             {/* Capa de superposición para asegurar contraste del texto. */}
-            <div className="absolute inset-0 bg-black/50 z-20"></div>
+            <div className="absolute inset-0 bg-[rgba(18,10,10,0.55)] z-20"></div>
 
             {/* Contenido del slide (por encima del overlay). */}
             <div className="relative z-30 flex flex-col items-center justify-center text-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+              <h2 className="font-bold leading-none tracking-[-0.02em] text-[clamp(2.5rem,1.2rem+5.5vw,4.25rem)]">
                 {slide.title}
               </h2>
-              <p className="mt-3 sm:mt-4 text-lg sm:text-xl max-w-xl">
+              <p className="mt-4 max-w-lg text-white/80 text-[clamp(0.95rem,0.9rem+0.35vw,1.1rem)]">
                 {slide.subtitle}
               </p>
               <Link

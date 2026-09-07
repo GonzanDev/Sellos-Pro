@@ -154,23 +154,22 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <h2
             id="home-about-title"
-            className="max-w-3xl text-2xl sm:text-3xl font-bold text-gray-900 text-balance"
+            className="max-w-xl text-2xl sm:text-3xl font-semibold leading-tight text-gray-800 text-balance"
           >
             Sellos personalizados, fabricados en Mar del Plata{" "}
-            <span className="text-[#e30613]">desde 1980</span>.
+            <span className="font-bold text-[#e30613]">desde 1980</span>.
           </h2>
-          <p className="mt-4 max-w-3xl text-base sm:text-lg leading-relaxed text-gray-600">
-            Diseñá tu sello automático,
-            fechador o numerador en la web —elegí texto, tipografía y color— y
-            compralo online. ¿Necesitás un sello con tu logo? Pedí tu
-            presupuesto y lo hacemos a medida.
+          <p className="mt-6 max-w-[60ch] text-base sm:text-lg font-normal leading-[1.75] text-gray-600">
+            Diseñá tu sello automático, fechador o numerador en la web —elegí
+            texto, tipografía y color— y compralo online. ¿Necesitás un sello
+            con tu logo? Pedí tu presupuesto y lo hacemos a medida.
           </p>
-          <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-medium text-gray-700">
+          <ul className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
             <li>Fabricantes en Mar del Plata</li>
-            <li className="flex items-center gap-x-6 before:block before:h-4 before:w-px before:bg-gray-300">
+            <li className="flex items-center before:mr-4 before:block before:h-3.5 before:w-px before:bg-gray-300">
               Diseño y compra 100% online
             </li>
-            <li className="flex items-center gap-x-6 before:block before:h-4 before:w-px before:bg-gray-300">
+            <li className="flex items-center before:mr-4 before:block before:h-3.5 before:w-px before:bg-gray-300">
               Sellos con tu logo, a medida
             </li>
           </ul>

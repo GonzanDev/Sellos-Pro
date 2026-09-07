@@ -27,12 +27,11 @@ export default function Footer() {
   return (
     // 'mt-16': Añade un margen superior grande para separarlo del contenido de la página.
     <footer className="bg-white text-gray-700 border-t border-gray-200 mt-16">
-      {/* Contenedor principal centrado (max-w-7xl mx-auto)
-        Grid layout: 1 columna en móvil (grid-cols-1), 4 en pantallas 'md' y superiores.
-      */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* === Columna 1: Logo y descripción === */}
-        <div>
+      {/* Contenedor principal: grid asimétrico de 12 columnas en desktop */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-12 gap-8">
+        {/* === Marca y datos === */}
+
+        <div className="md:col-span-4">
           <h2 className="text-2xl font-bold text-[#e30613]">Sellospro®</h2>
           <p className="mt-3 text-sm text-gray-500">
             Lunes a Viernes de 10 a 15hs.
@@ -41,15 +40,14 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* === Columna 2: Enlaces Rápidos === */}
-        <div>
+
+        {/* === Enlaces Rápidos === */}
+        <div className="md:col-span-2">
           <h3 className="text-base font-semibold text-gray-900 mb-4">
             Enlaces Rápidos
           </h3>
           <ul className="space-y-2">
             <li>
-              {/* Usa el componente <Link> de React Router para navegación interna.
-                  Esto evita que la página se recargue completamente. */}
               <Link to="/" className="hover:text-[#e30613] transition">
                 Inicio
               </Link>
@@ -72,17 +70,14 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* === Columna 3: Síguenos y Contacto === */}
-        <div>
-          <h3 className="text-base font-semibold text-gray-900 mb-4">
-            Síguenos
-          </h3>
+        {/* === Síguenos y Contacto === */}
+        <div className="md:col-span-2">
+          <h3 className="text-base font-semibold text-gray-900 mb-4">Síguenos</h3>
           <div className="flex space-x-4">
-            {/* Enlaces externos (redes sociales) usan la etiqueta <a> */}
             <a
               href="https://www.instagram.com/sellospro"
-              target="_blank" // Abre el enlace en una nueva pestaña.
-              rel="noopener noreferrer" // Práctica de seguridad para enlaces 'target="_blank"'.
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-500 hover:text-[#e30613] transition"
             >
               <Instagram size={24} />
@@ -99,7 +94,6 @@ export default function Footer() {
           <h3 className="text-base font-semibold text-gray-900 mb-4 mt-6">
             Contacto
           </h3>
-          {/* Enlace directo a WhatsApp */}
           <a
             href="https://wa.me/5492235551071"
             target="_blank"
@@ -111,21 +105,20 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* === Columna 4: Mapa === */}
-        <div>
+        {/* === Mapa === */}
+        <div className="md:col-span-4">
           <h3 className="text-base font-semibold text-gray-900 mb-4">
             Encontranos
           </h3>
-          {/* Contenedor para el iframe del mapa */}
           <div className="rounded-lg overflow-hidden shadow-sm border border-gray-200">
             <iframe
-              title="Mapa de ubicación" // Título para accesibilidad (screen readers).
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.162375726262!2d-57.5470841!3d-38.0433027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dddc18595d0b%3A0xc065f0573a4604f0!2sSellospro%20Sellos%20desde%201980!5e0!3m2!1ses-419!2sar!4v1758299762397!5m2!1ses-419!2sar" // URL del mapa embebido.
+              title="Mapa de ubicación"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.162375726262!2d-57.5470841!3d-38.0433027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dddc18595d0b%3A0xc065f0573a4604f0!2sSellospro%20Sellos%20desde%201980!5e0!3m2!1ses-419!2sar!4v1758299762397!5m2!1ses-419!2sar"
               width="100%"
-              height="150"
+              height="180"
               style={{ border: 0 }}
               allowFullScreen=""
-              loading="lazy" // Carga diferida: El mapa no se carga hasta que esté cerca de verse.
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
@@ -134,7 +127,6 @@ export default function Footer() {
 
       {/* === Barra de Copyright === */}
       <div className="border-t border-gray-200 py-6 text-center text-sm text-gray-500">
-        {/* Inserta dinámicamente el año actual para que el copyright esté siempre actualizado. */}
         © {new Date().getFullYear()} Sellospro — Todos los derechos reservados.
       </div>
     </footer>

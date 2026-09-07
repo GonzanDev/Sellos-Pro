@@ -120,15 +120,15 @@ export default function Header({ openCart, cartCount }) {
     <header className="bg-white text-gray-800 shadow-sm sticky top-0 z-50">
       {/* Contenedor principal centrado */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Barra principal (Logo, Nav, Iconos) */}
-        <div className="flex justify-between items-center h-16">
+        {/* Barra principal — masthead centrado: logo izquierda, nav centrada, acciones derecha */}
+        <div className="relative flex items-center h-16">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-[#e30613]">
             Sellospro
           </Link>
 
-          {/* Navegación de Escritorio ('md:flex' la oculta en móvil) */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Navegación de Escritorio (centrada; 'md:flex' la oculta en móvil) */}
+          <nav className="hidden md:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
             <NavLink to="/" className={navLinkClass}>
               Inicio
             </NavLink>
@@ -143,8 +143,8 @@ export default function Header({ openCart, cartCount }) {
             </NavLink>
           </nav>
 
-          {/* Iconos (Búsqueda, Carrito, Menú Móvil) */}
-          <div className="flex items-center gap-4">
+          {/* Iconos (Búsqueda, Carrito, Menú Móvil) — alineados a la derecha */}
+          <div className="flex items-center gap-4 ml-auto">
             {/* --- 🔍 BÚSQUEDA EN DESKTOP CON VISTA PREVIA --- */}
             <div className="hidden md:block relative">
               {/* Icono de Lupa (posicionado absoluto) */}
@@ -161,8 +161,7 @@ export default function Header({ openCart, cartCount }) {
                 onKeyDown={handleSearch} // Para "Enter"
                 onFocus={() => setIsSearchPreviewOpen(true)} // Abre el dropdown
                 onBlur={() =>
-                  // Cierra el dropdown con un delay.
-                  // Esto es VITAL para permitir que el 'onClick'
+                  // Cierra el dropdown con un delay para que el 'onClick'
                   // en un resultado se registre antes de que desaparezca.
                   setTimeout(() => setIsSearchPreviewOpen(false), 150)
                 }
@@ -238,7 +237,6 @@ export default function Header({ openCart, cartCount }) {
         {/* 2. Panel Deslizante (Menú) */}
         <div
           className={`absolute top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-            // Controla el slide (entrada/salida)
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
