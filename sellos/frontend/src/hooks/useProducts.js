@@ -51,10 +51,6 @@ export function useProducts() {
    * como en un "Reintentar" desde la UI, sin recargar toda la SPA.
    */
   const fetchProducts = useCallback(() => {
-    // --- LÍNEA DE DIAGNÓSTICO ---
-    // (Útil para verificar qué URL se está usando en el entorno de producción).
-    console.log("Intentando conectar con la API en:", API_URL);
-
     // Reinicia el ciclo: carga activa, error limpio.
     setLoading(true);
     setError(null);

@@ -46,10 +46,14 @@ export default function ProductCard({ product }) {
     .filter((c) => typeof c === "string") // 2. Nos aseguramos que solo contenga strings.
     .map((c) => c.toLowerCase()); // 3. Pasamos todo a minúsculas para una comparación fiable.
 
-  // 4. Verificamos si "kits" está INCLUIDO en el array de categorías.
-  //    Esto define qué botón mostraremos.
-  const isKitProduct = categories.includes("kits");
+  // 4. "kits" y "kitempanadas" siguen el camino de cotización (quote-first),
+  //    por eso muestran el botón "Personalizar y Cotizar".
+  const isKitProduct =
+    categories.includes("kits") || categories.includes("kitempanadas");
   // --- Fin de la lógica de categoría ---
+
+  // Sin stock: solo cuando el producto declara un stock numérico en 0 o menos.
+  const outOfStock = typeof product.stock === "number" && product.stock <= 0;
 
   return (
     // Contenedor principal de la tarjeta.
@@ -62,16 +66,24 @@ export default function ProductCard({ product }) {
         {/* --- CONTENEDOR DE IMAGEN AJUSTADO --- */}
         {/* 'aspect-square': Mantiene una proporción 1:1 (cuadrada). */}
         {/* 'overflow-hidden': Necesario para que 'object-cover' funcione bien. */}
-        <div className="aspect-square w-full bg-white flex items-center justify-center overflow-hidden">
+        <div className="relative aspect-square w-full bg-white flex items-center justify-center overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            // --- CAMBIO CLAVE: object-cover ---
-            // 'object-cover': La imagen llena el contenedor (aspect-square)
-            // sin distorsionarse, recortando los bordes si es necesario.
-            // 'group-hover:scale-105': Efecto de zoom al hacer hover en la tarjeta ('group').
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+            decoding="async"
+            // 'object-cover': llena el contenedor cuadrado sin distorsión.
+            // 'group-hover:scale-105': zoom sutil al hacer hover en la tarjeta.
+            // Sin stock: la imagen se atenúa y desatura.
+            className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${
+              outOfStock ? "opacity-50 grayscale" : ""
+            }`}
           />
+          {outOfStock && (
+            <span className="absolute top-2 left-2 rounded-full bg-gray-900/85 text-white text-xs font-semibold px-2.5 py-1">
+              Sin stock
+            </span>
+          )}
         </div>
       </Link>
 
@@ -81,7 +93,10 @@ export default function ProductCard({ product }) {
       <div className="p-4 text-left border-t border-gray-100 flex-1 flex flex-col justify-between">
         {/* Sección de Texto (Nombre y Precio) */}
         <div>
-          <h3 className="font-semibold text-base text-gray-800 truncate group-hover:text-[#e30613] transition-colors">
+          <h3
+            className="font-semibold text-base text-gray-800 truncate group-hover:text-[#e30613] transition-colors"
+            title={product.name}
+          >
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
