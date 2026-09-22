@@ -124,6 +124,24 @@ export default function ProductPage({ showToast }) {
 
   // --- Estados para el Modal de Presupuesto (para "Kits") ---
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+
+  // Cierre con Escape y bloqueo de scroll del body mientras un modal está abierto.
+  useEffect(() => {
+    if (!isModalOpen && !isBudgetModalOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setIsModalOpen(false);
+        setIsBudgetModalOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isModalOpen, isBudgetModalOpen]);
   const [isSendingBudget, setIsSendingBudget] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState({
     name: "",
@@ -379,6 +397,8 @@ export default function ProductPage({ showToast }) {
 
   // --- 9. RENDERIZACIÓN (JSX) ---
   return (
+
+
     <div className=" py-6 md:py-6">
       {/* SEO */}
       <title>{pageTitle}</title>
@@ -395,6 +415,8 @@ export default function ProductPage({ showToast }) {
             <div>
               {/* Imagen Principal (con botón de zoom) */}
               <button
+                type="button"
+                aria-label="Ampliar imagen del producto"
                 className="aspect-square bg-white rounded-lg flex items-center justify-center border overflow-hidden relative w-full cursor-pointer hover:opacity-90 transition group"
                 onClick={() => setIsModalOpen(true)} // Abre el modal de zoom
               >
@@ -431,13 +453,13 @@ export default function ProductPage({ showToast }) {
                       // Estilo condicional para la miniatura activa
                       className={`flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center p-1 border-2 overflow-hidden ${
                         activeImage === index
-                          ? "border-red-600 ring-1 ring-red-300" // Activa
-                          : "border-gray-200 hover:border-red-400" // Inactiva
+                          ? "border-[#e30613] ring-1 ring-[#e30613]/30" // Activa
+                          : "border-gray-200 hover:border-[#e30613]/60" // Inactiva
                       }`}
                     >
                       <img
                         src={img}
-                        alt={`Thumbnail ${index + 1}`}
+                        alt={`Vista ${index + 1} de ${product.name}`}
                         className="w-full h-full object-cover"
                       />
                     </button>
@@ -450,20 +472,24 @@ export default function ProductPage({ showToast }) {
             </div>
 
             {/* --- Información del Producto (Título, Precio, Descripción) --- */}
+            <div data-impeccable-variants="f81fa083" data-impeccable-variant-count="4" style={{ display: "contents" }}>
+              {/* impeccable-variants-start f81fa083 */}
+              {/* Original */}
+              <div data-impeccable-variant="original">
             <div>
               <div className="flex flex-row justify-between items-center gap-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {product.name}
                 </h1>
                 {/* Precio Condicional */}
-                <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
+                <p className="text-3xl md:text-4xl font-bold text-[#e30613] my-6">
                   {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
                 </p>
               </div>
               {/* Descripción (con formato de saltos de línea) */}
               {!(isInk || isDateStamp) && (
                 <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
-                  {product.description.split("\n").map((line, index, array) => (
+                  {(product.description || "").split("\n").map((line, index, array) => (
                     <React.Fragment key={index}>
                       {line}
                       {index < array.length - 1 && <br />}
@@ -472,14 +498,94 @@ export default function ProductPage({ showToast }) {
                 </p>
               )}
             </div>
+              </div>
+              {/* Variants: insert below this line */}
+              <style data-impeccable-css="f81fa083">{`
+                @scope ([data-impeccable-variant="1"]) { :scope .pp-title { font-size: calc(2.25rem * var(--p-scale,1)); } }
+                @scope ([data-impeccable-variant="2"]) { :scope .pp-tag { font-size: calc(1.5rem * var(--p-scale,1)); } }
+                @scope ([data-impeccable-variant="3"]) { :scope .pp-hero { font-size: calc(3.25rem * var(--p-scale,1)); } }
+                @scope ([data-impeccable-variant="4"]) { :scope .pp-title { font-size: calc(1.875rem * var(--p-scale,1)); } }
+              `}</style>
+              <div data-impeccable-variant="1" data-impeccable-params='[{"id":"scale","kind":"range","min":0.8,"max":1.3,"step":0.05,"default":1,"label":"Escala"}]'>
+                <div>
+                <h1 className="pp-title font-extrabold text-gray-900 leading-[1.1] tracking-[-0.01em]">{product.name}</h1>
+                <p className="text-3xl md:text-4xl font-bold text-[#e30613] mt-2">{isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}</p>
+            {!(isInk || isDateStamp) && (
+              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                {(product.description || "").split("\n").map((line, index, array) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+                </div>
+              </div>
+              <div data-impeccable-variant="2" style={{ display: "none" }} data-impeccable-params='[{"id":"scale","kind":"range","min":0.8,"max":1.3,"step":0.05,"default":1,"label":"Escala"}]'>
+                <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{product.name}</h1>
+                <div className="mt-3">
+                  <span className="pp-tag inline-flex items-center rounded-full border-2 border-[#e30613] text-[#e30613] font-bold px-4 py-1.5">{isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}</span>
+                </div>
+            {!(isInk || isDateStamp) && (
+              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                {(product.description || "").split("\n").map((line, index, array) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+                </div>
+              </div>
+              <div data-impeccable-variant="3" style={{ display: "none" }} data-impeccable-params='[{"id":"scale","kind":"range","min":0.8,"max":1.3,"step":0.05,"default":1,"label":"Escala"}]'>
+                <div>
+                <p className="text-lg font-semibold text-gray-900">{product.name}</p>
+                <p className="pp-hero font-extrabold text-[#e30613] leading-none mt-1">{isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}</p>
+            {!(isInk || isDateStamp) && (
+              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                {(product.description || "").split("\n").map((line, index, array) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+                </div>
+              </div>
+              <div data-impeccable-variant="4" style={{ display: "none" }} data-impeccable-params='[{"id":"scale","kind":"range","min":0.8,"max":1.3,"step":0.05,"default":1,"label":"Escala"}]'>
+                <div className="pp-edit border-l-4 border-[#e30613] pl-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h1 className="pp-title text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight">{product.name}</h1>
+                  <p className="text-3xl md:text-4xl font-bold text-[#e30613]">{isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}</p>
+                </div>
+                <div className="mt-3 border-t border-gray-200 pt-3">
+            {!(isInk || isDateStamp) && (
+              <p className="text-gray-600 mt-4 leading-relaxed whitespace-pre-wrap">
+                {(product.description || "").split("\n").map((line, index, array) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+                </div>
+                </div>
+              </div>
+              {/* impeccable-variants-end f81fa083 */}
+            </div>
           </div>
 
           {/* =============================================== */}
           {/* --- COLUMNA 2: PERSONALIZACIÓN Y ACCIONES --- */}
           {/* =============================================== */}
-          <div className="top-24 h-fit">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+          <div className="lg:sticky lg:top-24 h-fit">
+            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-5 sm:p-7 border-t-[5px] border-t-[#e30613]">
+              <h2 className="text-[1.6rem] leading-[1.15] font-extrabold tracking-[-0.01em] text-gray-900 mb-4">
                 {
                   isKit
                     ? "Completa los datos para cotizar"
@@ -575,7 +681,8 @@ export default function ProductPage({ showToast }) {
                   // --- CASO 1: Producto "Kit" (a cotizar) ---
                   <button
                     onClick={handleOpenBudgetModal} // Abre el modal de presupuesto
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+                    // Rojo profundo (misma familia, más oscuro): señala "presupuesto", no compra.
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-[#a30510] text-white font-semibold rounded-md hover:bg-[#7a040c] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a30510]"
                   >
                     <Send size={20} />
                     Solicitar Presupuesto
@@ -595,7 +702,7 @@ export default function ProductPage({ showToast }) {
                         {quantity}
                       </span>
                       <button
-                        onClick={() => setQuantity((q) => q + 1)}
+                        onClick={() => setQuantity((q) => Math.min(99, q + 1))}
                         className="px-3 py-2 text-lg hover:bg-gray-200 transition rounded-r-md"
                       >
                         +
@@ -606,7 +713,7 @@ export default function ProductPage({ showToast }) {
                       // --- CASO 2a: Modo Edición ---
                       <button
                         onClick={handleUpdateCartItem} // Llama a la función de ACTUALIZAR
-                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-[#b91c1c] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e30613]"
                       >
                         <RefreshCw size={20} />
                         Actualizar Cambios
@@ -615,7 +722,7 @@ export default function ProductPage({ showToast }) {
                       // --- CASO 2b: Modo Añadir (normal) ---
                       <button
                         onClick={handleAddToCart} // Llama a la función de AÑADIR
-                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
+                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-[#b91c1c] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e30613]"
                       >
                         <ShoppingCart size={20} />
                         Añadir al Carrito
@@ -633,7 +740,7 @@ export default function ProductPage({ showToast }) {
                   Descripción
                 </h3>
                 <p className="text-gray-600 mt-2 leading-relaxed whitespace-pre-wrap">
-                  {product.description.split("\n").map((line, index, array) => (
+                  {(product.description || "").split("\n").map((line, index, array) => (
                     <React.Fragment key={index}>
                       {line}
                       {index < array.length - 1 && <br />}
@@ -657,6 +764,9 @@ export default function ProductPage({ showToast }) {
           onClick={() => setIsModalOpen(false)} // Cierra al hacer clic fuera
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Imagen de ${product.name}`}
             className="relative max-w-3xl max-h-[85vh] rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()} // Evita cierre al hacer clic dentro
           >
@@ -684,16 +794,20 @@ export default function ProductPage({ showToast }) {
         >
           {/* Contenido del Modal */}
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="budget-title"
             className="relative bg-white rounded-lg shadow-xl w-full max-w-md"
             onClick={(e) => e.stopPropagation()} // Evita cierre
           >
             {/* Header del Modal */}
             <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 id="budget-title" className="text-lg font-semibold text-gray-900">
                 Solicitar Presupuesto
               </h3>
               <button
                 onClick={() => setIsBudgetModalOpen(false)}
+                aria-label="Cerrar"
                 className="p-1 rounded-full text-gray-500 hover:bg-gray-200"
               >
                 <X size={20} />
@@ -708,7 +822,7 @@ export default function ProductPage({ showToast }) {
               </p>
               {/* Campo Nombre */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="budget-name" className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre y Apellido
                 </label>
                 <div className="relative">
@@ -716,6 +830,7 @@ export default function ProductPage({ showToast }) {
                     <User size={16} className="text-gray-400" />
                   </span>
                   <input
+                    id="budget-name"
                     type="text"
                     name="name"
                     value={buyerInfo.name}
@@ -725,12 +840,12 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.name && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
+                  <p role="alert" className="text-[#e30613] text-xs mt-1">{formErrors.name}</p>
                 )}
               </div>
               {/* Campo Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="budget-email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <div className="relative">
@@ -738,6 +853,7 @@ export default function ProductPage({ showToast }) {
                     <Mail size={16} className="text-gray-400" />
                   </span>
                   <input
+                    id="budget-email"
                     type="email"
                     name="email"
                     value={buyerInfo.email}
@@ -747,14 +863,14 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.email && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p role="alert" className="text-[#e30613] text-xs mt-1">
                     {formErrors.email}
                   </p>
                 )}
               </div>
               {/* Campo Teléfono */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="budget-phone" className="block text-sm font-medium text-gray-700 mb-1">
                   Teléfono (WhatsApp)
                 </label>
                 <div className="relative">
@@ -762,6 +878,7 @@ export default function ProductPage({ showToast }) {
                     <Phone size={16} className="text-gray-400" />
                   </span>
                   <input
+                    id="budget-phone"
                     type="tel"
                     name="phone"
                     value={buyerInfo.phone}
@@ -771,7 +888,7 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.phone && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p role="alert" className="text-[#e30613] text-xs mt-1">
                     {formErrors.phone}
                   </p>
                 )}
@@ -783,7 +900,7 @@ export default function ProductPage({ showToast }) {
               <button
                 onClick={handleRequestBudget} // Llama a la función de envío
                 disabled={isSendingBudget}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-[#a30510] text-white font-semibold rounded-md hover:bg-[#7a040c] transition disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a30510]"
               >
                 <Send size={20} />
                 {isSendingBudget ? "Enviando..." : "Confirmar Solicitud"}
