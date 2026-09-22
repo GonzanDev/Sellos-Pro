@@ -34,6 +34,20 @@ html {
   animation: slideInLeft 0.4s ease-out forwards;
 }
 
+@keyframes slideInBottomCenter {
+  from {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+.animate-slide-in-bottom-center {
+  animation: slideInBottomCenter 0.4s ease-out forwards;
+}
+
 @keyframes section-focus {
   0% {
     transform: translateY(6px);

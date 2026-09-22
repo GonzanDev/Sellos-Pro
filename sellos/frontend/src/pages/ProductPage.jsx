@@ -26,7 +26,7 @@
  * 7. Gestionar la galería de imágenes (thumbnails y modal de zoom).
  */
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
@@ -37,6 +37,7 @@ import {
   Mail,
   Phone,
   RefreshCw,
+  Pencil,
 } from "lucide-react";
 // --- Importa TODOS los personalizadores ---
 import Personalizer from "../components/Personalizer";
@@ -131,6 +132,12 @@ export default function ProductPage({ showToast }) {
     phone: "",
   });
   const [formErrors, setFormErrors] = useState({});
+
+  // Referencia al inicio del panel de personalización, para poder
+  // hacer scroll hasta ahí tras agregar/actualizar (clave en mobile,
+  // donde el formulario es largo y el usuario queda scrolleado abajo
+  // sin ver que el formulario se limpió).
+  const formTopRef = useRef(null);
 
   /**
    * --------------------------------------------------------------------------
@@ -235,7 +242,16 @@ export default function ProductPage({ showToast }) {
     }
     const productToAdd = { ...product, customization, qty: quantity };
     addToCart(productToAdd);
-    showToast(`${product.name} agregado al carrito`);
+    showToast(
+      `${product.name} agregado al carrito ✅ — Formulario listo para tu próximo pedido`
+    );
+    // Limpiamos el formulario para que el usuario pueda cargar
+    // un pedido distinto sin arrastrar los datos del anterior.
+    setCustomization({});
+    setQuantity(1);
+    // Volvemos al inicio del formulario (clave en mobile, donde el
+    // usuario suele estar scrolleado hasta el botón, al final).
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   /**
    * "Modo Edición": Actualiza un ítem *existente* en el carrito.
@@ -248,8 +264,19 @@ export default function ProductPage({ showToast }) {
     }
     const updatedProductData = { ...product, customization, qty: quantity };
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
-    showToast(`${product.name} actualizado en el carrito`);
-    navigate("/");
+    showToast(
+      `${product.name} actualizado en el carrito ✅ — Formulario listo para tu próximo pedido`
+    );
+    // Igual que en "Añadir al Carrito": limpiamos el formulario en vez de
+    // sacar al usuario de la página. Salimos del "Modo Edición" (quitamos
+    // el location.state) pero nos quedamos en el mismo producto, por si
+    // quiere cargar otro pedido del mismo modelo.
+    setCustomization({});
+    setQuantity(1);
+    navigate(`/product/${id}`, { replace: true });
+    // Volvemos al inicio del formulario (clave en mobile, donde el
+    // usuario suele estar scrolleado hasta el botón, al final).
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   /**
@@ -477,8 +504,25 @@ export default function ProductPage({ showToast }) {
           {/* =============================================== */}
           {/* --- COLUMNA 2: PERSONALIZACIÓN Y ACCIONES --- */}
           {/* =============================================== */}
-          <div className="top-24 h-fit">
+          <div ref={formTopRef} className="top-24 h-fit scroll-mt-24">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
+              {/* --- Banner de "Modo Edición" --- */}
+              {/* Deja en claro que se está modificando un sello que ya
+                  está en el carrito, y ofrece una salida rápida sin guardar. */}
+              {isEditing && (
+                <div className="mb-4 flex items-center justify-between gap-3 bg-gray-100 border border-gray-300 text-gray-800 text-sm rounded-md px-3 py-2">
+                  <span className="flex items-center gap-2">
+                    <Pencil size={16} />
+                    Estás editando un sello que ya está en tu carrito.
+                  </span>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="text-gray-900 underline hover:text-black whitespace-nowrap"
+                  >
+                    Cancelar edición
+                  </button>
+                </div>
+              )}
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
                 {
                   isKit
@@ -488,6 +532,34 @@ export default function ProductPage({ showToast }) {
                     : "Personaliza tu Sello" // El resto (automáticos, escolar)
                 }
               </h2>
+              {/* --- Selector de Cantidad (arriba, antes del formulario) --- */}
+              {/* Se ubica primero para que el usuario elija cuántos sellos
+                  iguales quiere ANTES de llenar los campos de texto, y no
+                  termine escribiendo la cantidad por error en el nombre/línea. */}
+              {!isKit && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cantidad de sellos iguales
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-md w-fit">
+                    <button
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="px-3 py-2 text-lg hover:bg-gray-200 transition rounded-l-md"
+                    >
+                      -
+                    </button>
+                    <span className="px-4 py-2 font-semibold">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity((q) => q + 1)}
+                      className="px-3 py-2 text-lg hover:bg-gray-200 transition rounded-r-md"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
               {/* -------------------------------------------------- */}
               {/* --- LÓGICA DE PERSONALIZADOR DINÁMICO (El "Cerebro") --- */}
               {/* -------------------------------------------------- */}
@@ -580,48 +652,24 @@ export default function ProductPage({ showToast }) {
                     <Send size={20} />
                     Solicitar Presupuesto
                   </button>
+                ) : isEditing ? (
+                  // --- CASO 2a: Modo Edición ---
+                  <button
+                    onClick={handleUpdateCartItem} // Llama a la función de ACTUALIZAR
+                    className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition"
+                  >
+                    <RefreshCw size={20} />
+                    Actualizar Cambios
+                  </button>
                 ) : (
-                  // --- CASO 2: Producto normal (comprable) ---
-                  <>
-                    {/* Selector de Cantidad */}
-                    <div className="flex items-center border border-gray-300 rounded-md">
-                      <button
-                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="px-3 py-2 text-lg hover:bg-gray-200 transition rounded-l-md"
-                      >
-                        -
-                      </button>
-                      <span className="px-4 py-2 font-semibold ">
-                        {quantity}
-                      </span>
-                      <button
-                        onClick={() => setQuantity((q) => q + 1)}
-                        className="px-3 py-2 text-lg hover:bg-gray-200 transition rounded-r-md"
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    {isEditing ? (
-                      // --- CASO 2a: Modo Edición ---
-                      <button
-                        onClick={handleUpdateCartItem} // Llama a la función de ACTUALIZAR
-                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
-                      >
-                        <RefreshCw size={20} />
-                        Actualizar Cambios
-                      </button>
-                    ) : (
-                      // --- CASO 2b: Modo Añadir (normal) ---
-                      <button
-                        onClick={handleAddToCart} // Llama a la función de AÑADIR
-                        className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
-                      >
-                        <ShoppingCart size={20} />
-                        Añadir al Carrito
-                      </button>
-                    )}
-                  </>
+                  // --- CASO 2b: Modo Añadir (normal) ---
+                  <button
+                    onClick={handleAddToCart} // Llama a la función de AÑADIR
+                    className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
+                  >
+                    <ShoppingCart size={20} />
+                    Añadir al Carrito
+                  </button>
                 )}
               </div>
             </div>

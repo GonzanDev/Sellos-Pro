@@ -21,7 +21,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx";
-import { X, ShoppingBag } from "lucide-react"; // Iconos de la librería Lucide.
+import { X, ShoppingBag, Pencil } from "lucide-react"; // Iconos de la librería Lucide.
 
 // ==============================================================================
 // 🎨 SUB-COMPONENTE: Detalles de Personalización
@@ -174,6 +174,12 @@ export default function Cart() {
         quantity: item.qty,
       },
     });
+    // El <ScrollToTop> global (App.jsx) solo reacciona si cambia el
+    // pathname. Si el ítem editado es del MISMO producto que ya se
+    // estaba viendo, el pathname no cambia y no se dispara ningún
+    // scroll — sobre todo notorio en mobile, donde el usuario queda
+    // atascado en la mitad del formulario. Lo forzamos acá.
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   /**
@@ -293,13 +299,23 @@ export default function Cart() {
                           +
                         </button>
                       </div>
-                      {/* Botón Eliminar */}
-                      <button
-                        onClick={() => removeFromCart(item.cartItemId)}
-                        className="text-sm text-red-600 hover:underline"
-                      >
-                        Eliminar
-                      </button>
+                      <div className="flex items-center gap-3">
+                        {/* Botón Editar (pista visual explícita) */}
+                        <button
+                          onClick={() => handleProductClick(item)}
+                          className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition"
+                        >
+                          <Pencil size={14} />
+                          Editar
+                        </button>
+                        {/* Botón Eliminar */}
+                        <button
+                          onClick={() => removeFromCart(item.cartItemId)}
+                          className="text-sm text-red-600 hover:underline"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </li>
