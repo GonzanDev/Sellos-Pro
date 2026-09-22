@@ -1,0 +1,26 @@
+name: Keep backend awake
+
+# Render apaga los servicios web gratuitos tras ~15 min sin tráfico y
+# tardan >1 min en volver a levantar. Este workflow le pega al endpoint
+# /ping (sellos/backend/server.js) cada 5 minutos para que nunca llegue
+# a dormirse. Corre en GitHub Actions (gratis e ilimitado en repos
+# públicos), así no dependemos de un servicio externo de cron que se
+# puede dar de baja solo (como pasó con el anterior).
+#
+# Ojo: GitHub deshabilita automáticamente los workflows programados
+# después de 60 días sin actividad (commits) en el repo. Si el repo
+# está inactivo mucho tiempo, hay que volver a activarlo a mano desde
+# la pestaña Actions, o disparar un "workflow_dispatch" manual.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: |
+          curl -sf --max-time 90 https://sellos-pro.onrender.com/ping
