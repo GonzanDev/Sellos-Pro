@@ -188,9 +188,18 @@ export default function Header({ openCart, cartCount }) {
                             <p className="font-medium text-sm text-gray-800">
                               {product.name}
                             </p>
-                            <p className="text-sm text-red-600">
-                              ${product.price.toFixed(2)}
-                            </p>
+                            {/* Guardrail: igual que en ProductCard, algunos Kits
+                                tienen price 0 (o no numérico) y se cotizan aparte. */}
+                            {typeof product.price === "number" &&
+                            product.price > 0 ? (
+                              <p className="text-sm text-red-600">
+                                ${product.price.toLocaleString("es-AR")}
+                              </p>
+                            ) : (
+                              <p className="text-sm text-gray-500">
+                                Consultar precio
+                              </p>
+                            )}
                           </div>
                         </Link>
                       </li>
