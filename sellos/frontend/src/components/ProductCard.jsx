@@ -21,6 +21,7 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom"; // Para la navegación a la página de detalle.
 import { useNavigate } from "react-router-dom";
+import PriceBlock from "./PriceBlock.jsx";
 
 export default function ProductCard({ product, addToCart }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
@@ -87,26 +88,9 @@ export default function ProductCard({ product, addToCart }) {
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
           </h3>
-          {/* --- BLOQUE DE PRECIOS ACTUALIZADO --- */}
           {price > 0 && (
-            <div className="mt-1 flex items-center gap-3 flex-wrap">
-              {/* 🆕 1. PRECIO ORIGINAL TACHADO (si existe) */}
-              {originalPrice > price && (
-                <p className="text-sm text-gray-500 line-through">
-                  ${originalPrice.toLocaleString("es-AR")} 
-                </p>
-              )}
-              
-              {/* 2. PRECIO REAL (destacado) */}
-              <p className={`text-lg font-bold ${originalPrice > price ? 'text-red-600' : 'text-gray-900'}`}>
-                ${price.toLocaleString("es-AR")}
-              </p>
-              
-            {/* 🆕 3. ETIQUETA 'PROMO' (si hay descuento) */}
-              {originalPrice > price && (
-              <span className="text-sm font-bold text-red-600 ml-1 hidden md:inline">                      PROMO
-                  </span> 
-              )}
+            <div className="mt-1">
+              <PriceBlock price={price} originalPrice={originalPrice} size="card" />
             </div>
           )}
         </div>
@@ -129,7 +113,7 @@ export default function ProductCard({ product, addToCart }) {
           // ELIMINADO addToCart para obligar a ir a la página de detalle
           <button
             onClick={() => navigate(`/product/${product.id}`)}
-            className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-[#e30613] transition-colors duration-300 text-sm"
+            className="mt-4 w-full py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm"
           >
             Agregar
           </button>

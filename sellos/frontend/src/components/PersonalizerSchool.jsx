@@ -1,15 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ColorPicker from "./ColorPicker"; // Subcomponente para la selección de color.
 
 export default function PersonalizerSchool({
   customization,
   setCustomization,
   product = {},
+  errors = {},
 }) {
   // Manejador genérico para actualizar el estado `customization` en el padre.
   const handleChange = (field, value) => {
     setCustomization((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Mensaje mostrado cuando el código de dibujo fuera de rango se ajusta
+  // automáticamente a 200 (equivale a "sin dibujito"), para que el ajuste
+  // no sea silencioso.
+  const [dibujoAjustado, setDibujoAjustado] = useState(false);
 
   // Colores disponibles del producto
   const colors = product.colors || [];
@@ -37,9 +43,14 @@ export default function PersonalizerSchool({
           type="text"
           value={customization.Nombre || ""}
           onChange={(e) => handleChange("Nombre", e.target.value)}
-          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+          className={`w-full bg-white border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 ${
+            errors.Nombre ? "border-red-500" : "border-gray-300"
+          }`}
           placeholder="Nombre del alumno"
         />
+        {errors.Nombre && (
+          <p className="text-xs text-red-600 mt-1">{errors.Nombre}</p>
+        )}
       </div>
 {/* --- Campo Dibujito --- */}
       <div>
@@ -58,6 +69,7 @@ export default function PersonalizerSchool({
             // 1. Si el campo está vacío, permitimos el cambio para que pueda borrar
             if (valStr === "") {
               handleChange("Dibujo", "");
+              setDibujoAjustado(false);
               return;
             }
 
@@ -67,21 +79,32 @@ export default function PersonalizerSchool({
             // Esto permite que el usuario escriba "2", luego "25", luego "250"
             if (value <= 389) {
               handleChange("Dibujo", value);
+              setDibujoAjustado(false);
             }
           }}
           // Opcional: Validar el mínimo solo cuando el usuario desenfoca el input (onBlur)
           onBlur={(e) => {
             const value = Number(e.target.value);
             if (value < 200 && value !== 0) {
-              handleChange("Dibujo", 200); // O mostrar un error
+              handleChange("Dibujo", 200);
+              // El ajuste cambia el significado (200 = sin dibujito), así que
+              // lo avisamos en vez de dejarlo pasar en silencio.
+              setDibujoAjustado(true);
             }
           }}
+          aria-describedby={dibujoAjustado ? "dibujo-ajustado" : undefined}
           className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
           placeholder="Ej: 205"
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Ingresá un número entre <strong>200</strong> y <strong>389</strong>. El valor <strong>200</strong> significa sin dibujito.
-        </p>
+        {dibujoAjustado ? (
+          <p id="dibujo-ajustado" className="text-xs text-red-600 mt-1">
+            Ajustado a 200 — sin dibujito, porque el mínimo es 200.
+          </p>
+        ) : (
+          <p className="text-xs text-gray-500 mt-1">
+            Ingresá un número entre <strong>200</strong> y <strong>389</strong>. El valor <strong>200</strong> significa sin dibujito.
+          </p>
+        )}
       </div>
       {/* --- 🔤 Selector de tipo de letra --- */}
       <div>
@@ -91,7 +114,9 @@ export default function PersonalizerSchool({
         <select
           value={customization.Fuente || "sin-preferencia"}
           onChange={(e) => handleChange("Fuente", e.target.value)}
-          className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+          className={`w-full bg-white border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 ${
+            errors.Fuente ? "border-red-500" : "border-gray-300"
+          }`}
         >
           {/* Primera opción: Sin preferencia */}
           <option value="sin-preferencia">
@@ -105,9 +130,13 @@ export default function PersonalizerSchool({
             </option>
           ))}
         </select>
-        <p className="text-xs text-gray-500 mt-1">
-          Consultá la imagen con los modelos A–Z para ver cómo es cada fuente.
-        </p>
+        {errors.Fuente ? (
+          <p className="text-xs text-red-600 mt-1">{errors.Fuente}</p>
+        ) : (
+          <p className="text-xs text-gray-500 mt-1">
+            Consultá la imagen con los modelos A–Z para ver cómo es cada fuente.
+          </p>
+        )}
       </div>
 
       {/* --- Detalles Condicionales (solo para Sello Vertical ID 2) --- */}
@@ -150,6 +179,7 @@ export default function PersonalizerSchool({
         colors={colors}
         value={customization.color}
         onChange={(hex) => handleChange("color", hex)}
+        error={errors.color}
       />
 
       {/* --- 🗒 Comentarios adicionales --- */}

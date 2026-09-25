@@ -46,6 +46,7 @@ import PersonalizerSchool from "../components/PersonalizerSchool";
 import PersonalizerEmpanadas from "../components/PersonalizerEmpanadas";
 import ColorPicker from "../components/ColorPicker";
 import CrossSellItem from "../components/CrossSellItem";
+import PriceBlock from "../components/PriceBlock";
 // ----------------------------------------------------
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
@@ -133,6 +134,11 @@ export default function ProductPage({ showToast }) {
   });
   const [formErrors, setFormErrors] = useState({});
 
+  // Errores de validación del personalizador (Nombre, Fuente, color, líneas),
+  // mostrados inline en cada campo en vez de un toast que solo avisa uno
+  // por vez.
+  const [fieldErrors, setFieldErrors] = useState({});
+
   // Referencia al inicio del panel de personalización, para poder
   // hacer scroll hasta ahí tras agregar/actualizar (clave en mobile,
   // donde el formulario es largo y el usuario queda scrolleado abajo
@@ -158,6 +164,7 @@ export default function ProductPage({ showToast }) {
     setQuantity(newExistingCartItem?.quantity || 1);
     setActiveImage(0); // Volvemos a la primera imagen
     setFormErrors({}); // Limpiamos errores de formulario
+    setFieldErrors({}); // Limpiamos errores de personalización
     setBuyerInfo({ name: "", email: "", phone: "" }); // Limpiamos datos del comprador
     setIsBudgetModalOpen(false); // Cerramos el modal por si acaso
   }, [id, location.state]); // Dependencias: el ID del producto y el state de navegación
@@ -181,7 +188,7 @@ export default function ProductPage({ showToast }) {
           <p className="text-lg">Producto no encontrado</p>
           <button
             onClick={() => navigate("/catalog")}
-            className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-[#e30613] transition"
+            className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-red-600 transition"
           >
             Volver al catálogo
           </button>
@@ -193,40 +200,39 @@ export default function ProductPage({ showToast }) {
   // ==============================================================================
   //  FUNCIÓN DE VALIDACIÓN
   // ==============================================================================
+  // Devuelve un objeto { campo: mensaje } con TODOS los campos inválidos a
+  // la vez, para poder mostrarlos todos juntos en vez de uno por toast.
   const validateCustomization = () => {
+    const errors = {};
     if (isKit) {
-      return null;
+      return errors;
     }
     if (isSchool) {
-      if (!customization.Nombre) return "El campo 'Nombre' es obligatorio.";
+      if (!customization.Nombre) errors.Nombre = "El campo 'Nombre' es obligatorio.";
       if (!customization.Fuente)
-        return "El campo 'Tipo de letra' es obligatorio.";
-      if (!customization.color) return "Debes seleccionar un color.";
+        errors.Fuente = "El campo 'Tipo de letra' es obligatorio.";
+      if (!customization.color) errors.color = "Debes seleccionar un color.";
     }
     if (isCustomizable) {
       const lineKeys = Object.keys(customization).filter((key) =>
         key.startsWith("line")
       );
-      // 2. Verificamos si 'alguna' ('some') de esas líneas tiene un valor (no está vacía)
+      // Verificamos si 'alguna' ('some') de esas líneas tiene un valor (no está vacía)
       const hasAtLeastOneLine = lineKeys.some(
         (key) => customization[key] && customization[key].trim() !== ""
       );
 
       if (!hasAtLeastOneLine) {
-        return "Debe completar al menos una línea de texto.";
+        errors.lines = "Debe completar al menos una línea de texto.";
       }
-      //
       if (!customization.Fuente)
-        return "El campo 'Tipo de letra' es obligatorio.";
-      if (!customization.color) return "Debes seleccionar un color.";
+        errors.Fuente = "El campo 'Tipo de letra' es obligatorio.";
+      if (!customization.color) errors.color = "Debes seleccionar un color.";
     }
     if (isInk) {
-      if (!customization.color) return "Debes seleccionar un color.";
+      if (!customization.color) errors.color = "Debes seleccionar un color.";
     }
-    if (isDateStamp) {
-      return null;
-    }
-    return null;
+    return errors;
   };
 
   // --- 7. MANEJADORES DE ACCIONES (Handlers) ---
@@ -235,11 +241,13 @@ export default function ProductPage({ showToast }) {
    * Añade el producto (con su personalización y cantidad) al carrito.
    */
   const handleAddToCart = () => {
-    const validationError = validateCustomization();
-    if (validationError) {
-      showToast(validationError);
+    const errors = validateCustomization();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      showToast("Revisá los campos marcados en rojo.");
       return;
     }
+    setFieldErrors({});
     const productToAdd = { ...product, customization, qty: quantity };
     addToCart(productToAdd);
     showToast(
@@ -257,11 +265,13 @@ export default function ProductPage({ showToast }) {
    * "Modo Edición": Actualiza un ítem *existente* en el carrito.
    */
   const handleUpdateCartItem = () => {
-    const validationError = validateCustomization();
-    if (validationError) {
-      showToast(validationError);
+    const errors = validateCustomization();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      showToast("Revisá los campos marcados en rojo.");
       return;
     }
+    setFieldErrors({});
     const updatedProductData = { ...product, customization, qty: quantity };
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
     showToast(
@@ -478,14 +488,24 @@ export default function ProductPage({ showToast }) {
 
             {/* --- Información del Producto (Título, Precio, Descripción) --- */}
             <div>
-              <div className="flex flex-row justify-between items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {product.name}
                 </h1>
                 {/* Precio Condicional */}
-                <p className="text-3xl md:text-4xl font-bold text-red-600 my-6">
-                  {isKit ? "Precio a cotizar" : `$${product.price.toFixed(2)}`}
-                </p>
+                {isKit ? (
+                  <p className="text-3xl md:text-4xl font-bold text-red-600 my-4 sm:my-6">
+                    Precio a cotizar
+                  </p>
+                ) : (
+                  <div className="my-2 sm:my-6">
+                    <PriceBlock
+                      price={product.price}
+                      originalPrice={product.originalPrice}
+                      size="page"
+                    />
+                  </div>
+                )}
               </div>
               {/* Descripción (con formato de saltos de línea) */}
               {!(isInk || isDateStamp) && (
@@ -504,7 +524,7 @@ export default function ProductPage({ showToast }) {
           {/* =============================================== */}
           {/* --- COLUMNA 2: PERSONALIZACIÓN Y ACCIONES --- */}
           {/* =============================================== */}
-          <div ref={formTopRef} className="top-24 h-fit scroll-mt-24">
+          <div ref={formTopRef} className="h-fit scroll-mt-24">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
               {/* --- Banner de "Modo Edición" --- */}
               {/* Deja en claro que se está modificando un sello que ya
@@ -572,6 +592,7 @@ export default function ProductPage({ showToast }) {
                   product={product}
                   customization={customization}
                   setCustomization={setCustomization}
+                  errors={fieldErrors}
                 />
               )}
               {isInk && (
@@ -579,6 +600,7 @@ export default function ProductPage({ showToast }) {
                   colors={product.colors || []}
                   value={customization.color}
                   onChange={handleColorChange}
+                  error={fieldErrors.color}
                 />
               )}
               {/* 🆕 LÓGICA DE KITS: Da prioridad a 'Kit Empanadas' */}
@@ -601,6 +623,7 @@ export default function ProductPage({ showToast }) {
                   product={product}
                   customization={customization}
                   setCustomization={setCustomization}
+                  errors={fieldErrors}
                 />
               )}
               {/* ---------------------------------- */}
@@ -665,7 +688,7 @@ export default function ProductPage({ showToast }) {
                   // --- CASO 2b: Modo Añadir (normal) ---
                   <button
                     onClick={handleAddToCart} // Llama a la función de AÑADIR
-                    className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-[#e30613] text-white font-semibold rounded-md hover:bg-red-700 transition"
+                    className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 py-3 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition"
                   >
                     <ShoppingCart size={20} />
                     Añadir al Carrito

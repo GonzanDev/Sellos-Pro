@@ -2,6 +2,7 @@ import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { useProducts } from "../hooks/useProducts.js";
 import { useCart } from "../contexts/CartContext.jsx";
+import { formatPrice } from "../utils/formatPrice.js";
 
 /**
  * Componente reutilizable para mostrar una tarjeta de "cross-sell" (venta cruzada).
@@ -55,7 +56,7 @@ export default function CrossSellItem({
           <p className="text-sm text-gray-600 mb-1">{description}</p>
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-900">
-              {product.name}: ${product.price.toFixed(2)}
+              {product.name}: {formatPrice(product.price)}
             </span>
           </div>
         </div>
@@ -63,7 +64,7 @@ export default function CrossSellItem({
 
       <button
         onClick={handleAddItem}
-        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-[#e30613] text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
+        className="w-full flex items-center justify-center gap-1 py-2 px-3 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition"
       >
         <ShoppingCart size={18} />
         Añadir {product.name} al Carrito

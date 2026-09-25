@@ -16,6 +16,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx"; // Para obtener el carrito y el total.
+import { formatPrice } from "../utils/formatPrice.js";
 
 // URL del backend (desde variables de entorno VITE).
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -187,7 +188,7 @@ export default function CheckoutPage() {
         <h1 className="text-2xl font-bold mb-4">Tu carrito está vacío</h1>
         <button
           onClick={() => navigate("/catalog")}
-          className="px-6 py-2 bg-[#e30613] text-white rounded hover:bg-black transition"
+          className="px-6 py-2 bg-red-600 text-white rounded hover:bg-black transition"
         >
           Volver al catálogo
         </button>
@@ -460,7 +461,7 @@ export default function CheckoutPage() {
                 </div>
                 {/* Precio total del ítem (precio * cantidad) */}
                 <p className="font-semibold text-sm mt-1">
-                  AR$ {(item.price * item.qty).toFixed(2)}
+                  {formatPrice(item.price * item.qty)}
                 </p>
               </Link>
             ))}
@@ -470,19 +471,19 @@ export default function CheckoutPage() {
           <div className="border-t mt-6 pt-6 space-y-3 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>AR$ {total.toFixed(2)}</span>
+              <span>{formatPrice(total)}</span>
             </div>
             {/* Costo de envío (Condicional) */}
             {deliveryMethod === "shipping" && (
               <div className="flex justify-between">
                 <span>Envío</span>
-                <span>AR$ {SHIPPING_COST.toFixed(2)}</span>
+                <span>{formatPrice(SHIPPING_COST)}</span>
               </div>
             )}
             {/* Total Final */}
             <div className="flex justify-between font-bold text-lg border-t pt-3 mt-3">
               <span>Total</span>
-              <span>AR$ {finalTotal.toFixed(2)}</span>
+              <span>{formatPrice(finalTotal)}</span>
             </div>
           </div>
 
@@ -491,7 +492,7 @@ export default function CheckoutPage() {
             onClick={handleCreatePreference}
             // Deshabilitado si el formulario NO es válido o si está cargando.
             disabled={!formValid || loading}
-            className="mt-6 w-full bg-[#e30613] text-white py-3 rounded-md font-semibold hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="mt-6 w-full bg-red-600 text-white py-3 rounded-md font-semibold hover:bg-red-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? "Procesando..." : "Confirmar Pedido"}
           </button>

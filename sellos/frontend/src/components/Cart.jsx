@@ -22,6 +22,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx";
 import { X, ShoppingBag, Pencil } from "lucide-react"; // Iconos de la librería Lucide.
+import { formatPrice } from "../utils/formatPrice.js";
 
 // ==============================================================================
 // 🎨 SUB-COMPONENTE: Detalles de Personalización
@@ -263,12 +264,12 @@ export default function Cart() {
                         </h3>
                         {/* Precio Unitario */}
                         <p className="text-sm text-gray-500 mt-1">
-                          AR$ {item.price.toFixed(2)}
+                          {formatPrice(item.price)}
                         </p>
                       </button>
                       {/* Precio Total (Unitario * Cantidad) */}
                       <p className="text-md font-semibold text-gray-900 flex-shrink-0">
-                        AR$ {(item.price * (item.qty || 1)).toFixed(2)}
+                        {formatPrice(item.price * (item.qty || 1))}
                       </p>
                     </div>
 
@@ -336,14 +337,14 @@ export default function Cart() {
                 Subtotal
               </span>
               <span className="text-2xl font-bold text-gray-900">
-                AR$ {total.toFixed(2)}
+                {formatPrice(total)}
               </span>
             </div>
             {/* Botones de Acción */}
             <div className="space-y-3">
               <button
                 onClick={handleCheckout}
-                className="w-full py-3 bg-[#e30613] text-white font-semibold rounded-lg hover:bg-red-700 transition shadow-sm"
+                className="w-full py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition shadow-sm"
               >
                 Finalizar Compra
               </button>

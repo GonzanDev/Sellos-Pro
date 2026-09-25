@@ -31,6 +31,7 @@ export default function Personalizer({
   customization,
   setCustomization,
   product = {}, // Valor por defecto para evitar errores si `product` es undefined.
+  errors = {},
 }) {
   /**
    * --------------------------------------------------------------------------
@@ -89,11 +90,16 @@ export default function Personalizer({
               value={customization[`line${i + 1}`] || ""}
               // Al cambiar, llama al handler genérico con el nombre del campo (ej. 'line1').
               onChange={(e) => handleChange(`line${i + 1}`, e.target.value)}
-              className="w-full bg-white border-gray-300 border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500"
+              className={`w-full bg-white border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-red-500 ${
+                errors.lines ? "border-red-500" : "border-gray-300"
+              }`}
               placeholder={`Línea ${i + 1}`}
             />
           </div>
         ))}
+        {errors.lines && (
+          <p className="text-xs text-red-600 -mt-2">{errors.lines}</p>
+        )}
 
         {/* --- 🔤 Selector de tipo de letra (A–Z) --- */}
        <div>
@@ -156,6 +162,9 @@ export default function Personalizer({
       Borrar selección
     </button>
   </div>
+  {errors.Fuente && (
+    <p className="text-xs text-red-600 mt-1">{errors.Fuente}</p>
+  )}
 </div>
 
 
@@ -169,6 +178,7 @@ export default function Personalizer({
           colors={colors}
           value={customization.color} // Valor actual (ej. '#FF0000')
           onChange={(hex) => handleChange("color", hex)} // Handler (actualiza 'color' en el estado)
+          error={errors.color}
         />
 
         {/* --- 🖐 Opción de zurdo (Condicional) --- */}
