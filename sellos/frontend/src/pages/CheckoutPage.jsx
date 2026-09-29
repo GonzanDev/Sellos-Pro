@@ -17,6 +17,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx"; // Para obtener el carrito y el total.
 import { formatPrice } from "../utils/formatPrice.js";
+import { getCardImage } from "../utils/cardImage.js";
 
 // URL del backend (desde variables de entorno VITE).
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -377,7 +378,7 @@ export default function CheckoutPage() {
                 {/* Imagen con contador de cantidad */}
                 <div className="relative flex-shrink-0">
                   <img
-                    src={item.image}
+                    src={getCardImage(item.image)}
                     alt={item.name}
                     className="w-16 h-16 object-fit rounded-md border"
                   />

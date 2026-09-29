@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext.jsx";
 import { X, ShoppingBag, Pencil } from "lucide-react"; // Iconos de la librería Lucide.
 import { formatPrice } from "../utils/formatPrice.js";
+import { getCardImage } from "../utils/cardImage.js";
 
 // ==============================================================================
 // 🎨 SUB-COMPONENTE: Detalles de Personalización
@@ -245,7 +246,7 @@ export default function Cart() {
                     aria-label={`Ver ${item.name}`}
                   >
                     <img
-                      src={item.image}
+                      src={getCardImage(item.image)}
                       alt={item.name}
                       className="w-full h-full object-fit rounded-md"
                     />

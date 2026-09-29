@@ -47,6 +47,7 @@ import PersonalizerEmpanadas from "../components/PersonalizerEmpanadas";
 import ColorPicker from "../components/ColorPicker";
 import CrossSellItem from "../components/CrossSellItem";
 import PriceBlock from "../components/PriceBlock";
+import { getCardImage } from "../utils/cardImage.js";
 // ----------------------------------------------------
 import { useCart } from "../contexts/CartContext.jsx";
 import { useProducts } from "../hooks/useProducts.js";
@@ -170,8 +171,38 @@ export default function ProductPage({ showToast }) {
   }, [id, location.state]); // Dependencias: el ID del producto y el state de navegación
 
   // --- 6. GUARD CLAUSES (Carga, Error, No Encontrado) ---
+  // Mientras carga mostramos un skeleton con la misma grilla de 2 columnas
+  // que el producto real (galería + info), en vez de un mensaje de texto
+  // corto: evita el salto de layout grande que eso generaba (el Footer
+  // aparecía pegado arriba y después saltaba de golpe al llegar los datos).
   if (loading)
-    return <div className="text-center py-20">Cargando producto...</div>;
+    return (
+      <div className="py-6 md:py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            <div>
+              <div className="aspect-square w-full bg-gray-200 rounded-lg animate-pulse" />
+              <div className="flex gap-2 mt-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-16 h-16 bg-gray-200 rounded-md animate-pulse"
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-8 w-3/4 bg-gray-200 rounded animate-pulse" />
+              <div className="h-10 w-1/3 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 w-5/6 bg-gray-200 rounded animate-pulse" />
+              <div className="h-32 w-full bg-gray-200 rounded-lg animate-pulse mt-6" />
+              <div className="h-12 w-full bg-gray-200 rounded-md animate-pulse mt-6" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   if (error)
     return (
       <div className="text-center py-20 text-red-600">
@@ -439,6 +470,10 @@ export default function ProductPage({ showToast }) {
                   src={images[activeImage]} // Muestra la imagen activa
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  // Es el elemento LCP de esta página: siempre visible de
+                  // entrada, así que va con prioridad alta y sin lazy.
+                  loading="eager"
+                  fetchPriority="high"
                 />
                 {/* Icono de Zoom (aparece al hover) */}
                 <div className="absolute bottom-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
@@ -473,9 +508,15 @@ export default function ProductPage({ showToast }) {
                       }`}
                     >
                       <img
-                        src={img}
+                        // Miniatura chica (80x80): usa la variante liviana,
+                        // no la imagen original (algunas pesaban 150-230KB
+                        // por ser fotos/capturas sin comprimir). La imagen
+                        // grande de arriba sigue usando la resolución
+                        // completa vía `images[activeImage]`.
+                        src={getCardImage(img)}
                         alt={`Thumbnail ${index + 1}`}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </button>
                   ))}
