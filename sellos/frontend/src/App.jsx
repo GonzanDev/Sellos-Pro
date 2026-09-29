@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { Suspense, lazy, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 
@@ -16,15 +17,20 @@ import Cart from "./components/Cart";
 import Toast from "./components/Toast";
 
 // Páginas
+// Home se importa de forma directa (no lazy): es la ruta "/" y la que ve la
+// mayoría de las visitas, así que no tiene sentido pagar un round-trip extra
+// para descargarla. El resto de las páginas se cargan bajo demanda para que
+// el bundle inicial no incluya código de Checkout, Personalizer, etc. que la
+// mayoría de las visitas nunca usa.
 import Home from "./pages/Home";
-import CatalogPage from "./pages/CatalogPage";
-import ProductPage from "./pages/ProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import FAQPage from "./pages/FAQPage";
-import ContactPage from "./pages/ContactPage";
-import SuccessPage from "./pages/SuccesPage";
-import FailurePage from "./pages/FailurePage";
-import OrderStatusPage from "./pages/OrderStatusPage";
+const CatalogPage = lazy(() => import("./pages/CatalogPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const SuccessPage = lazy(() => import("./pages/SuccesPage"));
+const FailurePage = lazy(() => import("./pages/FailurePage"));
+const OrderStatusPage = lazy(() => import("./pages/OrderStatusPage"));
 import { useSearchParams } from "react-router-dom";
 
 function ScrollToTop() {
@@ -68,30 +74,32 @@ function AppContent() {
       <ScrollToTop />
 
       <main className="flex-1">
-        <Routes>
-          {/* Las páginas ahora son más limpias y no necesitan tantas props */}
-          <Route path="/" element={<Home showToast={showToast} />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route
-            path="/product/:id"
-            element={<ProductPage showToast={showToast} />}
-          />
-          <Route path="/checkout" element={<CheckoutPage />} />
+        <Suspense fallback={null}>
+          <Routes>
+            {/* Las páginas ahora son más limpias y no necesitan tantas props */}
+            <Route path="/" element={<Home showToast={showToast} />} />
+            <Route path="/catalog" element={<CatalogPage />} />
+            <Route
+              path="/product/:id"
+              element={<ProductPage showToast={showToast} />}
+            />
+            <Route path="/checkout" element={<CheckoutPage />} />
 
-          {/* --- NUEVAS RUTAS AÑADIDAS --- */}
-          <Route path="/nosotros" element={<FAQPage />} />
-          <Route path="/contacto" element={<ContactPage />} />
-          <Route
-            path="/success"
-            element={
-              <ProtectedRoute>
-                <SuccessPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/failure" element={<FailurePage />} />
-          <Route path="/order/:orderId" element={<OrderStatusPage />} />
-        </Routes>
+            {/* --- NUEVAS RUTAS AÑADIDAS --- */}
+            <Route path="/nosotros" element={<FAQPage />} />
+            <Route path="/contacto" element={<ContactPage />} />
+            <Route
+              path="/success"
+              element={
+                <ProtectedRoute>
+                  <SuccessPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/failure" element={<FailurePage />} />
+            <Route path="/order/:orderId" element={<OrderStatusPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <Cart />

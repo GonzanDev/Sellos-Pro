@@ -22,6 +22,7 @@ import React from "react";
 import { Link, Navigate } from "react-router-dom"; // Para la navegación a la página de detalle.
 import { useNavigate } from "react-router-dom";
 import PriceBlock from "./PriceBlock.jsx";
+import { getCardImage } from "../utils/cardImage.js";
 
 export default function ProductCard({ product, addToCart }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
@@ -67,7 +68,7 @@ export default function ProductCard({ product, addToCart }) {
         {/* 'overflow-hidden': Necesario para que 'object-cover' funcione bien. */}
         <div className="aspect-square w-full bg-white flex items-center justify-center overflow-hidden">
           <img
-            src={product.image}
+            src={getCardImage(product.image)}
             alt={product.name}
             // --- CAMBIO CLAVE: object-cover ---
             // 'object-cover': La imagen llena el contenedor (aspect-square)

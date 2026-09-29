@@ -10,6 +10,21 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Adelanta la conexión al backend: /api/products es lo primero que
+         pide la página y hoy espera a que el bundle JS se ejecute para
+         recién ahí abrir la conexión. -->
+    <link rel="preconnect" href="https://sellos-pro.onrender.com" crossorigin />
+    <link rel="dns-prefetch" href="https://sellos-pro.onrender.com" />
+
+    <!-- Precarga la imagen del primer slide del Hero (es el elemento LCP de
+         Home) para que no dependa de que React termine de montar el árbol. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/Hero/Hero1.webp"
+      fetchpriority="high"
+    />
+
     <meta name="color-scheme" content="light" />
     <style>
       :root {

@@ -61,6 +61,14 @@ export default function Hero() {
   // Almacena el índice (0, 1, 2...) del slide que está visible actualmente.
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Índices de slides cuya imagen de fondo ya se puede pedir. Solo el slide 0
+  // (el que es LCP) se carga de entrada; el resto se difiere unos segundos
+  // para que no compitan por ancho de banda con la carga inicial de la
+  // página. `background-image` no soporta loading="lazy", así que sin esto
+  // el navegador bajaba las 3 imágenes del carrusel en paralelo apenas carga
+  // Home, aunque 2 de ellas ni se ven todavía.
+  const [loadedSlides, setLoadedSlides] = useState(() => new Set([0]));
+
   /**
    * --------------------------------------------------------------------------
    * REFERENCIAS (useRef)
@@ -120,6 +128,26 @@ export default function Hero() {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [currentSlide]); // Dependencia: se re-ejecuta si `currentSlide` cambia.
+
+  // Precarga la imagen del PRÓXIMO slide 2s después de entrar al actual, así
+  // llega descargada antes de que el autoplay la muestre a los 5s (y también
+  // cubre el caso de que el usuario salte de slide a mano antes de tiempo).
+  useEffect(() => {
+    // El slide actual siempre debe estar cargado (cubre saltos manuales por
+    // los puntos o el swipe a un slide que todavía no se había precargado).
+    setLoadedSlides((prev) =>
+      prev.has(currentSlide) ? prev : new Set(prev).add(currentSlide)
+    );
+
+    const nextIndex = (currentSlide + 1) % slides.length;
+    const preloadTimer = setTimeout(() => {
+      setLoadedSlides((prev) =>
+        prev.has(nextIndex) ? prev : new Set(prev).add(nextIndex)
+      );
+    }, 2000);
+
+    return () => clearTimeout(preloadTimer);
+  }, [currentSlide]);
 
   /**
    * --------------------------------------------------------------------------
@@ -198,8 +226,11 @@ export default function Hero() {
           // Estilos en línea para las imágenes de fondo dinámicas.
           style={{
             transition: "opacity 1s ease-in-out",
-            backgroundImage: `url(${slide.bgImage})`,
-            backgroundSize: "cover",
+            backgroundImage: loadedSlides.has(index)
+              ? `url(${slide.bgImage})`
+              : undefined,
+            backgroundColor: "#1f2937",
+            backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}

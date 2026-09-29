@@ -22,6 +22,38 @@ import { useState, useEffect } from "react";
 // 2. Si no la encuentra, usa 'http://localhost:8080/api' como fallback (para desarrollo local).
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
+// Caché a nivel de módulo: Header, Home y CatalogPage usan este hook al mismo
+// tiempo y sin esto cada uno dispara su propio fetch a /api/products (se veía
+// duplicado en la red). Se comparte la misma promesa/resultado entre todas
+// las instancias del hook durante la vida de la pestaña.
+let productsCache = null; // Array de productos ya resueltos.
+let productsRequest = null; // Promise en curso, para no duplicar el fetch.
+
+function fetchProducts() {
+  if (productsCache) return Promise.resolve(productsCache);
+  if (!productsRequest) {
+    productsRequest = fetch(`${API_URL}/products`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            `La respuesta de la red no fue exitosa (Status: ${res.status})`
+          );
+        }
+        return res.json();
+      })
+      .then((data) => {
+        productsCache = data;
+        return data;
+      })
+      .catch((err) => {
+        // No cachear errores: la próxima instancia puede reintentar.
+        productsRequest = null;
+        throw err;
+      });
+  }
+  return productsRequest;
+}
+
 /**
  * Hook para obtener la lista de productos.
  *
@@ -51,42 +83,38 @@ export function useProducts() {
    * que usa este hook se monta (gracias al array de dependencias vacío `[]`).
    */
   useEffect(() => {
-    // --- LÍNEA DE DIAGNÓSTICO ---
-    // (Útil para verificar qué URL se está usando en el entorno de producción).
-    console.log("Intentando conectar con la API en:", API_URL);
+    // Si ya hay datos cacheados de otra instancia del hook, evitamos el
+    // parpadeo de loading y mostramos de una.
+    if (productsCache) {
+      setProducts(productsCache);
+      setLoading(false);
+      return;
+    }
 
-    // Asegura que el estado de carga esté activo al (re)iniciar la petición.
+    let cancelled = false;
     setLoading(true);
 
-    // 1. Inicia la petición (fetch) a la API para obtener los productos.
-    fetch(`${API_URL}/products`)
-      // 2. Comprueba si la respuesta HTTP fue exitosa (status 200-299).
-      .then((res) => {
-        // Si la respuesta no es 'ok' (ej. 404 No Encontrado, 500 Error de Servidor)...
-        if (!res.ok) {
-          // ...lanza un error que será capturado por el .catch().
-          throw new Error(
-            `La respuesta de la red no fue exitosa (Status: ${res.status})`
-          );
-        }
-        // 3. Si fue exitosa, parsea la respuesta JSON.
-        return res.json();
-      })
-      // 4.A. ÉXITO (Datos recibidos):
+    fetchProducts()
       .then((data) => {
-        setProducts(data); // Guarda los productos en el estado.
-        setError(null); // Limpia cualquier error de una ejecución anterior.
+        if (cancelled) return;
+        setProducts(data);
+        setError(null);
       })
-      // 4.B. ERROR (La petición falló):
       .catch((err) => {
+        if (cancelled) return;
         console.error("Error cargando productos", err);
-        setError(err.message); // Guarda el mensaje de error en el estado.
+        setError(err.message);
       })
-      // 5. FINALMENTE (Se ejecuta siempre, con éxito o error):
       .finally(() => {
-        setLoading(false); // Indica que la petición ha terminado.
+        if (!cancelled) setLoading(false);
       });
-  }, []); // El array vacío `[]` asegura que esto se ejecute solo una vez.
+
+    // Evita actualizar estado de un componente ya desmontado si la
+    // respuesta llega después (ej. navegación rápida entre páginas).
+    return () => {
+      cancelled = true;
+    };
+  }, []); // El array vacío `[]` asegura que esto se ejecute solo una vez por instancia.
 
   // --- VALOR DE RETORNO ---
   // Devuelve el estado actual (los 3 valores) para que

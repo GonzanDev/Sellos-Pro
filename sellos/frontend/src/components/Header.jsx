@@ -21,6 +21,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X, Search } from "lucide-react";
 import { useProducts } from "../hooks/useProducts"; // Importamos el hook para acceder a los productos
+import { getCardImage } from "../utils/cardImage.js";
 
 export default function Header({ openCart, cartCount }) {
   // --- ESTADO ---
@@ -180,7 +181,7 @@ export default function Header({ openCart, cartCount }) {
                           className="flex items-center gap-4 p-3 hover:bg-gray-100 rounded-lg transition"
                         >
                           <img
-                            src={product.image}
+                            src={getCardImage(product.image)}
                             alt={product.name}
                             className="w-12 h-12 object-contain rounded-md bg-gray-100"
                           />

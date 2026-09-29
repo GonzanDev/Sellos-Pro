@@ -3,6 +3,7 @@ import { ShoppingCart } from "lucide-react";
 import { useProducts } from "../hooks/useProducts.js";
 import { useCart } from "../contexts/CartContext.jsx";
 import { formatPrice } from "../utils/formatPrice.js";
+import { getCardImage } from "../utils/cardImage.js";
 
 /**
  * Componente reutilizable para mostrar una tarjeta de "cross-sell" (venta cruzada).
@@ -48,7 +49,7 @@ export default function CrossSellItem({
 
       <div className="flex gap-4 items-center mb-3">
         <img
-          src={product.image}
+          src={getCardImage(product.image)}
           alt={product.name}
           className="w-16 h-16 object-cover rounded-md bg-white flex-shrink-0 border"
         />

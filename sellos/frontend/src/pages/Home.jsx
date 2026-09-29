@@ -59,27 +59,16 @@ export default function Home({ showToast }) {
     showToast(`${product.name} agregado al carrito`);
   };
 
-  // --- 2. MANEJO DE ESTADOS DE CARGA Y ERROR ---
-  // Muestra un estado de "Cargando..." mientras se obtienen los productos.
-  if (loading) {
-    return <div className="text-center py-20">Cargando... vuelva en 1 minuto que la pagina ya deberia estar lista</div>;
-  }
-  // Muestra un estado de "Error..." si el hook `useProducts` falló.
-  if (error) {
-    return (
-      <div className="text-center py-20 text-red-500">
-        Error al cargar los productos.
-      </div>
-    );
-  }
+  // --- 2. LÓGICA DE NEGOCIO: FILTRADO DE PRODUCTOS ---
+  // Solo tiene sentido una vez que los productos se cargaron (loading=false
+  // y error=null); en cualquier otro caso queda vacío.
+  const previewProducts =
+    !loading && !error ? getProductsByIds(products, selectedIds) : [];
 
-  // --- 3. LÓGICA DE NEGOCIO: FILTRADO DE PRODUCTOS ---
-  // Una vez que los productos se han cargado (loading=false y error=null),
-  // filtramos la lista completa para obtener solo los productos
-  // cuyos IDs están en el array `selectedIds`.
-  const previewProducts = getProductsByIds(products, selectedIds);
-
-  // --- 4. RENDERIZACIÓN ---
+  // --- 3. RENDERIZACIÓN ---
+  // El <Hero /> no depende de los productos, así que se renderiza siempre de
+  // entrada: bloquearlo detrás del fetch de /api/products retrasaba el LCP
+  // (el carrusel esperaba a que el backend responda antes de pintar nada).
   return (
     <div>
       {/* 1. Renderiza el carrusel principal */}
@@ -94,13 +83,24 @@ export default function Home({ showToast }) {
             </h2>
           </div>
 
+          {loading && (
+            <div className="text-center py-20">Cargando productos...</div>
+          )}
+          {error && !loading && (
+            <div className="text-center py-20 text-red-500">
+              Error al cargar los productos.
+            </div>
+          )}
+
           {/* 3. Renderiza el grid (vista previa) de productos */}
-          <CatalogPreview
-            // Le pasamos la lista *filtrada* de productos.
-            products={previewProducts}
-            // Le pasamos nuestro handler *personalizado* (el que muestra el toast).
-            addToCart={handleAddToCart}
-          />
+          {!loading && !error && (
+            <CatalogPreview
+              // Le pasamos la lista *filtrada* de productos.
+              products={previewProducts}
+              // Le pasamos nuestro handler *personalizado* (el que muestra el toast).
+              addToCart={handleAddToCart}
+            />
+          )}
 
           {/* 4. Botón para ver el catálogo completo */}
           <div className="text-center mt-16">
