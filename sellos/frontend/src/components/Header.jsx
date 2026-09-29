@@ -129,7 +129,10 @@ export default function Header({ openCart, cartCount }) {
           </Link>
 
           {/* Navegación de Escritorio ('md:flex' la oculta en móvil) */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav
+            aria-label="Navegación principal"
+            className="hidden md:flex items-center space-x-8"
+          >
             <NavLink to="/" className={navLinkClass}>
               Inicio
             </NavLink>
@@ -267,7 +270,10 @@ export default function Header({ openCart, cartCount }) {
           </div>
           {/* Navegación móvil */}
           <div className="p-6">
-            <nav className="flex flex-col space-y-6">
+            <nav
+              aria-label="Navegación móvil"
+              className="flex flex-col space-y-6"
+            >
               <NavLink
                 to="/"
                 onClick={() => setMenuOpen(false)} // Cierra el menú al navegar

@@ -87,7 +87,7 @@ export default function Home({ showToast }) {
             <div className="text-center py-20">Cargando productos...</div>
           )}
           {error && !loading && (
-            <div className="text-center py-20 text-red-500">
+            <div className="text-center py-20 text-red-600">
               Error al cargar los productos.
             </div>
           )}

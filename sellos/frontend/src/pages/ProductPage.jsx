@@ -837,7 +837,7 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.name && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
+                  <p className="text-red-600 text-xs mt-1">{formErrors.name}</p>
                 )}
               </div>
               {/* Campo Email */}
@@ -859,7 +859,7 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.email && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.email}
                   </p>
                 )}
@@ -883,7 +883,7 @@ export default function ProductPage({ showToast }) {
                   />
                 </div>
                 {formErrors.phone && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.phone}
                   </p>
                 )}

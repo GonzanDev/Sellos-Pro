@@ -206,9 +206,9 @@ export default function CheckoutPage() {
         {/* Columna 1: Formulario       */}
         {/* --------------------------- */}
         <div className="bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-6">
+          <h1 className="text-2xl font-semibold mb-6">
             Información de contacto
-          </h2>
+          </h1>
           {/* Formulario (inputs controlados) */}
           <div className="space-y-5">
             {/* Campo Email */}
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
               />
               {/* Muestra de error condicional */}
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                <p className="text-red-600 text-xs mt-1">{errors.email}</p>
               )}
             </div>
             {/* Campo Nombre */}
@@ -243,7 +243,7 @@ export default function CheckoutPage() {
                 placeholder="Tu nombre completo"
               />
               {errors.name && (
-                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                <p className="text-red-600 text-xs mt-1">{errors.name}</p>
               )}
             </div>
             {/* Campo Teléfono */}
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                 placeholder="Para coordinar la entrega"
               />
               {errors.phone && (
-                <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                <p className="text-red-600 text-xs mt-1">{errors.phone}</p>
               )}
             </div>
 
@@ -327,7 +327,7 @@ export default function CheckoutPage() {
                     placeholder="Calle y número"
                   />
                   {errors.street && (
-                    <p className="text-red-500 text-xs mt-1">{errors.street}</p>
+                    <p className="text-red-600 text-xs mt-1">{errors.street}</p>
                   )}
                 </div>
                 {/* Campo Código Postal */}
@@ -344,7 +344,7 @@ export default function CheckoutPage() {
                     placeholder="Ej: 7600"
                   />
                   {errors.postalCode && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.postalCode}
                     </p>
                   )}
