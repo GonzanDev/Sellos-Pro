@@ -15,20 +15,27 @@
  * @param {string} props.message - El mensaje de texto que se mostrará dentro del toast.
  * @param {function} props.onClose - La función (callback) que se ejecutará cuando el
  * usuario haga clic en el botón de cerrar (✕).
+ * @param {boolean} [props.closing] - Si es true, reproduce la animación de salida
+ * en vez de la de entrada (el padre sigue siendo quien decide cuándo desmontar
+ * el componente, después de que la animación termine).
  */
 import React from "react";
 
-export default function Toast({ message, onClose }) {
+export default function Toast({ message, onClose, closing = false }) {
   return (
     <div
       // --- Estilos de Posicionamiento y Animación ---
       // 'fixed': Fijo en la pantalla.
       // 'bottom-6 left-1/2': Centrado horizontalmente, abajo.
       // 'z-50': Se asegura de que esté por encima de la mayoría del contenido.
-      // 'animate-slide-in-bottom-center': Animación CSS personalizada (definida
-      // en index.css) que aparece deslizando desde abajo, ya centrada
-      // (el propio keyframe incluye el translateX(-50%) para no pisarlo).
-      className="fixed bottom-6 left-1/2 w-[calc(100%-2rem)] max-w-sm bg-black text-white px-4 py-3 rounded-lg shadow-lg z-50 animate-slide-in-bottom-center"
+      // 'animate-slide-in/out-bottom-center': Animaciones CSS personalizadas
+      // (definidas en index.css) que aparecen/desaparecen deslizando desde/hacia
+      // abajo, ya centradas (el propio keyframe incluye el translateX(-50%)).
+      className={`fixed bottom-6 left-1/2 w-[calc(100%-2rem)] max-w-sm bg-black text-white px-4 py-3 rounded-lg shadow-lg z-50 ${
+        closing
+          ? "animate-slide-out-bottom-center"
+          : "animate-slide-in-bottom-center"
+      }`}
       // --- Accesibilidad (a11y) ---
       // 'role="alert"': Notifica a los lectores de pantalla (screen readers) que
       // este es un mensaje importante y debe ser leído en voz alta.

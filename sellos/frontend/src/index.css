@@ -48,6 +48,20 @@ html {
   animation: slideInBottomCenter 0.4s ease-out forwards;
 }
 
+@keyframes slideOutBottomCenter {
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+}
+.animate-slide-out-bottom-center {
+  animation: slideOutBottomCenter 0.3s ease-in forwards;
+}
+
 @keyframes section-focus {
   0% {
     transform: translateY(6px);

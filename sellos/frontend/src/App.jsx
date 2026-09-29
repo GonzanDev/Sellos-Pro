@@ -62,10 +62,36 @@ function ProtectedRoute({ children }) {
 function AppContent() {
   const { cartCount, openCart } = useCart();
   const [toast, setToast] = useState(null);
+  // Controla la animación de salida: al cerrar (auto o manual) no lo
+  // desmontamos de una, primero reproducimos slide-out y recién después
+  // sacamos el toast del DOM (ver el useEffect de abajo).
+  const [toastClosing, setToastClosing] = useState(false);
 
   const showToast = (message) => {
+    setToastClosing(false);
     setToast(message);
   };
+
+  const closeToast = () => setToastClosing(true);
+
+  // Auto-cierre: sin esto el toast quedaba pegado en pantalla hasta que el
+  // usuario lo cerraba a mano (más molesto en mobile, donde tapa contenido).
+  useEffect(() => {
+    if (!toast || toastClosing) return;
+    const timer = setTimeout(closeToast, 3500);
+    return () => clearTimeout(timer);
+  }, [toast, toastClosing]);
+
+  // Espera a que termine la animación de salida (0.3s, definida en
+  // index.css) antes de desmontar el toast.
+  useEffect(() => {
+    if (!toastClosing) return;
+    const timer = setTimeout(() => {
+      setToast(null);
+      setToastClosing(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [toastClosing]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -106,7 +132,12 @@ function AppContent() {
       <Footer />
 
       {toast && (
-        <Toast message={toast} onClose={() => setToast(null)} position="left" />
+        <Toast
+          message={toast}
+          onClose={closeToast}
+          closing={toastClosing}
+          position="left"
+        />
       )}
     </div>
   );
