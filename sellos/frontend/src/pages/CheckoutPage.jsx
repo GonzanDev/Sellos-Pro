@@ -224,10 +224,13 @@ export default function CheckoutPage() {
                 className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-1 focus:ring-red-500"
                 placeholder="tu@email.com"
               />
-              {/* Muestra de error condicional */}
-              {errors.email && (
-                <p className="text-red-600 text-xs mt-1">{errors.email}</p>
-              )}
+              {/* Reservamos el alto de esta línea siempre (en vez de
+                  renderizarla condicionalmente) para que el resto del
+                  formulario no salte de lugar cuando el error aparece o
+                  se corrige mientras el usuario sigue tipeando. */}
+              <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                {errors.email || ""}
+              </p>
             </div>
             {/* Campo Nombre */}
             <div>
@@ -242,9 +245,9 @@ export default function CheckoutPage() {
                 className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-1 focus:ring-red-500"
                 placeholder="Tu nombre completo"
               />
-              {errors.name && (
-                <p className="text-red-600 text-xs mt-1">{errors.name}</p>
-              )}
+              <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                {errors.name || ""}
+              </p>
             </div>
             {/* Campo Teléfono */}
             <div>
@@ -259,9 +262,9 @@ export default function CheckoutPage() {
                 className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-1 focus:ring-red-500"
                 placeholder="Para coordinar la entrega"
               />
-              {errors.phone && (
-                <p className="text-red-600 text-xs mt-1">{errors.phone}</p>
-              )}
+              <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                {errors.phone || ""}
+              </p>
             </div>
 
             {/* Selector de Método de Entrega */}
@@ -326,9 +329,9 @@ export default function CheckoutPage() {
                     className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-1 focus:ring-red-500"
                     placeholder="Calle y número"
                   />
-                  {errors.street && (
-                    <p className="text-red-600 text-xs mt-1">{errors.street}</p>
-                  )}
+                  <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                    {errors.street || ""}
+                  </p>
                 </div>
                 {/* Campo Código Postal */}
                 <div>
@@ -343,11 +346,9 @@ export default function CheckoutPage() {
                     className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-1 focus:ring-red-500"
                     placeholder="Ej: 7600"
                   />
-                  {errors.postalCode && (
-                    <p className="text-red-600 text-xs mt-1">
-                      {errors.postalCode}
-                    </p>
-                  )}
+                  <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                    {errors.postalCode || ""}
+                  </p>
                 </div>
               </div>
             )}

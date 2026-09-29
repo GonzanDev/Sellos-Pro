@@ -836,9 +836,9 @@ export default function ProductPage({ showToast }) {
                     placeholder="Tu nombre"
                   />
                 </div>
-                {formErrors.name && (
-                  <p className="text-red-600 text-xs mt-1">{formErrors.name}</p>
-                )}
+                <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                  {formErrors.name || ""}
+                </p>
               </div>
               {/* Campo Email */}
               <div>
@@ -858,11 +858,9 @@ export default function ProductPage({ showToast }) {
                     placeholder="tu@email.com"
                   />
                 </div>
-                {formErrors.email && (
-                  <p className="text-red-600 text-xs mt-1">
-                    {formErrors.email}
-                  </p>
-                )}
+                <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                  {formErrors.email || ""}
+                </p>
               </div>
               {/* Campo Teléfono */}
               <div>
@@ -882,11 +880,9 @@ export default function ProductPage({ showToast }) {
                     placeholder="223 123-4567"
                   />
                 </div>
-                {formErrors.phone && (
-                  <p className="text-red-600 text-xs mt-1">
-                    {formErrors.phone}
-                  </p>
-                )}
+                <p className="text-red-600 text-xs mt-1 min-h-[1rem]">
+                  {formErrors.phone || ""}
+                </p>
               </div>
             </div>
 
