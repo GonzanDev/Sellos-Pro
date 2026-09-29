@@ -19,9 +19,58 @@
  * - react-router-dom: Para la navegación interna (Inicio, Catálogo, etc.).
  * - lucide-react: Iconos para enlaces sociales y de contacto.
  */
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom"; // Para la navegación interna
 import { Mail, Instagram, Facebook, MessageCircle } from "lucide-react"; // Iconos
+
+/**
+ * El `loading="lazy"` nativo del iframe no alcanza acá: el umbral de
+ * "distancia al viewport" que usa Chrome para decidir cuándo cargar un
+ * recurso lazy es bastante generoso en conexiones lentas (piensa que vale
+ * la pena precargar contenido que el usuario probablemente va a ver
+ * pronto), así que el mapa (~370KB entre el iframe y sus scripts) terminaba
+ * cargando casi de entrada en cualquier página, aunque el Footer estuviera
+ * lejos. Con un IntersectionObserver propio y un margen chico controlamos
+ * nosotros el umbral: el iframe recién se monta cuando el Footer está a
+ * ~150px de entrar en pantalla.
+ */
+function LazyMap({ title, src }) {
+  const containerRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoad || !containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "150px" }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
+
+  return (
+    <div ref={containerRef} className="w-full" style={{ height: 150 }}>
+      {shouldLoad && (
+        <iframe
+          title={title}
+          src={src}
+          width="100%"
+          height="150"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          referrerPolicy="no-referrer-when-downgrade"
+        ></iframe>
+      )}
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
@@ -118,16 +167,10 @@ export default function Footer() {
           </h3>
           {/* Contenedor para el iframe del mapa */}
           <div className="rounded-lg overflow-hidden shadow-sm border border-gray-200">
-            <iframe
-              title="Mapa de ubicación" // Título para accesibilidad (screen readers).
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.162375726262!2d-57.5470841!3d-38.0433027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dddc18595d0b%3A0xc065f0573a4604f0!2sSellospro%20Sellos%20desde%201980!5e0!3m2!1ses-419!2sar!4v1758299762397!5m2!1ses-419!2sar" // URL del mapa embebido.
-              width="100%"
-              height="150"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy" // Carga diferida: El mapa no se carga hasta que esté cerca de verse.
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+            <LazyMap
+              title="Mapa de ubicación"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3142.162375726262!2d-57.5470841!3d-38.0433027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dddc18595d0b%3A0xc065f0573a4604f0!2sSellospro%20Sellos%20desde%201980!5e0!3m2!1ses-419!2sar!4v1758299762397!5m2!1ses-419!2sar"
+            />
           </div>
         </div>
       </div>

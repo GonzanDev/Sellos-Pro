@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import PriceBlock from "./PriceBlock.jsx";
 import { getCardImage } from "../utils/cardImage.js";
 
-export default function ProductCard({ product, addToCart }) {
+export default function ProductCard({ product, addToCart, priority = false }) {
   // Guardrail: Asegura que el precio sea un número para evitar errores
   // con .toLocaleString() si 'price' es undefined o null.
   const price = typeof product.price === "number" ? product.price : 0;
@@ -75,6 +75,13 @@ export default function ProductCard({ product, addToCart }) {
             // sin distorsionarse, recortando los bordes si es necesario.
             // 'group-hover:scale-105': Efecto de zoom al hacer hover en la tarjeta ('group').
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            // Solo las tarjetas "arriba del pliegue" (las que pasan
+            // `priority`) se cargan de entrada y con alta prioridad; el
+            // resto usa loading="lazy" para no competir por ancho de banda
+            // con el LCP cuando el catálogo tiene 50+ productos.
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            decoding={priority ? "sync" : "async"}
           />
         </div>
       </Link>

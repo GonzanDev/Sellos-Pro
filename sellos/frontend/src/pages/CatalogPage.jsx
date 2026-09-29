@@ -14,6 +14,9 @@ import { useCart } from "../contexts/CartContext.jsx"; // Para la función addTo
 import { useProducts } from "../hooks/useProducts.js"; // Hook para obtener los datos.
 import { ChevronDown } from "lucide-react"; // Icono para los select.
 
+// Cantidad de placeholders del skeleton de carga.
+const PAGE_SIZE = 12;
+
 export default function CatalogPage() {
   // 1. Obtiene los datos de la API
   const { products, loading, error } = useProducts();
@@ -112,8 +115,35 @@ export default function CatalogPage() {
   };
 
   // --- Manejo de Estados de Carga y Error ---
+  // Mientras carga mostramos la misma estructura (título + grilla) con
+  // placeholders en vez de un simple mensaje de texto: eso dejaba la página
+  // mucho más corta que el catálogo real, así que el Footer aparecía pegado
+  // arriba y después "saltaba" hacia abajo de golpe al llegar los productos
+  // (era la causa del layout shift grande que marcaba Lighthouse).
   if (loading) {
-    return <div className="text-center py-20">Cargando productos...</div>;
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left">
+            Catálogo
+          </h1>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6 lg:gap-8">
+            {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <div className="aspect-square w-full bg-gray-200 animate-pulse" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
   if (error) {
     return (
@@ -243,11 +273,12 @@ export default function CatalogPage() {
         {/* ---------------------------------- */}
         {sortedAndFilteredProducts.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6 lg:gap-8">
-            {sortedAndFilteredProducts.map((product) => (
+            {sortedAndFilteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 addToCart={addToCart}
+                priority={index < 4}
               />
             ))}
           </div>

@@ -15,15 +15,12 @@
          recién ahí abrir la conexión. -->
     <link rel="preconnect" href="https://sellos-pro.onrender.com" crossorigin />
     <link rel="dns-prefetch" href="https://sellos-pro.onrender.com" />
-
-    <!-- Precarga la imagen del primer slide del Hero (es el elemento LCP de
-         Home) para que no dependa de que React termine de montar el árbol. -->
-    <link
-      rel="preload"
-      as="image"
-      href="/images/Hero/Hero1.webp"
-      fetchpriority="high"
-    />
+    <!-- Ojo: NO preloadear acá la imagen del Hero. index.html es el único
+         documento de esta SPA (se sirve igual para /, /catalog, /checkout,
+         etc.), así que un <link rel="preload"> acá se descarga en TODAS las
+         rutas, no solo en Home. Ya lo tuvimos como bug: en /catalog bajaba
+         177KB de Hero1.webp a máxima prioridad sin usarla, compitiendo con
+         la imagen real del LCP de esa página. -->
 
     <meta name="color-scheme" content="light" />
     <style>

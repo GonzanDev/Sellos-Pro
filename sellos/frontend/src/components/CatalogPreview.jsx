@@ -30,12 +30,13 @@ export default function CatalogPreview({ products, addToCart }) {
        * Mapea (itera) sobre el array de `products` recibido por props.
        * Para cada objeto de producto `p` en el array...
        */}
-      {products.map((p) => (
+      {products.map((p, index) => (
         // ...renderiza un componente `ProductCard`.
         <ProductCard
           key={p.id} // La 'key' de React, fundamental para el rendimiento en listas.
           product={p} // Pasa el objeto de producto completo al componente hijo.
           addToCart={addToCart} // Pasa la función de "añadir al carrito" al componente hijo.
+          priority={index < 4} // Las primeras tarjetas están arriba del pliegue.
         />
       ))}
     </div>
