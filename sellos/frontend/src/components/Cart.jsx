@@ -210,7 +210,7 @@ export default function Cart() {
         className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col z-50 ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        aria-hidden={!isCartOpen}
+        inert={!isCartOpen ? "" : undefined}
       >
         {/* --------------------------------- */}
         {/* Encabezado del Carrito           */}
@@ -219,6 +219,7 @@ export default function Cart() {
           <h2 className="text-xl font-semibold text-gray-800">Mi Carrito</h2>
           <button
             onClick={closeCart}
+            aria-label="Cerrar carrito"
             className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors"
           >
             <X size={24} />

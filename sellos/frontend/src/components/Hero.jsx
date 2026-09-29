@@ -261,7 +261,7 @@ export default function Hero() {
         </div>
       ))}
       {/* --- 2. Puntos de Navegación (Dots) --- */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex z-20">
         {/* Itera de nuevo, esta vez solo para crear los botones (puntos). */}
         {slides.map((_, index) => (
           <button
@@ -273,13 +273,18 @@ export default function Hero() {
               startTimer();
             }}
             aria-label={`Ir a slide ${index + 1}`}
-            // Lógica de estilo para el punto activo.
-            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-colors ${
-              index === currentSlide
-                ? "bg-white" // Punto activo
-                : "bg-white/50 hover:bg-white/75" // Puntos inactivos
-            }`}
-          />
+            // Botón con área de toque de 24px+ (accesibilidad), el punto
+            // visual adentro se mantiene chico vía el span.
+            className="p-[7px] flex items-center justify-center"
+          >
+            <span
+              className={`block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-colors ${
+                index === currentSlide
+                  ? "bg-white" // Punto activo
+                  : "bg-white/50 hover:bg-white/75" // Puntos inactivos
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

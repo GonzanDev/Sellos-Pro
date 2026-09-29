@@ -193,11 +193,15 @@ export default function CatalogPage() {
 
             {/* Selector de Orden (Sort By) */}
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+              <label
+                htmlFor="sort-by-desktop"
+                className="text-sm font-medium text-gray-700 whitespace-nowrap"
+              >
                 Ordenar por:
               </label>
               <div className="relative w-48">
                 <select
+                  id="sort-by-desktop"
                   value={sortBy}
                   onChange={(e) => handleSortByChange(e.target.value)}
                   className="w-full appearance-none bg-white border border-gray-300 rounded-md py-2 pl-4 pr-10 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
@@ -228,6 +232,7 @@ export default function CatalogPage() {
             {/* Selector de categorías (móvil) */}
             <div className="relative flex-1">
               <select
+                aria-label="Filtrar por categoría"
                 value={category}
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-8 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"
@@ -250,6 +255,7 @@ export default function CatalogPage() {
             {/* Selector de orden (móvil) */}
             <div className="relative flex-1">
               <select
+                aria-label="Ordenar por"
                 value={sortBy}
                 onChange={(e) => handleSortByChange(e.target.value)}
                 className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-8 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition"

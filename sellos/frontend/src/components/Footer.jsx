@@ -132,6 +132,7 @@ export default function Footer() {
               href="https://www.instagram.com/sellospro"
               target="_blank" // Abre el enlace en una nueva pestaña.
               rel="noopener noreferrer" // Práctica de seguridad para enlaces 'target="_blank"'.
+              aria-label="Instagram de Sellospro"
               className="text-gray-500 hover:text-red-600 transition"
             >
               <Instagram size={24} />
@@ -140,6 +141,7 @@ export default function Footer() {
               href="https://www.facebook.com/sellospro"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Facebook de Sellospro"
               className="text-gray-500 hover:text-red-600 transition"
             >
               <Facebook size={24} />

@@ -92,10 +92,10 @@ export default function ProductCard({ product, addToCart, priority = false }) {
       <div className="p-4 text-left border-t border-gray-100 flex-1 flex flex-col justify-between">
         {/* Sección de Texto (Nombre y Precio) */}
         <div>
-          <h3 className="font-semibold text-base text-gray-800 truncate group-hover:text-red-600 transition-colors">
+          <h2 className="font-semibold text-base text-gray-800 truncate group-hover:text-red-600 transition-colors">
             {/* 'truncate': Añade "..." si el nombre es muy largo. */}
             {product.name}
-          </h3>
+          </h2>
           {price > 0 && (
             <div className="mt-1">
               <PriceBlock price={price} originalPrice={originalPrice} size="card" />

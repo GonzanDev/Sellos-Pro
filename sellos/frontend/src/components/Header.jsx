@@ -213,6 +213,7 @@ export default function Header({ openCart, cartCount }) {
             {/* --- 🛒 Botón de Carrito --- */}
             <button
               onClick={openCart} // Prop recibida del padre
+              aria-label="Abrir carrito"
               className="relative p-2 rounded-full hover:bg-gray-100"
             >
               <ShoppingCart size={22} />
@@ -228,6 +229,7 @@ export default function Header({ openCart, cartCount }) {
             {/* 'md:hidden' lo muestra solo en móvil */}
             <button
               onClick={() => setMenuOpen(true)}
+              aria-label="Abrir menú"
               className="md:hidden p-2 rounded-full hover:bg-gray-100"
             >
               <Menu size={24} />
@@ -257,6 +259,7 @@ export default function Header({ openCart, cartCount }) {
             <h2 className="font-bold text-lg">Menú</h2>
             <button
               onClick={() => setMenuOpen(false)}
+              aria-label="Cerrar menú"
               className="p-2 rounded-full hover:bg-gray-100"
             >
               <X size={24} />
