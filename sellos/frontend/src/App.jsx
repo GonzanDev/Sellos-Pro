@@ -67,9 +67,9 @@ function AppContent() {
   // sacamos el toast del DOM (ver el useEffect de abajo).
   const [toastClosing, setToastClosing] = useState(false);
 
-  const showToast = (message) => {
+  const showToast = (message, type = "success") => {
     setToastClosing(false);
-    setToast(message);
+    setToast({ message, type });
   };
 
   const closeToast = () => setToastClosing(true);
@@ -133,7 +133,8 @@ function AppContent() {
 
       {toast && (
         <Toast
-          message={toast}
+          message={toast.message}
+          type={toast.type}
           onClose={closeToast}
           closing={toastClosing}
           position="left"

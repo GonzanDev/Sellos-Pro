@@ -275,14 +275,14 @@ export default function ProductPage({ showToast }) {
     const errors = validateCustomization();
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      showToast("Revisá los campos marcados en rojo.");
+      showToast("Revisá los campos marcados en rojo.", "error");
       return;
     }
     setFieldErrors({});
     const productToAdd = { ...product, customization, qty: quantity };
     addToCart(productToAdd);
     showToast(
-      `${product.name} agregado al carrito ✅ — Formulario listo para tu próximo pedido`
+      `${product.name} agregado al carrito — Formulario listo para tu próximo pedido`
     );
     // Limpiamos el formulario para que el usuario pueda cargar
     // un pedido distinto sin arrastrar los datos del anterior.
@@ -299,14 +299,14 @@ export default function ProductPage({ showToast }) {
     const errors = validateCustomization();
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      showToast("Revisá los campos marcados en rojo.");
+      showToast("Revisá los campos marcados en rojo.", "error");
       return;
     }
     setFieldErrors({});
     const updatedProductData = { ...product, customization, qty: quantity };
     updateCartItem(existingCartItem.cartItemId, updatedProductData);
     showToast(
-      `${product.name} actualizado en el carrito ✅ — Formulario listo para tu próximo pedido`
+      `${product.name} actualizado en el carrito — Formulario listo para tu próximo pedido`
     );
     // Igual que en "Añadir al Carrito": limpiamos el formulario en vez de
     // sacar al usuario de la página. Salimos del "Modo Edición" (quitamos
@@ -339,7 +339,7 @@ export default function ProductPage({ showToast }) {
   const handleOpenBudgetModal = () => {
     // Validación: No abrir el modal si es un Kit y falta el logo.
     if (isKit && !isKitEmpanadas && !customization.logoFile) {
-      showToast("Por favor, sube un logo antes de cotizar.");
+      showToast("Por favor, sube un logo antes de cotizar.", "error");
       return;
     }
     setFormErrors({}); // Limpiamos errores antiguos
@@ -363,7 +363,7 @@ export default function ProductPage({ showToast }) {
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      showToast("Por favor, completa tus datos de contacto.");
+      showToast("Por favor, completa tus datos de contacto.", "error");
       return;
     }
 
@@ -412,13 +412,14 @@ export default function ProductPage({ showToast }) {
         showToast(
           `Error al enviar la solicitud: ${
             errorData.details || "Intenta de nuevo."
-          }`
+          }`,
+          "error"
         );
       }
     } catch (err) {
       // ERROR (de red/CORS)
       console.error("Error enviando solicitud de presupuesto:", err);
-      showToast("Error de conexión al enviar la solicitud.");
+      showToast("Error de conexión al enviar la solicitud.", "error");
     } finally {
       setIsSendingBudget(false); // Desactiva el estado de carga
     }
