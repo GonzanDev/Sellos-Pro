@@ -527,7 +527,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°3 Joyko",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 12000,
+    "price": 13500,
     "image": "/images/Almohadillas/AlmN3.webp",
     "thumbnails": ["/images/Almohadillas/AlmN3-2.jpg"]
   },
@@ -536,7 +536,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°4 ópalo tapa transparente",
     "description": "Almohadilla de fieltro tapa transparente 10x15cm, compatible con varios modelos.",
-    "price": 18000,
+    "price": 20000,
     "image": "/images/Almohadillas/AlmN4.webp"
   },
   {
@@ -544,7 +544,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla N°5 Jumbo",
     "description": "Almohadilla para sellos de tinta, compatible con varios modelos.",
-    "price": 19000,
+    "price": 21000,
     "image": "/images/Almohadillas/AlmN5.webp"
   },
   {
@@ -552,7 +552,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chapa 3 (Medio A4)",
     "description": "Almohadilla Doble Fieltro Reforzada de chapa de 21x14 cm.",
-    "price": 30000,
+    "price": 33000,
     "image": "/images/Almohadillas/Chapa3.webp"
   },
   {
@@ -560,7 +560,7 @@
     "category": ["Almohadillas"],
     "name": "Almohadilla Chapa 5 (A4)",
     "description": "Almohadilla Doble Fieltro Reforzada de 30x20 cm.",
-    "price": 45000,
+    "price": 48000,
     "image": "/images/Almohadillas/Chapa5.webp"
   },
   {
